@@ -5,6 +5,8 @@ import {
   CognitoUser
 } from 'amazon-cognito-identity-js'
 
+import App from './App.jsx'
+
 /**
  *  Handle authenticated flow with AWS Cognito. Children are hidden
  *  until user is authenticated.
@@ -63,6 +65,7 @@ class LoginForm extends Component {
       case 'authenticated':
         return (
           <div>
+            <App />
             {/* <Sidebar />
             <div className="contentArea">
               <Topbar>
