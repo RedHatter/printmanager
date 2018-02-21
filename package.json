@@ -1,0 +1,45 @@
+{
+  "name": "printmanager",
+  "version": "3.0.0",
+  "description": "Manages print jobs.",
+  "main": "app.js",
+  "author": "Timothy Johnson",
+  "private": true,
+  "scripts": {
+    "start": "node app.js",
+    "build": "gulp"
+  },
+  "dependencies": {
+    "amazon-cognito-identity-js": "^2.0.1",
+    "dateformat": "^3.0.2",
+    "koa": "^2.3.0",
+    "koa-body": "^2.3.0",
+    "koa-router": "^7.2.1",
+    "koa-session": "^5.4.0",
+    "koa-static": "^4.0.1",
+    "nodemailer": "^4.1.1",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "socket.io": "^2.0.3"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-react": "^6.24.1",
+    "babelify": "^8.0.0",
+    "browserify": "^14.4.0",
+    "collectify": "^1.1.0",
+    "del": "^3.0.0",
+    "freedesktop-notifications": "^1.2.2",
+    "gulp": "file:../gulp",
+    "gulp-newer": "^1.3.0",
+    "gulp-raster": "^0.2.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-sourcemaps": "^2.6.4",
+    "gulp-tap": "^1.0.1",
+    "open": "0.0.5",
+    "vinyl-buffer": "^1.0.1",
+    "vinyl-source-stream": "^2.0.0"
+  }
+}
