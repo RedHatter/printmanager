@@ -1,5 +1,6 @@
 import io from 'socket.io-client'
 import React, { Component } from 'react'
+import { Paper, Button } from 'material-ui'
 
 import JobTable from './JobTable.jsx'
 
@@ -14,9 +15,9 @@ class App extends Component {
 
   render () {
     return (
-      <div className="app">
+      <Paper className="app">
         <JobTable jobs={ this.state.jobs }></JobTable>
-      </div>
+      </Paper>
     )
   }
 }
@@ -24,15 +25,15 @@ class App extends Component {
 <style>
   body {
     text-align: center;
+    font-family: 'Roboto', sans-serif;
+    background-color: #F2F3F4;
   }
 
   .app {
-    text-align: left;
-    padding: 20px;
-    background-color: white;
-    border-radius: 5px;
     display: inline-block;
-    margin: 100px 0;
+    padding: 20px;
+    margin: 100px 50%;
+    transform: translateX(-50%)
   }
 </style>
 

@@ -133,12 +133,8 @@ class LoginForm extends Component {
 export default LoginForm
 
 <style>
-  @import url('https://fonts.googleapis.com/css?family=Roboto:400,500');
-
-  body {
-    font-family: 'Roboto', sans-serif;
-    background-color: #F2F3F4;
-  }
+  @import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+  @import url("https://fonts.googleapis.com/css?family=Roboto:300,400,500");
 
   .contentArea {
     display: inline-block;
@@ -146,34 +142,6 @@ export default LoginForm
     width: calc(100% - 260px);
     vertical-align: top;
     overflow: auto;
-  }
-
-  input[type="submit"], .button {
-    min-width: 64px;
-    margin: 6px;
-    padding: 9px 16px;
-    border: none;
-    background-color: #2196F3;
-    color: white;
-    text-transform: uppercase;
-    border-radius: 2px;
-    cursor: pointer;
-    box-shadow: 0 1px 1px #9E9E9E;
-  }
-
-  .button-flat {
-    min-width: 64px;
-    margin: 6px;
-    padding: 9px 16px;
-    border: none;
-    background-color: transparent;
-    color: #2196F3;
-    text-transform: uppercase;
-    cursor: pointer;
-  }
-
-  input[type="submit"]:hover, .button {
-    background-color: #42A5F5;
   }
 
   .depth-1 {
