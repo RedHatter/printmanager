@@ -63,19 +63,7 @@ class LoginForm extends Component {
           </form>
         )
       case 'authenticated':
-        return (
-          <div>
-            <App />
-            {/* <Sidebar />
-            <div className="contentArea">
-              <Topbar>
-                <span>{ this.cognitoUser.getUsername() }</span>
-                <a onClick={ this.handleSignOut }>Sign Out</a>
-              </Topbar>
-              <SalesmenManager authorization={ this.state.authorization } />
-            </div> */}
-          </div>
-        )
+        return <App />
     }
   }
 

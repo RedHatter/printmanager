@@ -19,10 +19,7 @@ function JobTable (props) {
         </tr>
       </thead>
       <tbody>
-        { props.jobs.reduce((elements, job) => {
-          elements.push(<JobRow job={ o } />, <Accordion job={ o } />)
-          return elements
-        }, []) }
+        { props.jobs.map(o => <Job model={ o } />) }
       </tbody>
     </table>
   )
