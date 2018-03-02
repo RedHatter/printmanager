@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
+const enums = require('./enums.js')
 
 mongoose.connect('mongodb://localhost/printmanager')
 mongoose.connection
@@ -7,36 +8,29 @@ mongoose.connection
 
 const Job = mongoose.model('Job', new Schema({
   created: { type: Date, default: Date.now },
-  name: String,
+  name: { type: String, required: true },
   // client: { type: ObjectId, ref: 'Client' },
   envelope: { type: String, required: true },
   size: { type: String, required: true },
   fold: {
     type: String,
     required: true,
-    enum: [ 'Half Fold', 'Tri Fold', 'Custom', 'No Fold' ]
+    enum: enums.fold
   },
   addons: [ {
     type: String,
-    enum: [
-      "Scratcher", "Key", "Hologram Scratcher","KBB Append", "Handwriting",
-      "4x6 Note", "Lamination", "Pull Tab", "Post-It-Note", "Bus. Card 1-sided",
-      "BB Append", "Bus. Card 2-sided", "Credit Card", "Spanish", "Custom"
-    ]
+    enum: enums.addons
   } ],
   listType: {
     type: String,
     required: true,
-    enum: [ 'Database', 'Saturation', 'Bankruptcy', 'Credit', 'Conquest' ]
+    enum: enums.listType
   },
   // salesman: { type: ObjectId, ref: 'User' },
   postage: {
     type: String,
     required: true,
-    enum: [
-      'Indicia, Standard', 'Indicia, 1st Class',
-      'Stamp, Standard', 'Stamp, 1st Class'
-    ]
+    enum: enums.postage
   },
   quantity: { type: Number, required: true, min: 0 },
   dropDate: { type: Date, required: true },

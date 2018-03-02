@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import { Paper, Button } from 'material-ui'
 
 import JobTable from './JobTable.jsx'
+import CreateDialog from './CreateDialog.jsx'
 
 const socket = io()
 
@@ -10,21 +11,31 @@ class App extends Component {
   constructor (props) {
     super(props)
 
-    this.state = { jobs: [] }
+    this.state = {
+      jobs: [],
+      isCreateDialogOpen: false
+    }
+
+    this.handleCreateDialogClose = this.handleCreateDialogClose.bind(this)
   }
 
   render () {
     return (
       <Paper className="app">
+        <Button variant="raised" color="primary" onClick={ () => this.setState({ isCreateDialogOpen: true }) }>Create Job</Button>
+        <CreateDialog isOpen={ this.state.isCreateDialogOpen } onClose={ this.handleCreateDialogClose } />
         <JobTable jobs={ this.state.jobs }></JobTable>
       </Paper>
     )
+  }
+
+  handleCreateDialogClose () {
+    this.setState({ isCreateDialogOpen: false })
   }
 }
 
 <style>
   body {
-    text-align: center;
     font-family: 'Roboto', sans-serif;
     background-color: #F2F3F4;
   }
