@@ -38,13 +38,14 @@ class App extends Component {
   body {
     font-family: 'Roboto', sans-serif;
     background-color: #F2F3F4;
+    text-align: center;
   }
 
   .app {
     display: inline-block;
     padding: 20px;
-    margin: 100px 50%;
-    transform: translateX(-50%)
+    margin: 100px;
+    text-align: left;
   }
 </style>
 
