@@ -28,7 +28,7 @@ class CreateModal extends Component {
         listType: '',
         postage: '',
         comments: '',
-        artStatus: 'In Progress'
+        artStatus: enums.artStatus[0]
       },
       errors: {},
       submitDisabled: false
@@ -48,7 +48,7 @@ class CreateModal extends Component {
       <Fragment>
         <Snackbar open={ this.state.errorMessage != undefined } onClose={ this.clearError } autoHideDuration={ 5000 }
           message={ this.state.errorMessage } anchorOrigin={ { vertical: 'bottom', horizontal: 'right' } } />
-        <Dialog open={ this.props.isOpen } className="create-modal">
+        <Dialog open className="create-modal">
           <DialogContent>
             <Grid container spacing={ 16 }>
               <Grid item sm={ 12 }><Typography variant="headline" aline="left">Dates</Typography></Grid>

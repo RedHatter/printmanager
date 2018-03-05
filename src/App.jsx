@@ -23,7 +23,7 @@ class App extends Component {
     return (
       <Paper className="app">
         <Button variant="raised" color="primary" onClick={ () => this.setState({ isCreateDialogOpen: true }) }>Create Job</Button>
-        <CreateDialog isOpen={ this.state.isCreateDialogOpen } onClose={ this.handleCreateDialogClose } />
+        { this.state.isCreateDialogOpen && <CreateDialog onClose={ this.handleCreateDialogClose } /> }
         <JobTable jobs={ this.state.jobs }></JobTable>
       </Paper>
     )
