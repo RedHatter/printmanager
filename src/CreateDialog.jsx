@@ -27,7 +27,8 @@ class CreateModal extends Component {
         size: '',
         listType: '',
         postage: '',
-        comments: ''
+        comments: '',
+        artStatus: 'In Progress'
       },
       errors: {},
       submitDisabled: false
@@ -157,7 +158,7 @@ class CreateModal extends Component {
     if (this.validate())
       fetch('/api/job', {
         method: 'POST',
-        body: JSON.stringify(this.state),
+        body: JSON.stringify(this.state.model),
         headers: {
           'Content-Type': 'application/json'
         }
@@ -182,8 +183,6 @@ class CreateModal extends Component {
     if (!this.state.model.printDate) state.errors.printDate = 'Print date is required'
     if (!this.state.model.expire) state.errors.expire = 'Expire is required'
     if (!this.state.model.envelope) state.errors.envelope = 'Envelope is required'
-    if (!this.state.model.quanity) state.errors.quanity = 'Quanity is required'
-    if (!this.state.model.fold) state.errors.fold = 'Fold is required'
     if (!this.state.model.vendor) state.errors.vendor = 'Vendor is required'
     if (!this.state.model.quantity) state.errors.quantity = 'Quantity is required'
     if (!this.state.model.size) state.errors.size = 'Size is required'

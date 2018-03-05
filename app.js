@@ -11,6 +11,8 @@ const router = new Router()
 
 app.keys = ['d4c2b975-6876-4e04-9e41-dc8153bbade6']
 
+router.use('/api', require(path.join(__dirname, 'routes', 'api.js')))
+
 app
   .use(body())
   .use(session({ maxAge: 'session' }, app))

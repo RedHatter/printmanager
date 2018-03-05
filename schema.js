@@ -19,7 +19,8 @@ const Job = mongoose.model('Job', new Schema({
   },
   addons: [ {
     type: String,
-    enum: enums.addons
+    enum: enums.addons,
+    default: []
   } ],
   listType: {
     type: String,
@@ -39,13 +40,14 @@ const Job = mongoose.model('Job', new Schema({
   vendor: { type: String, required: true },
   trackingNumber: {
     type: String,
-    required: true,
-    match: /\+1[0-9]{10}/
+    // required: true,
+    match: /^\+1[0-9]{10}$/
   },
+  comments: { type: String },
   artStatus: {
-    type: Number,
+    type: String,
     required: true,
-    min: 1, max: 4
+    enum: enums.artStatus
   },
   dropStatus: Date,
   completed: {

@@ -19,5 +19,6 @@ module.exports = {
     '11 x 15', '11 x 17', '19 x 27', '21 x 34', 'Double 21 x 34',
     '8.5 x 11 Snap Pack', '8.5 x 11 Windowed Snap Pack',
     '8 Page 11 x 17 Magazine', '8 Page 11 x 17 Newsprint', 'Die Cut'
-  ]
+  ],
+  artStatus: [ 'In Progress', 'Needs Revisions', 'Sent to Client', 'Approved' ]
 }
