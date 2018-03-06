@@ -1,5 +1,7 @@
 import React from 'react'
 
+import Job from './Job.jsx'
+
 function JobTable (props) {
   return (
     <table className='job-table'>
@@ -19,7 +21,7 @@ function JobTable (props) {
         </tr>
       </thead>
       <tbody>
-        { props.jobs.map(o => <Job model={ o } />) }
+        { props.model.map(o => <Job key={ o._id } model={ o } />) }
       </tbody>
     </table>
   )
@@ -43,7 +45,6 @@ export default JobTable
   }
 
   .job-table td {
-    text-align: center;
     padding: 30px;
     color: #757575;
   }

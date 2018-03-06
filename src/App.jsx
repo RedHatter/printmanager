@@ -12,9 +12,13 @@ class App extends Component {
     super(props)
 
     this.state = {
-      jobs: [],
+      model: [],
       isCreateDialogOpen: false
     }
+
+    fetch('/api/job')
+      .then(res => res.json())
+      .then(model => this.setState({ model }))
 
     this.handleCreateDialogClose = this.handleCreateDialogClose.bind(this)
   }
@@ -24,7 +28,7 @@ class App extends Component {
       <Paper className="app">
         <Button variant="raised" color="primary" onClick={ () => this.setState({ isCreateDialogOpen: true }) }>Create Job</Button>
         { this.state.isCreateDialogOpen && <CreateDialog onClose={ this.handleCreateDialogClose } /> }
-        <JobTable jobs={ this.state.jobs }></JobTable>
+        <JobTable model={ this.state.model }></JobTable>
       </Paper>
     )
   }

@@ -34,4 +34,9 @@ router.post('/job', async ctx => {
   }
 })
 
+router.get('/job', async ctx => {
+  ctx.response.type = 'json'
+  ctx.body = await Job.find({})
+})
+
 module.exports = router.routes()
