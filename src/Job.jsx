@@ -2,6 +2,8 @@ import React, { Fragment } from 'react'
 import moment from 'moment'
 import classnames from 'classnames'
 
+import Collapse from './Collapse.jsx'
+
 function colorize (status) {
   switch(status) {
     case 'Approved':
@@ -31,7 +33,7 @@ function Job (props) {
 
   return (
     <Fragment>
-      <tr className="job-row">
+      <tr onClick={ props.onClick }>
         <td>{ props.model.name }</td>
         <td>{ props.model.fold } &mdash; { props.model.size }</td>
         <td>{ props.model.quantity.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') }</td>
@@ -50,11 +52,11 @@ function Job (props) {
         <td>{ moment(props.model.created).format('MM/DD/YYYY') }</td>
         <td>{ props.model.salesman }</td>
       </tr>
-      <tr className="accordion">
+      <tr>
         <td colSpan="10">
-          <div>
-            <div>
-              <table>
+          <Collapse isOpen={ props.isOpen }>
+            <table className="job-details">
+              <tbody>
                 <tr>
                   <th>Client</th>
                   <td></td>
@@ -75,17 +77,17 @@ function Job (props) {
                 </tr>
                 <tr>
                   <th rowSpan="2">Comments</th>
-                  <td>{ props.model.comments }</td>
+                  <td rowSpan="2">{ props.model.comments }</td>
                   <th>Envelope</th>
                   <td>{ props.model.envelope }</td>
                 </tr>
                 <tr>
                   <th>Expiration</th>
-                  <td>{ props.model.expire }</td>
+                  <td>{ moment(props.model.expire).format('MM/DD/YYYY') }</td>
                 </tr>
-              </table>
-            </div>
-          </div>
+              </tbody>
+            </table>
+          </Collapse>
         </td>
       </tr>
     </Fragment>
@@ -115,5 +117,23 @@ export default Job
   span.green {
     background-color: #4CAF50;
     color: white;
+  }
+
+  .job-details {
+    margin: 0 auto;
+    border-collapse: collapse;
+  }
+
+  .job-details th {
+    background-color: #E0E0E0;
+    color: #7f8c8d;
+    font-weight: normal;
+    text-align: right;
+  }
+
+  .job-details td, .job-details th {
+    border: 1px solid #E0E0E0;
+    max-width: 500px;
+    padding: 10px;
   }
 </style>
