@@ -32,7 +32,6 @@ function Job (props) {
   return (
     <Fragment>
       <tr className="job-row">
-        <td></td>
         <td>{ props.model.name }</td>
         <td>{ props.model.fold } &mdash; { props.model.size }</td>
         <td>{ props.model.quantity.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') }</td>

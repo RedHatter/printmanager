@@ -7,7 +7,6 @@ function JobTable (props) {
     <table className='job-table'>
       <thead>
         <tr>
-          <th>Order #</th>
           <th>Job Name</th>
           <th>Mailer Type</th>
           <th>Quantity</th>
