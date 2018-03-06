@@ -20,21 +20,26 @@ class App extends Component {
       .then(res => res.json())
       .then(model => this.setState({ model }))
 
-    this.handleCreateDialogClose = this.handleCreateDialogClose.bind(this)
+    this.closeCreateDialog = this.closeCreateDialog.bind(this)
+    this.openCreateDialog = this.openCreateDialog.bind(this)
   }
 
   render () {
     return (
       <Paper className="app">
-        <Button variant="raised" color="primary" onClick={ () => this.setState({ isCreateDialogOpen: true }) }>Create Job</Button>
-        { this.state.isCreateDialogOpen && <CreateDialog onClose={ this.handleCreateDialogClose } /> }
+        <Button variant="raised" color="primary" onClick={ this.openCreateDialog }>Create Job</Button>
+        { this.state.isCreateDialogOpen && <CreateDialog onClose={ this.closeCreateDialog } /> }
         <JobTable model={ this.state.model }></JobTable>
       </Paper>
     )
   }
 
-  handleCreateDialogClose () {
+  closeCreateDialog () {
     this.setState({ isCreateDialogOpen: false })
+  }
+
+  openCreateDialog () {
+    this.setState({ isCreateDialogOpen: true })
   }
 }
 
