@@ -8,7 +8,11 @@ mongoose.connection
 
 const Job = mongoose.model('Job', new Schema({
   created: { type: Date, default: Date.now },
-  name: { type: String, required: true },
+  name: {
+    type: String,
+    required: true,
+    match: /^[A-Z]{3,5} \d{4}-\d+/
+  },
   // client: { type: ObjectId, ref: 'Client' },
   envelope: { type: String, required: true },
   size: { type: String, required: true },

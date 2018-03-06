@@ -20,5 +20,23 @@ module.exports = {
     '8.5 x 11 Snap Pack', '8.5 x 11 Windowed Snap Pack',
     '8 Page 11 x 17 Magazine', '8 Page 11 x 17 Newsprint', 'Die Cut'
   ],
-  artStatus: [ 'In Progress', 'Needs Revisions', 'Sent to Client', 'Approved' ]
+  artStatus: [ 'In Progress', 'Needs Revisions', 'Sent to Client', 'Approved' ],
+
+  colorize (status) {
+    switch(status) {
+      case 'Approved':
+      case 'List Uploaded':
+      case 'List Pending':
+      default:
+        return 'green'
+      case 'Sent to Client':
+      case 'Count Pending':
+        return 'yellow'
+      case 'Needs Revisions':
+      case 'Incomplete':
+        return 'red'
+      case 'In Progress':
+        return undefined
+    }
+  }
 }

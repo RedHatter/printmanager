@@ -39,4 +39,23 @@ router.get('/job', async ctx => {
   ctx.body = await Job.find({})
 })
 
+router.post('/job/:id', async ctx => {
+  ctx.assert(ctx.request.body._id == ctx.params.id, 422, 'Model id must match update id.')
+
+  try {
+    delete ctx.request.body._id
+    let job = await Job.findByIdAndUpdate(ctx.params.id, ctx.request.body, { runValidators: true, new: true })
+    ctx.response.type = 'json'
+    ctx.body = job
+  } catch (err) {
+    if (err.name == 'ValidationError') {
+      console.error(err.message)
+      ctx.status = 422
+      return
+    }
+
+    throw err
+  }
+})
+
 module.exports = router.routes()

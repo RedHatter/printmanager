@@ -3,24 +3,9 @@ import moment from 'moment'
 import classnames from 'classnames'
 
 import Collapse from './Collapse.jsx'
+import JobActions from './JobActions.jsx'
 
-function colorize (status) {
-  switch(status) {
-    case 'Approved':
-    case 'List Uploaded':
-    case 'List Pending':
-    default:
-      return 'green'
-    case 'Sent to Client':
-    case 'Count Pending':
-      return 'yellow'
-    case 'Needs Revisions':
-    case 'Incomplete':
-      return 'red'
-    case 'In Progress':
-      return undefined
-  }
-}
+import { colorize } from '../enums.js'
 
 function Job (props) {
   let listStatus = 'Count Pending'
@@ -87,6 +72,7 @@ function Job (props) {
                 </tr>
               </tbody>
             </table>
+            <JobActions model={ props.model } />
           </Collapse>
         </td>
       </tr>
