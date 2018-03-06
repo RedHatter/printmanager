@@ -54,9 +54,36 @@ function Job (props) {
         <td colSpan="10">
           <div>
             <div>
-              {/* <checklist class="checklist" :job="job"></checklist>
-              <job-details :job="job"></job-details>
-              <job-actions :job="job" class="actions"></job-actions> */}
+              <table>
+                <tr>
+                  <th>Client</th>
+                  <td></td>
+                  <th>Contact</th>
+                  <td></td>
+                </tr>
+                <tr>
+                  <th>Address</th>
+                  <td></td>
+                  <th>Phone</th>
+                  <td></td>
+                </tr>
+                <tr>
+                  <th>Addons</th>
+                  <td>{ props.model.addons.join(', ') }</td>
+                  <th>Vendor</th>
+                  <td>{ props.model.vendor }</td>
+                </tr>
+                <tr>
+                  <th rowSpan="2">Comments</th>
+                  <td>{ props.model.comments }</td>
+                  <th>Envelope</th>
+                  <td>{ props.model.envelope }</td>
+                </tr>
+                <tr>
+                  <th>Expiration</th>
+                  <td>{ props.model.expire }</td>
+                </tr>
+              </table>
             </div>
           </div>
         </td>

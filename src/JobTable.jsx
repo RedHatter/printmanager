@@ -29,21 +29,21 @@ function JobTable (props) {
 export default JobTable
 
 <style>
-  .job-table {
+  table.job-table {
     position: relative;
     background-color: white;
     border-collapse: collapse;
     z-index: 2;
   }
 
-  .job-table th {
+  table.job-table > thead > tr > th {
     background-color: #3498db;
     color: white;
     font-weight: bold;
     padding: 10px;
   }
 
-  .job-table td {
+  table.job-table > tbody > tr > td {
     padding: 30px;
     color: #757575;
   }
