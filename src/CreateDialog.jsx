@@ -186,13 +186,6 @@ class CreateModal extends Component {
       }).catch(err => this.setState({ errorMessage: 'Unable to submit job. ' + err.message }))
   }
 
-  getRequiredValidator (prop, name) {
-    return {
-      error: () => !this.state.model[prop],
-      helperText: name + ' is required'
-    }
-  }
-
   validate () {
     let state = { errors: {} }
     if (!this.state.model.dropDate) state.errors.dropDate = 'Drop date is required'
