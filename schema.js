@@ -6,6 +6,55 @@ mongoose.connect('mongodb://localhost/printmanager')
 mongoose.connection
   .on('error', console.error.bind(console, 'connection error:'))
 
+const Client = mongoose.model('Client', new Schema({
+  name: { type: String, required: true },
+  acronym: {
+    type: String,
+    required: true,
+    match: /^[A-Z]{3,5}$/
+  },
+  contact: {
+    name: { type: String, required: true },
+    email: {
+      type: String,
+      required: true,
+      match: /^.+@.+\..+$/
+    },
+    phone: {
+      type: String,
+      required: true,
+      match: /^[0-9]{10}$/
+    }
+  },
+  trackingNumbers: {
+    database: {
+      type: String,
+      required: true,
+      match: /^[0-9]{10}$/
+    },
+    saturation: {
+      type: String,
+      required: true,
+      match: /^[0-9]{10}$/
+    },
+    bankruptcy: {
+      type: String,
+      required: true,
+      match: /^[0-9]{10}$/
+    },
+    credit: {
+      type: String,
+      required: true,
+      match: /^[0-9]{10}$/
+    },
+    conquest: {
+      type: String,
+      required: true,
+      match: /^[0-9]{10}$/
+    }
+  }
+}))
+
 const Job = mongoose.model('Job', new Schema({
   created: { type: Date, default: Date.now },
   name: {
@@ -45,7 +94,7 @@ const Job = mongoose.model('Job', new Schema({
   trackingNumber: {
     type: String,
     // required: true,
-    match: /^\+1[0-9]{10}$/
+    match: /^[0-9]{10}$/
   },
   comments: { type: String },
   artStatus: {
@@ -62,4 +111,4 @@ const Job = mongoose.model('Job', new Schema({
   }
 }))
 
-module.exports = { Job }
+module.exports = { Job, Client }

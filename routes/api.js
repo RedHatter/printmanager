@@ -1,5 +1,5 @@
 const Router = require('koa-router')
-const { Job } = require('../schema.js')
+const { Job, Client } = require('../schema.js')
 const moment = require('moment')
 
 const router = new Router()
@@ -56,6 +56,46 @@ router.post('/job/:id', async ctx => {
 
     throw err
   }
+})
+
+router.post('/client', async ctx => {
+  try {
+    let client = new Client(ctx.request.body)
+    await client.save()
+    ctx.status = 200
+  } catch (err) {
+    if (err.name == 'ValidationError') {
+      console.error(err.message)
+      ctx.status = 422
+      return
+    }
+
+    throw err
+  }
+})
+
+router.post('/client/:id', async ctx => {
+  ctx.assert(ctx.request.body._id == ctx.params.id, 422, 'Model id must match update id.')
+
+  try {
+    delete ctx.request.body._id
+    let client = await Client.findByIdAndUpdate(ctx.params.id, ctx.request.body, { runValidators: true, new: true })
+    ctx.response.type = 'json'
+    ctx.body = client
+  } catch (err) {
+    if (err.name == 'ValidationError') {
+      console.error(err.message)
+      ctx.status = 422
+      return
+    }
+
+    throw err
+  }
+})
+
+router.get('/client', async ctx => {
+  ctx.response.type = 'json'
+  ctx.body = await Client.find({})
 })
 
 module.exports = router.routes()

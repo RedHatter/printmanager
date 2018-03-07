@@ -4,6 +4,7 @@ import { Paper, Button } from 'material-ui'
 
 import JobTable from './JobTable.jsx'
 import CreateDialog from './CreateDialog.jsx'
+import ClientDialog from './ClientDialog.jsx'
 
 const socket = io()
 
@@ -12,16 +13,23 @@ class App extends Component {
     super(props)
 
     this.state = {
-      model: [],
-      isCreateDialogOpen: false
+      jobs: [],
+      clients: [],
+      isCreateDialogOpen: false,
+      isClientDialogOpen: false
     }
 
     fetch('/api/job')
       .then(res => res.json())
-      .then(model => this.setState({ model }))
+      .then(jobs => this.setState({ jobs }))
+    fetch('/api/client')
+      .then(res => res.json())
+      .then(clients => this.setState({ clients }))
 
     this.closeCreateDialog = this.closeCreateDialog.bind(this)
     this.openCreateDialog = this.openCreateDialog.bind(this)
+    this.closeClientDialog = this.closeClientDialog.bind(this)
+    this.openClientDialog = this.openClientDialog.bind(this)
   }
 
   render () {
@@ -29,7 +37,10 @@ class App extends Component {
       <Paper className="app">
         <Button variant="raised" color="primary" onClick={ this.openCreateDialog }>Create Job</Button>
         { this.state.isCreateDialogOpen && <CreateDialog onClose={ this.closeCreateDialog } /> }
-        <JobTable model={ this.state.model }></JobTable>
+
+        <Button variant="raised" color="primary" onClick={ this.openClientDialog }>Clients</Button>
+        { this.state.isClientDialogOpen && <ClientDialog onClose={ this.closeClientDialog } model={ this.state.clients } /> }
+        <JobTable model={ this.state.jobs }></JobTable>
       </Paper>
     )
   }
@@ -40,6 +51,14 @@ class App extends Component {
 
   openCreateDialog () {
     this.setState({ isCreateDialogOpen: true })
+  }
+
+  closeClientDialog () {
+    this.setState({ isClientDialogOpen: false })
+  }
+
+  openClientDialog () {
+    this.setState({ isClientDialogOpen: true })
   }
 }
 
