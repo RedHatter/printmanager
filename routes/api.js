@@ -23,6 +23,7 @@ router.post('/job', async ctx => {
   try {
     await job.save()
     ctx.status = 200
+    ctx.socketIo.emit('invalidateJobs')
   } catch (err) {
     if (err.name == 'ValidationError') {
       console.error(err.message)
@@ -47,6 +48,7 @@ router.post('/job/:id', async ctx => {
     let job = await Job.findByIdAndUpdate(ctx.params.id, ctx.request.body, { runValidators: true, new: true })
     ctx.response.type = 'json'
     ctx.body = job
+    ctx.socketIo.emit('invalidateJobs')
   } catch (err) {
     if (err.name == 'ValidationError') {
       console.error(err.message)
@@ -63,6 +65,7 @@ router.post('/client', async ctx => {
     let client = new Client(ctx.request.body)
     await client.save()
     ctx.status = 200
+    ctx.socketIo.emit('invalidateClients')
   } catch (err) {
     if (err.name == 'ValidationError') {
       console.error(err.message)
@@ -82,6 +85,7 @@ router.post('/client/:id', async ctx => {
     let client = await Client.findByIdAndUpdate(ctx.params.id, ctx.request.body, { runValidators: true, new: true })
     ctx.response.type = 'json'
     ctx.body = client
+    ctx.socketIo.emit('invalidateClients')
   } catch (err) {
     if (err.name == 'ValidationError') {
       console.error(err.message)

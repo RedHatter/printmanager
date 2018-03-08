@@ -19,12 +19,13 @@ class App extends Component {
       isClientDialogOpen: false
     }
 
-    fetch('/api/job')
-      .then(res => res.json())
-      .then(jobs => this.setState({ jobs }))
-    fetch('/api/client')
-      .then(res => res.json())
-      .then(clients => this.setState({ clients }))
+    this.fetchJobs = this.fetchJobs.bind(this)
+    this.fetchClients = this.fetchClients.bind(this)
+
+    this.fetchJobs()
+    this.fetchClients()
+    socket.on('invalidateJobs', this.fetchJobs)
+    socket.on('invalidateClients', this.fetchClients)
 
     this.closeCreateDialog = this.closeCreateDialog.bind(this)
     this.openCreateDialog = this.openCreateDialog.bind(this)
@@ -59,6 +60,18 @@ class App extends Component {
 
   openClientDialog () {
     this.setState({ isClientDialogOpen: true })
+  }
+
+  fetchJobs () {
+    fetch('/api/job')
+      .then(res => res.json())
+      .then(jobs => this.setState({ jobs }))
+  }
+
+  fetchClients () {
+    fetch('/api/client')
+      .then(res => res.json())
+      .then(clients => this.setState({ clients }))
   }
 }
 

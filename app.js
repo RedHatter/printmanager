@@ -5,6 +5,7 @@ const body = require('koa-body')
 const serve = require('koa-static')
 const Router = require('koa-router')
 const session = require('koa-session')
+const socketIo = require('socket.io')
 
 const app = new Koa()
 const router = new Router()
@@ -18,4 +19,7 @@ app
   .use(session({ maxAge: 'session' }, app))
   .use(router.routes())
   .use(serve(path.join(__dirname, 'public')))
-  .listen(3000)
+
+let connection = http.createServer(app.callback())
+app.context.socketIo = socketIo(connection)
+connection.listen(3000)
