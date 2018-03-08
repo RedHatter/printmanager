@@ -1,4 +1,6 @@
-module.exports = {
+const moment = require('moment')
+
+const enums = {
   fold: [ 'Half Fold', 'Tri Fold', 'Custom', 'No Fold' ],
   addons: [
     "Scratcher", "Key", "Hologram Scratcher","KBB Append", "Handwriting",
@@ -20,23 +22,37 @@ module.exports = {
     '8.5 x 11 Snap Pack', '8.5 x 11 Windowed Snap Pack',
     '8 Page 11 x 17 Magazine', '8 Page 11 x 17 Newsprint', 'Die Cut'
   ],
-  artStatus: [ 'In Progress', 'Needs Revisions', 'Sent to Client', 'Approved' ],
+  artStatus: [ 'In Progress', 'Needs Revisions', 'Sent to Client', 'Approved' ]
+}
 
-  colorize (status) {
-    switch(status) {
-      case 'Approved':
-      case 'List Uploaded':
-      case 'List Pending':
-      default:
-        return 'green'
-      case 'Sent to Client':
-      case 'Count Pending':
-        return 'yellow'
-      case 'Needs Revisions':
-      case 'Incomplete':
-        return 'red'
-      case 'In Progress':
-        return undefined
-    }
+function colorize (status) {
+  switch(status) {
+    case 'Approved':
+    case 'List Uploaded':
+    case 'List Pending':
+    default:
+      return 'green'
+    case 'Sent to Client':
+    case 'Count Pending':
+      return 'yellow'
+    case 'Needs Revisions':
+    case 'Incomplete':
+      return 'red'
+    case 'In Progress':
+      return undefined
   }
 }
+
+function formatNumber (number) {
+  return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+}
+
+function formatPhone (phone) {
+  return phone ? `+1 (${phone.substring(0, 3)}) ${phone.substring(3, 6)} ${phone.substring(6)}` : ''
+}
+
+function formatDate (date) {
+  return moment(date).format('MM/DD/YYYY')
+}
+
+module.exports = { enums, colorize, formatNumber, formatPhone, formatDate }

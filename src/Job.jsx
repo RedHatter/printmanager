@@ -1,11 +1,10 @@
 import React, { Fragment } from 'react'
-import moment from 'moment'
 import classnames from 'classnames'
 
 import Collapse from './Collapse.jsx'
 import JobActions from './JobActions.jsx'
 
-import { colorize } from '../enums.js'
+import { colorize, formatNumber, formatPhone, formatDate } from '../utils.js'
 
 function Job (props) {
   let listStatus = 'Count Pending'
@@ -21,20 +20,20 @@ function Job (props) {
       <tr onClick={ props.onClick }>
         <td>{ props.model.name }</td>
         <td>{ props.model.fold } &mdash; { props.model.size }</td>
-        <td>{ props.model.quantity.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') }</td>
+        <td>{ formatNumber(props.model.quantity) }</td>
         <td>
           <span className={ classnames('statusBlock', colorize(dropStatus)) }>{ dropStatus }</span>
-          { moment(props.model.dropDate ).format('MM/DD/YYY') }
+          { formatDate(props.model.dropDate) }
         </td>
         <td>
           <span className={ classnames('statusBlock', colorize(props.model.artStatus)) }>{ props.model.artStatus }</span>
-          { moment(props.model.printDate).format('MM/DD/YYY') }
+          { formatDate(props.model.printDate) }
         </td>
         <td>
           <span className={ classnames('statusBlock', colorize(listStatus)) }>{ listStatus }</span>
           { props.model.listType }
         </td>
-        <td>{ moment(props.model.created).format('MM/DD/YYYY') }</td>
+        <td>{ formatDate(props.model.created) }</td>
         <td>{ props.model.salesman }</td>
       </tr>
       <tr>
@@ -44,35 +43,43 @@ function Job (props) {
               <tbody>
                 <tr>
                   <th>Client</th>
-                  <td></td>
-                  <th>Contact</th>
-                  <td></td>
-                </tr>
-                <tr>
-                  <th>Address</th>
-                  <td></td>
-                  <th>Phone</th>
-                  <td></td>
-                </tr>
-                <tr>
+                  <td>
+                    { props.model.client.name }
+                    <br />
+                    { props.model.client.address }
+                  </td>
                   <th>Addons</th>
                   <td>{ props.model.addons.join(', ') }</td>
-                  <th>Vendor</th>
-                  <td>{ props.model.vendor }</td>
                 </tr>
                 <tr>
-                  <th rowSpan="2">Comments</th>
-                  <td rowSpan="2">{ props.model.comments }</td>
+                  <th rowSpan="2">Contact</th>
+                  <td rowSpan="2">
+                    { props.model.client.contact.name }
+                    <br />
+                    { props.model.client.contact.email }
+                    <br />
+                    { formatPhone(props.model.client.contact.phone) }
+                  </td>
                   <th>Envelope</th>
                   <td>{ props.model.envelope }</td>
                 </tr>
                 <tr>
+                  <th>Vendor</th>
+                  <td>{ props.model.vendor }</td>
+                </tr>
+                <tr>
+                  <th>Tracking Number</th>
+                  <td>{ formatPhone(props.model.trackingNumber) }</td>
                   <th>Expiration</th>
-                  <td>{ moment(props.model.expire).format('MM/DD/YYYY') }</td>
+                  <td>{ formatDate(props.model.expire) }</td>
+                </tr>
+                <tr>
+                  <th>Comments</th>
+                  <td colSpan="3">{ props.model.comments }</td>
                 </tr>
               </tbody>
             </table>
-            <JobActions model={ props.model } />
+            <JobActions model={ props.model } clients={ props.clients } />
           </Collapse>
         </td>
       </tr>

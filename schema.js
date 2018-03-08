@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
-const enums = require('./enums.js')
+const ObjectId = Schema.Types.ObjectId
+const { enums } = require('./utils.js')
 
 mongoose.connect('mongodb://localhost/printmanager')
 mongoose.connection
@@ -13,6 +14,7 @@ const Client = mongoose.model('Client', new Schema({
     required: true,
     match: /^[A-Z]{3,5}$/
   },
+  address: { type: String, required: true },
   contact: {
     name: { type: String, required: true },
     email: {
@@ -62,7 +64,11 @@ const Job = mongoose.model('Job', new Schema({
     required: true,
     match: /^[A-Z]{3,5} \d{4}-\d+/
   },
-  // client: { type: ObjectId, ref: 'Client' },
+  client: {
+    type: ObjectId,
+    ref: 'Client',
+    required: true
+  },
   envelope: { type: String, required: true },
   size: { type: String, required: true },
   fold: {

@@ -7,7 +7,7 @@ import { DatePicker } from 'material-ui-pickers'
 import NumberFormat from 'react-number-format'
 
 import FoldPicker from './FoldPicker.jsx'
-import enums from '../enums.js'
+import { enums, colorize } from '../utils.js'
 
 class CreateModal extends Component {
   constructor (props) {
@@ -15,6 +15,7 @@ class CreateModal extends Component {
 
     this.state = {
       model: {
+        client: '',
         dropDate: null,
         printDate: null,
         expire: null,
@@ -55,19 +56,27 @@ class CreateModal extends Component {
           <Snackbar open={ this.state.errorMessage != undefined } onClose={ this.clearError } autoHideDuration={ 5000 }
             message={ this.state.errorMessage } anchorOrigin={ { vertical: 'bottom', horizontal: 'right' } } />
           <Grid container spacing={ 16 }>
+            <Grid item sm={ 12 }><Typography variant="headline" aline="left">General</Typography></Grid>
+
             { this.state.editMode && <Fragment>
-              <Grid item sm={ 12 }><Typography variant="headline" aline="left">General</Typography></Grid>
-              <Grid item sm={ 8 }>
+              <Grid item sm={ 4 }>
                 <TextField fullWidth label="Name" value={ this.state.model.name } onChange={ this.handleInputChange('name') }
                 error={ this.state.errors.name != undefined } helperText={ this.state.errors.name } />
               </Grid>
               <Grid item sm={ 4 }>
                 <TextField fullWidth value={ this.state.model.artStatus } onChange={ this.handleInputChange('artStatus') }
                   label="Art Status" select>
-                  { enums.artStatus.map(value => <MenuItem key={ value } value={ value } className={ enums.colorize(value) }>{ value }</MenuItem>) }
+                  { enums.artStatus.map(value => <MenuItem key={ value } value={ value } className={ colorize(value) }>{ value }</MenuItem>) }
                 </TextField>
               </Grid>
             </Fragment>}
+
+            <Grid item sm={ 4 }>
+              <TextField value={ this.state.model.client } onChange={ this.handleInputChange('client') } label="Client"
+                select fullWidth error={ this.state.errors.client != undefined } helperText={ this.state.errors.client }>
+                { this.props.clients.map(client => <MenuItem value={ client._id } key={ client._id }>{ client.name }</MenuItem>) }
+              </TextField>
+            </Grid>
             <Grid item sm={ 12 }><Typography variant="headline" aline="left">Dates</Typography></Grid>
             <Grid item sm={ 4 }>
               <DatePicker autoOk clearable label="Drop date" value={ this.state.model.dropDate } onChange={ this.handleValueChange('dropDate') }
@@ -188,6 +197,7 @@ class CreateModal extends Component {
 
   validate () {
     let state = { errors: {} }
+    if (!this.state.model.client) state.errors.client = 'Client is required'
     if (!this.state.model.dropDate) state.errors.dropDate = 'Drop date is required'
     if (!this.state.model.printDate) state.errors.printDate = 'Print date is required'
     if (!this.state.model.expire) state.errors.expire = 'Expire is required'
@@ -197,7 +207,7 @@ class CreateModal extends Component {
     if (!this.state.model.size) state.errors.size = 'Size is required'
     if (!this.state.model.listType) state.errors.listType = 'List type is required'
     if (!this.state.model.postage) state.errors.postage = 'Postage is required'
-    if (this.state.model.trackingNumber && !/1[0-9]{10}/.test(this.state.model.trackingNumber))
+    if (this.state.model.trackingNumber && !/^[0-9]{10}$/.test(this.state.model.trackingNumber))
       state.errors.trackingNumber = 'Tracking number must be 10 digits'
 
     if (this.state.editMode && !/^[A-Z]{3,5} \d{4}-\d+/.test(this.state.model.name))

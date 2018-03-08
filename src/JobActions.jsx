@@ -19,7 +19,7 @@ class JobActions extends Component {
     return (
       <Fragment>
         <Button onClick={ this.openEdit }>Edit</Button>
-        { this.state.editIsOpen && <CreateDialog open model={ this.props.model } onClose={ this.closeEdit } /> }
+        { this.state.editIsOpen && <CreateDialog open model={ this.props.model } clients={ this.props.clients } onClose={ this.closeEdit } /> }
       </Fragment>
     )
   }

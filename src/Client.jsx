@@ -12,6 +12,7 @@ class Client extends Component {
       model: {
         name: '',
         acronym: '',
+        address: '',
         contact: {
           name: '',
           phone: '',
@@ -64,6 +65,10 @@ class Client extends Component {
         <Grid item sm={ 3 }>
           <TextField fullWidth label="Acronym" value={ this.state.model.acronym } onChange={ this.handleAcronymChange }
             error={ this.state.errors.acronym != undefined } helperText={ this.state.errors.acronym } />
+        </Grid>
+        <Grid item sm={ 12 }>
+          <TextField fullWidth label="Address" value={ this.state.model.address } onChange={ this.handleInputChange.bind(this, [ 'address' ]) }
+            error={ this.state.errors.address != undefined } helperText={ this.state.errors.address } />
         </Grid>
         <Grid item sm={ 12 }>
           <Typography variant="headline" aline="left">Contact Information</Typography>
@@ -149,6 +154,7 @@ class Client extends Component {
     if (!this.state.model.acronym) state.errors.acronym = 'Acronym is required'
     else if (!/^[A-Z]{3,4}$/.test(this.state.model.acronym)) state.errors.acronym = 'Invalid acronym'
 
+    if (!this.state.model.address) state.errors.address = 'Address is required'
     if (!this.state.model.contact.name) state.errors.contactName = 'Contact name is required'
 
     if (!this.state.model.contact.email) state.errors.contactEmail = 'Contact email is required'

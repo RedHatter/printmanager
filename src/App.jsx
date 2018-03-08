@@ -25,7 +25,10 @@ class App extends Component {
     this.fetchJobs()
     this.fetchClients()
     socket.on('invalidateJobs', this.fetchJobs)
-    socket.on('invalidateClients', this.fetchClients)
+    socket.on('invalidateClients', () => {
+      this.fetchClients()
+      this.fetchJobs()
+    })
 
     this.closeCreateDialog = this.closeCreateDialog.bind(this)
     this.openCreateDialog = this.openCreateDialog.bind(this)
@@ -37,11 +40,11 @@ class App extends Component {
     return (
       <Paper className="app">
         <Button variant="raised" color="primary" onClick={ this.openCreateDialog }>Create Job</Button>
-        { this.state.isCreateDialogOpen && <CreateDialog onClose={ this.closeCreateDialog } /> }
+        { this.state.isCreateDialogOpen && <CreateDialog onClose={ this.closeCreateDialog } clients={ this.state.clients } /> }
 
         <Button variant="raised" color="primary" onClick={ this.openClientDialog }>Clients</Button>
         { this.state.isClientDialogOpen && <ClientDialog onClose={ this.closeClientDialog } model={ this.state.clients } /> }
-        <JobTable model={ this.state.jobs }></JobTable>
+        <JobTable model={ this.state.jobs } clients={ this.state.clients }></JobTable>
       </Paper>
     )
   }

@@ -16,7 +16,9 @@ router.post('/job', async ctx => {
       dropDate: { $gte: monthStart, $lt: monthEnd }
     })
 
-    model.name = `${moment().format('MMYY')}-${n + 1}`
+    let client = await Client.findById(model.client)
+
+    model.name = `${client.acronym} ${moment().format('MMYY')}-${n + 1}`
   }
 
   let job = new Job(model)
@@ -37,7 +39,7 @@ router.post('/job', async ctx => {
 
 router.get('/job', async ctx => {
   ctx.response.type = 'json'
-  ctx.body = await Job.find({})
+  ctx.body = await Job.find({}).populate('client').exec()
 })
 
 router.post('/job/:id', async ctx => {
