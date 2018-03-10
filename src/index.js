@@ -1,5 +1,5 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import LoginForm from './LoginForm.jsx'
+import Auth from './Auth.jsx'
 
-ReactDOM.render(<LoginForm />, document.getElementById('root'))
+ReactDOM.render(<Auth />, document.getElementById('root'))

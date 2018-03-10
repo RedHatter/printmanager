@@ -37,6 +37,9 @@ class App extends Component {
   }
 
   render () {
+    if (this.props.authState != 'signedIn')
+      return null
+
     return (
       <Paper className="app">
         <Button variant="raised" color="primary" onClick={ this.openCreateDialog }>Create Job</Button>
@@ -79,6 +82,9 @@ class App extends Component {
 }
 
 <style>
+  @import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+  @import url("https://fonts.googleapis.com/css?family=Roboto:300,400,500");
+
   body {
     font-family: 'Roboto', sans-serif;
     background-color: #F2F3F4;
