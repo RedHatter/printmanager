@@ -33,7 +33,7 @@ class JobTable extends Component {
         <ClickAwayListener onClickAway={ this.handleClose }>
           <tbody>
             { this.props.model.map(o => (
-              <Job key={ o._id } model={ o } clients={ this.props.clients }
+              <Job key={ o._id } model={ o } clients={ this.props.clients } salesmen={ this.props.salesmen }
                 isOpen={ this.state.openId == o._id } onClick={ this.toggle.bind(this, o._id) } />
             )) }
           </tbody>

@@ -1,6 +1,7 @@
 import io from 'socket.io-client'
 import React, { Component } from 'react'
 import { Paper, Button } from 'material-ui'
+import AWS from 'aws-sdk'
 
 import JobTable from './JobTable.jsx'
 import CreateDialog from './CreateDialog.jsx'
@@ -15,6 +16,7 @@ class App extends Component {
     this.state = {
       jobs: [],
       clients: [],
+      salesmen: [],
       isCreateDialogOpen: false,
       isClientDialogOpen: false
     }
@@ -30,6 +32,44 @@ class App extends Component {
       this.fetchJobs()
     })
 
+    // Retrieve salesmen from cognito
+    let cognito = new AWS.CognitoIdentityServiceProvider({
+      region: 'us-west-2',
+      accessKeyId: 'AKIAIRGJBHTLFGNYSQVA',
+      secretAccessKey: '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'
+    })
+    cognito.listUsersInGroup({
+      GroupName: 'Salesmen',
+      UserPoolId: 'us-west-2_dQ6iTiYI4'
+    }, (err, data) => {
+      if (err) {
+        console.log(err, err.stack)
+        return
+      }
+
+      let salesmen = {}
+      for (let user of data.Users) {
+        let salesman = {}
+
+        for (let attr of user.Attributes) {
+          switch (attr.Name) {
+            case 'email':
+              salesman.email = attr.Value
+              break
+            case 'given_name':
+              salesman.name = attr.Value
+              break
+            case 'phone_number':
+              salesman.phoneNumber = attr.Value
+          }
+        }
+
+        salesmen[user.Username] = salesman
+      }
+
+      this.setState({ salesmen })
+    });
+
     this.closeCreateDialog = this.closeCreateDialog.bind(this)
     this.openCreateDialog = this.openCreateDialog.bind(this)
     this.closeClientDialog = this.closeClientDialog.bind(this)
@@ -43,11 +83,11 @@ class App extends Component {
     return (
       <Paper className="app">
         <Button variant="raised" color="primary" onClick={ this.openCreateDialog }>Create Job</Button>
-        { this.state.isCreateDialogOpen && <CreateDialog onClose={ this.closeCreateDialog } clients={ this.state.clients } /> }
+        { this.state.isCreateDialogOpen && <CreateDialog onClose={ this.closeCreateDialog } clients={ this.state.clients } salesmen={ this.state.salesmen } /> }
 
         <Button variant="raised" color="primary" onClick={ this.openClientDialog }>Clients</Button>
-        { this.state.isClientDialogOpen && <ClientDialog onClose={ this.closeClientDialog } model={ this.state.clients } /> }
-        <JobTable model={ this.state.jobs } clients={ this.state.clients }></JobTable>
+        { this.state.isClientDialogOpen && <ClientDialog onClose={ this.closeClientDialog } model={ this.state.clients } salesmen={ this.state.salesmen } /> }
+        <JobTable model={ this.state.jobs } clients={ this.state.clients } salesmen={ this.state.salesmen }></JobTable>
       </Paper>
     )
   }

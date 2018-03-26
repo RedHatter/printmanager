@@ -13,8 +13,8 @@ import SignIn from './SignIn.jsx'
 Amplify.configure({
   Auth: {
     region: 'us-west-2',
-    userPoolId: 'us-west-2_EFMtIXlnr',
-    userPoolWebClientId: '7irmvcapun4vembvh8kf52l961'
+    userPoolId: 'us-west-2_dQ6iTiYI4',
+    userPoolWebClientId: 'tvlsfbfcqdipq9j651vhuc387'
     // mandatorySignIn: false,
   }
 })

@@ -86,7 +86,7 @@ const Job = mongoose.model('Job', new Schema({
     required: true,
     enum: enums.listType
   },
-  // salesman: { type: ObjectId, ref: 'User' },
+  salesman: { type: String, required: true },
   postage: {
     type: String,
     required: true,

@@ -34,7 +34,7 @@ function Job (props) {
           { props.model.listType }
         </td>
         <td>{ formatDate(props.model.created) }</td>
-        <td>{ props.model.salesman }</td>
+        <td>{ props.salesmen[props.model.salesman] ? props.salesmen[props.model.salesman].name : '' }</td>
       </tr>
       <tr>
         <td colSpan="10">
@@ -79,7 +79,7 @@ function Job (props) {
                 </tr>
               </tbody>
             </table>
-            <JobActions model={ props.model } clients={ props.clients } />
+            <JobActions model={ props.model } clients={ props.clients } salesmen={ props.salesmen } />
           </Collapse>
         </td>
       </tr>

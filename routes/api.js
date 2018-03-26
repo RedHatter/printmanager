@@ -12,7 +12,7 @@ router.post('/job', async ctx => {
     let monthEnd = moment(monthStart).endOf('month').toDate()
 
     let n = await Job.count({
-      // client: data.client
+      client: data.client,
       dropDate: { $gte: monthStart, $lt: monthEnd }
     })
 

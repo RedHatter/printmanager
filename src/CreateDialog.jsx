@@ -16,6 +16,7 @@ class CreateModal extends Component {
     this.state = {
       model: {
         client: '',
+        salesman: '',
         dropDate: null,
         printDate: null,
         expire: null,
@@ -37,6 +38,7 @@ class CreateModal extends Component {
 
     if (props.model) {
       this.state.model = JSON.parse(JSON.stringify(props.model))
+      this.state.model.client = this.state.model.client._id
       this.state.editMode = true
     }
 
@@ -59,11 +61,11 @@ class CreateModal extends Component {
             <Grid item sm={ 12 }><Typography variant="headline" aline="left">General</Typography></Grid>
 
             { this.state.editMode && <Fragment>
-              <Grid item sm={ 4 }>
+              <Grid item sm={ 6 }>
                 <TextField fullWidth label="Name" value={ this.state.model.name } onChange={ this.handleInputChange('name') }
                 error={ this.state.errors.name != undefined } helperText={ this.state.errors.name } />
               </Grid>
-              <Grid item sm={ 4 }>
+              <Grid item sm={ 6 }>
                 <TextField fullWidth value={ this.state.model.artStatus } onChange={ this.handleInputChange('artStatus') }
                   label="Art Status" select>
                   { enums.artStatus.map(value => <MenuItem key={ value } value={ value } className={ colorize(value) }>{ value }</MenuItem>) }
@@ -71,10 +73,16 @@ class CreateModal extends Component {
               </Grid>
             </Fragment>}
 
-            <Grid item sm={ 4 }>
+            <Grid item sm={ 6 }>
               <TextField value={ this.state.model.client } onChange={ this.handleInputChange('client') } label="Client"
                 select fullWidth error={ this.state.errors.client != undefined } helperText={ this.state.errors.client }>
                 { this.props.clients.map(client => <MenuItem value={ client._id } key={ client._id }>{ client.name }</MenuItem>) }
+              </TextField>
+            </Grid>
+            <Grid item sm={ 6 }>
+              <TextField value={ this.state.model.salesman } onChange={ this.handleInputChange('salesman') } label="Salesman"
+                select fullWidth error={ this.state.errors.salesman != undefined } helperText={ this.state.errors.salesman }>
+                { Object.entries(this.props.salesmen).map(([id, attributes]) => <MenuItem value={ id } key={ id }>{ attributes.name }</MenuItem>) }
               </TextField>
             </Grid>
             <Grid item sm={ 12 }><Typography variant="headline" aline="left">Dates</Typography></Grid>
@@ -197,6 +205,7 @@ class CreateModal extends Component {
 
   validate () {
     let state = { errors: {} }
+    if (!this.state.model.salesman) state.errors.salesman = 'Salesman is required'
     if (!this.state.model.client) state.errors.client = 'Client is required'
     if (!this.state.model.dropDate) state.errors.dropDate = 'Drop date is required'
     if (!this.state.model.printDate) state.errors.printDate = 'Print date is required'
