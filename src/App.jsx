@@ -1,7 +1,10 @@
 import io from 'socket.io-client'
 import React, { Component } from 'react'
-import { Paper, Button } from 'material-ui'
+import { Paper, Button, AppBar, Toolbar } from 'material-ui'
 import AWS from 'aws-sdk'
+import { Auth } from 'aws-amplify'
+import MomentUtils from 'material-ui-pickers/utils/moment-utils'
+import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsProvider'
 
 import JobTable from './JobTable.jsx'
 import CreateDialog from './CreateDialog.jsx'
@@ -74,22 +77,37 @@ class App extends Component {
     this.openCreateDialog = this.openCreateDialog.bind(this)
     this.closeClientDialog = this.closeClientDialog.bind(this)
     this.openClientDialog = this.openClientDialog.bind(this)
+    this.handleSignOut = this.handleSignOut.bind(this)
   }
 
   render () {
-    if (this.props.authState != 'signedIn')
-      return null
-
     return (
-      <Paper className="app">
-        <Button variant="raised" color="primary" onClick={ this.openCreateDialog }>Create Job</Button>
-        { this.state.isCreateDialogOpen && <CreateDialog onClose={ this.closeCreateDialog } clients={ this.state.clients } salesmen={ this.state.salesmen } /> }
+      <MuiPickersUtilsProvider utils={ MomentUtils }>
+        <AppBar position="static" color="default">
+          <Toolbar>
+            <img src="/images/logo.png" />
+            <div className="header-button-container">
+              { this.props.authData && this.props.authData.email }
+              <Button onClick={ this.handleSignOut }>Sign Out</Button>
+            </div>
+          </Toolbar>
+        </AppBar>
+        <Paper className="app">
+          <Button variant="raised" color="primary" onClick={ this.openCreateDialog }>Create Job</Button>
+          { this.state.isCreateDialogOpen && <CreateDialog onClose={ this.closeCreateDialog } clients={ this.state.clients } salesmen={ this.state.salesmen } /> }
 
-        <Button variant="raised" color="primary" onClick={ this.openClientDialog }>Clients</Button>
-        { this.state.isClientDialogOpen && <ClientDialog onClose={ this.closeClientDialog } model={ this.state.clients } salesmen={ this.state.salesmen } /> }
-        <JobTable model={ this.state.jobs } clients={ this.state.clients } salesmen={ this.state.salesmen }></JobTable>
-      </Paper>
+          <Button variant="raised" color="primary" onClick={ this.openClientDialog }>Clients</Button>
+          { this.state.isClientDialogOpen && <ClientDialog onClose={ this.closeClientDialog } model={ this.state.clients } salesmen={ this.state.salesmen } /> }
+          <JobTable model={ this.state.jobs } clients={ this.state.clients } salesmen={ this.state.salesmen }></JobTable>
+        </Paper>
+      </MuiPickersUtilsProvider>
     )
+  }
+
+  handleSignOut () {
+    Auth.signOut()
+      .then(() => this.props.onStateChange('signIn'))
+      .catch(console.error)
   }
 
   closeCreateDialog () {
@@ -122,9 +140,6 @@ class App extends Component {
 }
 
 <style>
-  @import url("https://fonts.googleapis.com/icon?family=Material+Icons");
-  @import url("https://fonts.googleapis.com/css?family=Roboto:300,400,500");
-
   body {
     font-family: 'Roboto', sans-serif;
     background-color: #F2F3F4;

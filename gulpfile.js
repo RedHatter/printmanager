@@ -4,6 +4,7 @@ const source = require('vinyl-source-stream')
 const buffer = require('vinyl-buffer')
 const rename = require('gulp-rename')
 const raster = require('gulp-raster')
+const concat = require('gulp-concat')
 const newer = require('gulp-newer')
 const gulp = require('gulp')
 const open = require("open")
@@ -55,9 +56,18 @@ function javascript () {
     .pipe(gulp.dest('./public'))
 }
 
+function styles () {
+  return gulp.src([
+    './public/styles.css',
+    './node_modules/material-ui-utils/build/styles.css'
+  ])
+    .pipe(concat('styles.css'))
+    .pipe(gulp.dest('./public/'))
+}
+
 gulp.task('clean', () => del([ './public/**', '!./public/index.html' ]))
 
-gulp.task('default', gulp.parallel(javascript, svg))
+gulp.task('default', gulp.parallel(gulp.series(javascript, styles), svg))
 
 gulp.task('watch', gulp.parallel('default', () => {
   gulp.watch('src/**/*.{js,jsx}', javascript)

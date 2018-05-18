@@ -1,5 +1,16 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import Auth from './Auth.jsx'
+import Amplify from 'aws-amplify'
+import { Authenticator } from 'material-ui-utils'
 
-ReactDOM.render(<Auth />, document.getElementById('root'))
+import App from './App.jsx'
+
+ReactDOM.render((
+  <Authenticator configure={ {
+    region: 'us-west-2',
+    userPoolId: 'us-west-2_dQ6iTiYI4',
+    userPoolWebClientId: 'tvlsfbfcqdipq9j651vhuc387'
+  } } logo={ <img src="/images/logo.png" /> }>
+    <App />
+  </Authenticator>
+), document.getElementById('root'))

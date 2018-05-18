@@ -1,5 +1,6 @@
-import React, { Component, Fragment } from 'react'
-import { Button, TextField, Grid, Typography, Snackbar } from 'material-ui'
+import React, { Component } from 'react'
+import { Button, Grid, Typography, Snackbar } from 'material-ui'
+import { Form, TextField } from 'material-ui-utils'
 import NumberFormat from 'react-number-format'
 
 
@@ -8,7 +9,6 @@ class Client extends Component {
     super(props)
 
     this.initalState = {
-      errors: '',
       model: {
         name: '',
         acronym: '',
@@ -35,6 +35,8 @@ class Client extends Component {
 
     this.handleSave = this.handleSave.bind(this)
     this.clearMessage = this.clearMessage.bind(this)
+    this.handleValid = this.handleValid.bind(this)
+    this.handleInvalid = this.handleInvalid.bind(this)
     this.handleAcronymChange = this.handleAcronymChange.bind(this)
   }
 
@@ -51,7 +53,7 @@ class Client extends Component {
   }
 
   render () {
-    return (<Fragment>
+    return (<Form onSubmit={ this.handleSave } onValid={ this.handleValid } onInvalid={ this.handleInvalid } >
       <Snackbar open={ this.state.message != undefined } onClose={ this.clearMessage } autoHideDuration={ 5000 }
         message={ this.state.message } anchorOrigin={ { vertical: 'bottom', horizontal: 'right' } } />
       <Grid container spacing={ 16 } className="client">
@@ -59,66 +61,63 @@ class Client extends Component {
           <Typography variant="headline" aline="left">General</Typography>
         </Grid>
         <Grid item sm={ 9 }>
-          <TextField fullWidth label="Name" value={ this.state.model.name } onChange={ this.handleInputChange.bind(this, [ 'name' ]) }
-            error={ this.state.errors.name != undefined } helperText={ this.state.errors.name } />
+          <TextField fullWidth label="Name" value={ this.state.model.name } onChange={ this.handleInputChange.bind(this, [ 'name' ]) } required />
         </Grid>
         <Grid item sm={ 3 }>
-          <TextField fullWidth label="Acronym" value={ this.state.model.acronym } onChange={ this.handleAcronymChange }
-            error={ this.state.errors.acronym != undefined } helperText={ this.state.errors.acronym } />
+          <TextField fullWidth label="Acronym" value={ this.state.model.acronym } onChange={ this.handleAcronymChange } required />
         </Grid>
         <Grid item sm={ 12 }>
-          <TextField fullWidth label="Address" value={ this.state.model.address } onChange={ this.handleInputChange.bind(this, [ 'address' ]) }
-            error={ this.state.errors.address != undefined } helperText={ this.state.errors.address } />
+          <TextField fullWidth label="Address" value={ this.state.model.address } onChange={ this.handleInputChange.bind(this, [ 'address' ]) } required />
         </Grid>
         <Grid item sm={ 12 }>
           <Typography variant="headline" aline="left">Contact Information</Typography>
         </Grid>
         <Grid item sm={ 6 }>
-          <TextField fullWidth label="Name" value={ this.state.model.contact.name } onChange={ this.handleInputChange.bind(this, [ 'contact', 'name' ]) }
-            error={ this.state.errors.contactName != undefined } helperText={ this.state.errors.contactName } />
+          <TextField fullWidth label="Name" value={ this.state.model.contact.name } onChange={ this.handleInputChange.bind(this, [ 'contact', 'name' ]) } required />
         </Grid>
         <Grid item sm={ 6 }>
-          <NumberFormat fullWidth customInput={ TextField } label="Phone" format="+1 (###) ### ####" isNumericString type="tel"
-            value={ this.state.model.contact.phone } onValueChange={ this.handleNumericChange.bind(this, [ 'contact', 'phone' ]) }
-            error={ this.state.errors.contactPhone != undefined } helperText={ this.state.errors.contactPhone } />
+          <NumberFormat fullWidth customInput={ TextField } label="Phone" format="+1 (###) ### ####" isNumericString type="tel" pattern={ /^\d{10}$/ }
+            value={ this.state.model.contact.phone } onValueChange={ this.handleNumericChange.bind(this, [ 'contact', 'phone' ]) } required />
         </Grid>
         <Grid item sm={ 12 }>
-          <TextField fullWidth label="Email" value={ this.state.model.contact.email } onChange={ this.handleInputChange.bind(this, [ 'contact', 'email' ]) }
-            error={ this.state.errors.contactEmail != undefined } helperText={ this.state.errors.contactEmail } />
+          <TextField fullWidth label="Email" value={ this.state.model.contact.email } onChange={ this.handleInputChange.bind(this, [ 'contact', 'email' ]) } required />
         </Grid>
         <Grid item sm={ 12 }>
           <Typography variant="headline" aline="left">Call Tracking Numbers</Typography>
         </Grid>
         <Grid item sm={ 4 }>
-          <NumberFormat customInput={ TextField } label="Database" format="+1 (###) ### ####" isNumericString type="tel"
-            value={ this.state.model.trackingNumbers.database } onValueChange={ this.handleNumericChange.bind(this, [ 'trackingNumbers', 'database' ]) }
-            error={ this.state.errors.trackingNumbersDatabase != undefined } helperText={ this.state.errors.trackingNumbersDatabase } />
+          <NumberFormat customInput={ TextField } label="Database" format="+1 (###) ### ####" isNumericString type="tel" pattern={ /^\d{10}$/ }
+            value={ this.state.model.trackingNumbers.database } onValueChange={ this.handleNumericChange.bind(this, [ 'trackingNumbers', 'database' ]) } required />
         </Grid>
         <Grid item sm={ 4 }>
-          <NumberFormat customInput={ TextField } label="Saturation" format="+1 (###) ### ####" isNumericString type="tel"
-            value={ this.state.model.trackingNumbers.saturation } onValueChange={ this.handleNumericChange.bind(this, [ 'trackingNumbers', 'saturation' ]) }
-            error={ this.state.errors.trackingNumbersSaturation != undefined } helperText={ this.state.errors.trackingNumbersSaturation } />
+          <NumberFormat customInput={ TextField } label="Saturation" format="+1 (###) ### ####" isNumericString type="tel" pattern={ /^\d{10}$/ }
+            value={ this.state.model.trackingNumbers.saturation } onValueChange={ this.handleNumericChange.bind(this, [ 'trackingNumbers', 'saturation' ]) } required />
         </Grid>
         <Grid item sm={ 4 }>
-          <NumberFormat customInput={ TextField } label="Bankruptcy" format="+1 (###) ### ####" isNumericString type="tel"
-            value={ this.state.model.trackingNumbers.bankruptcy } onValueChange={ this.handleNumericChange.bind(this, [ 'trackingNumbers', 'bankruptcy' ]) }
-            error={ this.state.errors.trackingNumbersBankruptcy != undefined } helperText={ this.state.errors.trackingNumbersBankruptcy } />
+          <NumberFormat customInput={ TextField } label="Bankruptcy" format="+1 (###) ### ####" isNumericString type="tel" pattern={ /^\d{10}$/ }
+            value={ this.state.model.trackingNumbers.bankruptcy } onValueChange={ this.handleNumericChange.bind(this, [ 'trackingNumbers', 'bankruptcy' ]) } required />
         </Grid>
         <Grid item sm={ 4 }>
-          <NumberFormat customInput={ TextField } label="Credit" format="+1 (###) ### ####" isNumericString type="tel"
-            value={ this.state.model.trackingNumbers.credit } onValueChange={ this.handleNumericChange.bind(this, [ 'trackingNumbers', 'credit' ]) }
-            error={ this.state.errors.trackingNumbersCredit != undefined } helperText={ this.state.errors.trackingNumbersCredit } />
+          <NumberFormat customInput={ TextField } label="Credit" format="+1 (###) ### ####" isNumericString type="tel" pattern={ /^\d{10}$/ }
+            value={ this.state.model.trackingNumbers.credit } onValueChange={ this.handleNumericChange.bind(this, [ 'trackingNumbers', 'credit' ]) } required />
         </Grid>
         <Grid item sm={ 4 }>
-          <NumberFormat customInput={ TextField } label="Conquest" format="+1 (###) ### ####" isNumericString type="tel"
-            value={ this.state.model.trackingNumbers.conquest } onValueChange={ this.handleNumericChange.bind(this, [ 'trackingNumbers', 'conquest' ]) }
-            error={ this.state.errors.trackingNumbersConquest != undefined } helperText={ this.state.errors.trackingNumbersConquest } />
+          <NumberFormat customInput={ TextField } label="Conquest" format="+1 (###) ### ####" isNumericString type="tel" pattern={ /^\d{10}$/ }
+            value={ this.state.model.trackingNumbers.conquest } onValueChange={ this.handleNumericChange.bind(this, [ 'trackingNumbers', 'conquest' ]) } required />
         </Grid>
         <Grid item sm={ 12 }>
-          <Button onClick={ this.handleSave } className="client-save-button" disabled={ this.state.submitDisabled }>Save</Button>
+          <Button type="submit" className="client-save-button" disabled={ this.state.submitDisabled }>Save</Button>
         </Grid>
       </Grid>
-    </Fragment>)
+    </Form>)
+  }
+
+  handleValid () {
+    this.setState({ submitDisabled: false })
+  }
+
+  handleInvalid () {
+    this.setState({ submitDisabled: true })
   }
 
   handleAcronymChange (e) {
@@ -143,45 +142,7 @@ class Client extends Component {
       obj[path[0]] = value
 
       return { model }
-    }, () => this.state.submitDisabled && this.validate())
-  }
-
-  validate () {
-    let state = { errors: {} }
-
-    if (!this.state.model.name) state.errors.name = 'Client name is required'
-
-    if (!this.state.model.acronym) state.errors.acronym = 'Acronym is required'
-    else if (!/^[A-Z]{3,4}$/.test(this.state.model.acronym)) state.errors.acronym = 'Invalid acronym'
-
-    if (!this.state.model.address) state.errors.address = 'Address is required'
-    if (!this.state.model.contact.name) state.errors.contactName = 'Contact name is required'
-
-    if (!this.state.model.contact.email) state.errors.contactEmail = 'Contact email is required'
-    else if (!/^.+@.+\..+$/.test(this.state.model.contact.email)) state.errors.contactEmail = 'Invalid email'
-
-    if (!this.state.model.contact.phone) state.errors.contactPhone = 'Contact phone is required'
-    else if (!/^\d{10}$/.test(this.state.model.contact.phone)) state.errors.contactPhone = 'Invalid phone number'
-
-    if (!this.state.model.trackingNumbers.database) state.errors.trackingNumbersDatabase = 'Database is required'
-    else if (!/^\d{10}$/.test(this.state.model.trackingNumbers.database)) state.errors.trackingNumbersDatabase = 'Invalid phone number'
-
-    if (!this.state.model.trackingNumbers.saturation) state.errors.trackingNumbersSaturation = 'Saturation is required'
-    else if (!/^\d{10}$/.test(this.state.model.trackingNumbers.saturation)) state.errors.trackingNumbersSaturation = 'Invalid phone number'
-
-    if (!this.state.model.trackingNumbers.bankruptcy) state.errors.trackingNumbersBankruptcy = 'Bankruptcy is required'
-    else if (!/^\d{10}$/.test(this.state.model.trackingNumbers.bankruptcy)) state.errors.trackingNumbersBankruptcy = 'Invalid phone number'
-
-    if (!this.state.model.trackingNumbers.credit) state.errors.trackingNumbersCredit = 'Credit is required'
-    else if (!/^\d{10}$/.test(this.state.model.trackingNumbers.credit)) state.errors.trackingNumbersCredit = 'Invalid phone number'
-
-    if (!this.state.model.trackingNumbers.conquest) state.errors.trackingNumbersConquest = 'Conquest is required'
-    else if (!/^\d{10}$/.test(this.state.model.trackingNumbers.conquest)) state.errors.trackingNumbersConquest = 'Invalid phone number'
-
-    state.submitDisabled = Object.keys(state.errors).length > 0
-    this.setState(state)
-
-    return !state.submitDisabled
+    })
   }
 
   handleSave () {
