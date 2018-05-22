@@ -10,7 +10,8 @@
     "build": "gulp"
   },
   "dependencies": {
-    "aws-amplify": "^0.2.9",
+    "aws-amplify": "^0.4.1",
+    "aws-sdk": "^2.211.0",
     "classnames": "^2.2.5",
     "dateformat": "^3.0.2",
     "koa": "^2.3.0",
@@ -18,8 +19,6 @@
     "koa-router": "^7.2.1",
     "koa-session": "^5.4.0",
     "koa-static": "^4.0.1",
-    "material-ui": "^1.0.0-beta.34",
-    "material-ui-pickers": "^1.0.0-beta.15.1",
     "moment": "^2.20.1",
     "mongoose": "^5.0.6",
     "nodemailer": "^4.1.1",
@@ -29,12 +28,13 @@
     "socket.io": "^2.0.3"
   },
   "devDependencies": {
+    "@material-ui/core": "^1.0.0",
     "babel-core": "^6.26.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
     "babelify": "^8.0.0",
-    "browserify": "^14.4.0",
+    "browserify": "^16.2.2",
     "collectify": "^1.1.0",
     "del": "^3.0.0",
     "freedesktop-notifications": "^1.2.2",
@@ -45,6 +45,7 @@
     "gulp-rename": "^1.2.2",
     "gulp-sourcemaps": "^2.6.4",
     "gulp-tap": "^1.0.1",
+    "material-ui-pickers": "^1.0.0-rc.9",
     "material-ui-utils": "../material-ui-utils/",
     "open": "0.0.5",
     "vinyl-buffer": "^1.0.1",

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import {
   Dialog, DialogContent, DialogActions, Icon,
   Tabs, Tab, Button, TextField, Grid, Typography
-} from 'material-ui'
+} from '@material-ui/core'
 
 import Client from './Client.jsx'
 

@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react'
 import {
   Dialog, DialogContent, DialogActions, Grid, Snackbar,
   Button, Input, MenuItem, Checkbox, ListItemText, Typography
-} from 'material-ui'
+} from '@material-ui/core'
 import { DatePicker } from 'material-ui-pickers'
 import { Form, TextField } from 'material-ui-utils'
 import NumberFormat from 'react-number-format'

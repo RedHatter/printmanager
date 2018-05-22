@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import { ClickAwayListener  } from 'material-ui'
+import { ClickAwayListener  } from '@material-ui/core'
 
 import Job from './Job.jsx'
 

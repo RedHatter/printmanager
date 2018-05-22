@@ -1,6 +1,6 @@
 import io from 'socket.io-client'
-import React, { Component } from 'react'
-import { Paper, Button, AppBar, Toolbar } from 'material-ui'
+import React, { Component, Fragment } from 'react'
+import { Paper, Button, AppBar, Toolbar } from '@material-ui/core'
 import AWS from 'aws-sdk'
 import { Auth } from 'aws-amplify'
 import MomentUtils from 'material-ui-pickers/utils/moment-utils'
@@ -83,23 +83,25 @@ class App extends Component {
   render () {
     return (
       <MuiPickersUtilsProvider utils={ MomentUtils }>
-        <AppBar position="static" color="default">
-          <Toolbar>
-            <img src="/images/logo.png" />
-            <div className="header-button-container">
-              { this.props.authData && this.props.authData.email }
-              <Button onClick={ this.handleSignOut }>Sign Out</Button>
-            </div>
-          </Toolbar>
-        </AppBar>
-        <Paper className="app">
-          <Button variant="raised" color="primary" onClick={ this.openCreateDialog }>Create Job</Button>
-          { this.state.isCreateDialogOpen && <CreateDialog onClose={ this.closeCreateDialog } clients={ this.state.clients } salesmen={ this.state.salesmen } /> }
+        <Fragment>
+          <AppBar position="static" color="default">
+            <Toolbar>
+              <img src="/images/logo.png" />
+              <div className="header-button-container">
+                { this.props.authData && this.props.authData.email }
+                <Button onClick={ this.handleSignOut }>Sign Out</Button>
+              </div>
+            </Toolbar>
+          </AppBar>
+          <Paper className="app">
+            <Button variant="raised" color="primary" onClick={ this.openCreateDialog }>Create Job</Button>
+            { this.state.isCreateDialogOpen && <CreateDialog onClose={ this.closeCreateDialog } clients={ this.state.clients } salesmen={ this.state.salesmen } /> }
 
-          <Button variant="raised" color="primary" onClick={ this.openClientDialog }>Clients</Button>
-          { this.state.isClientDialogOpen && <ClientDialog onClose={ this.closeClientDialog } model={ this.state.clients } salesmen={ this.state.salesmen } /> }
-          <JobTable model={ this.state.jobs } clients={ this.state.clients } salesmen={ this.state.salesmen }></JobTable>
-        </Paper>
+            <Button variant="raised" color="primary" onClick={ this.openClientDialog }>Clients</Button>
+            { this.state.isClientDialogOpen && <ClientDialog onClose={ this.closeClientDialog } model={ this.state.clients } salesmen={ this.state.salesmen } /> }
+            <JobTable model={ this.state.jobs } clients={ this.state.clients } salesmen={ this.state.salesmen }></JobTable>
+          </Paper>
+        </Fragment>
       </MuiPickersUtilsProvider>
     )
   }

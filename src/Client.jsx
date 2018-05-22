@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, Grid, Typography, Snackbar } from 'material-ui'
+import { Button, Grid, Typography, Snackbar } from '@material-ui/core'
 import { Form, TextField } from 'material-ui-utils'
 import NumberFormat from 'react-number-format'
 

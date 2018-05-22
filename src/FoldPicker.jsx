@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import { Dialog, DialogContent, TextField, Grid } from 'material-ui'
+import { Dialog, DialogContent, TextField, Grid } from '@material-ui/core'
 import classnames from 'classnames'
 
 class FoldPicker extends Component {
