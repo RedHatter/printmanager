@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
+import autobind from 'autobind-decorator'
 
+@autobind
 class Collapse extends Component {
   constructor (props) {
     super(props)
 
     this.state = { height: 0 }
-
-    this.measure = this.measure.bind(this)
   }
 
   render () {

@@ -1,5 +1,6 @@
 import io from 'socket.io-client'
 import React, { Component, Fragment } from 'react'
+import autobind from 'autobind-decorator'
 import { Paper, Button, AppBar, Toolbar } from '@material-ui/core'
 import AWS from 'aws-sdk'
 import { Auth } from 'aws-amplify'
@@ -12,6 +13,7 @@ import ClientDialog from './ClientDialog.jsx'
 
 const socket = io()
 
+@autobind
 class App extends Component {
   constructor (props) {
     super(props)
@@ -72,12 +74,6 @@ class App extends Component {
 
       this.setState({ salesmen })
     });
-
-    this.closeCreateDialog = this.closeCreateDialog.bind(this)
-    this.openCreateDialog = this.openCreateDialog.bind(this)
-    this.closeClientDialog = this.closeClientDialog.bind(this)
-    this.openClientDialog = this.openClientDialog.bind(this)
-    this.handleSignOut = this.handleSignOut.bind(this)
   }
 
   render () {

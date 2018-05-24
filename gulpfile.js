@@ -44,7 +44,8 @@ function javascript () {
         "react"
       ],
       "plugins": [
-        "babel-plugin-transform-object-rest-spread"
+        "transform-decorators-legacy",
+        "transform-object-rest-spread"
       ],
       sourceMaps: true
     })
@@ -65,7 +66,7 @@ function styles () {
     .pipe(gulp.dest('./public/'))
 }
 
-gulp.task('clean', () => del([ './public/**', '!./public/index.html' ]))
+gulp.task('clean', () => del([ './public/**', '!./public', '!./public/index.html' ]))
 
 gulp.task('default', gulp.parallel(gulp.series(javascript, styles), svg))
 

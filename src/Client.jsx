@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
+import autobind from 'autobind-decorator'
 import { Button, Grid, Typography, Snackbar } from '@material-ui/core'
 import { Form, TextField } from 'material-ui-utils'
 import NumberFormat from 'react-number-format'
 
-
+@autobind
 class Client extends Component {
   constructor (props) {
     super(props)
@@ -32,12 +33,6 @@ class Client extends Component {
 
     if (props.model)
       this.state.model = JSON.parse(JSON.stringify(props.model))
-
-    this.handleSave = this.handleSave.bind(this)
-    this.clearMessage = this.clearMessage.bind(this)
-    this.handleValid = this.handleValid.bind(this)
-    this.handleInvalid = this.handleInvalid.bind(this)
-    this.handleAcronymChange = this.handleAcronymChange.bind(this)
   }
 
   componentWillReceiveProps (nextProps) {

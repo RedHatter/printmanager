@@ -1,15 +1,14 @@
 import React, { Component, Fragment } from 'react'
+import autobind from 'autobind-decorator'
 import { Dialog, DialogContent, TextField, Grid } from '@material-ui/core'
 import classnames from 'classnames'
 
+@autobind
 class FoldPicker extends Component {
   constructor (props) {
     super(props)
 
     this.state = { isOpen: false }
-
-    this.handleOpen = this.handleOpen.bind(this)
-    this.handleOnClick = this.handleOnClick.bind(this)
   }
 
   render () {

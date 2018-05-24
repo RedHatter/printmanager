@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react'
+import autobind from 'autobind-decorator'
 import {
   Dialog, DialogContent, DialogActions, Grid, Snackbar,
   Button, Input, MenuItem, Checkbox, ListItemText, Typography
@@ -10,6 +11,7 @@ import NumberFormat from 'react-number-format'
 import FoldPicker from './FoldPicker.jsx'
 import { enums, colorize } from '../utils.js'
 
+@autobind
 class CreateModal extends Component {
   constructor (props) {
     super(props)
@@ -41,15 +43,6 @@ class CreateModal extends Component {
       this.state.model.client = this.state.model.client._id
       this.state.editMode = true
     }
-
-    this.handleChange = this.handleChange.bind(this)
-    this.handleValueChange = this.handleValueChange.bind(this)
-    this.handleInputChange = this.handleInputChange.bind(this)
-    this.handleNumericChange = this.handleNumericChange.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
-    this.clearError = this.clearError.bind(this)
-    this.handleValid = this.handleValid.bind(this)
-    this.handleInvalid = this.handleInvalid.bind(this)
   }
 
   render () {

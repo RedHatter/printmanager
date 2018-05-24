@@ -1,8 +1,10 @@
 import React, { Component, Fragment } from 'react'
+import autobind from 'autobind-decorator'
 import { withStyles, Button } from '@material-ui/core'
 
 import CreateDialog from './CreateDialog.jsx'
 
+@autobind
 class JobActions extends Component {
   constructor (props) {
     super(props)
@@ -10,9 +12,6 @@ class JobActions extends Component {
     this.state = {
       editIsOpen: false
     }
-
-    this.openEdit = this.openEdit.bind(this)
-    this.closeEdit = this.closeEdit.bind(this)
   }
 
   render () {

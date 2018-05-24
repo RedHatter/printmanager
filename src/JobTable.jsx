@@ -1,16 +1,16 @@
 import React, { Component } from 'react'
+import autobind from 'autobind-decorator'
 
 import { ClickAwayListener  } from '@material-ui/core'
 
 import Job from './Job.jsx'
 
+@autobind
 class JobTable extends Component {
   constructor (props) {
     super(props)
 
     this.state = { openId: false }
-
-    this.handleClose = this.handleClose.bind(this)
   }
 
   render () {

@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import autobind from 'autobind-decorator'
 import {
   Dialog, DialogContent, DialogActions, Icon,
   Tabs, Tab, Button, TextField, Grid, Typography
@@ -6,6 +7,7 @@ import {
 
 import Client from './Client.jsx'
 
+@autobind
 class ClientDialog extends Component {
   constructor (props) {
     super(props)
@@ -13,8 +15,6 @@ class ClientDialog extends Component {
     this.state = {
       selectedTab: 0
     }
-
-    this.handleTabChange = this.handleTabChange.bind(this)
   }
 
   render () {
