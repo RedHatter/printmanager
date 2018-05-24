@@ -12,6 +12,7 @@
   "dependencies": {
     "aws-amplify": "^0.4.1",
     "aws-sdk": "^2.211.0",
+    "babel-polyfill": "^6.26.0",
     "classnames": "^2.2.5",
     "dateformat": "^3.0.2",
     "koa": "^2.3.0",
@@ -50,6 +51,8 @@
     "material-ui-pickers": "^1.0.0-rc.9",
     "material-ui-utils": "../material-ui-utils/",
     "open": "0.0.5",
+    "react-redux": "^5.0.7",
+    "redux": "^4.0.0",
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0"
   }

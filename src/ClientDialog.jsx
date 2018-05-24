@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import autobind from 'autobind-decorator'
+import { connect } from 'react-redux'
 import {
   Dialog, DialogContent, DialogActions, Icon,
   Tabs, Tab, Button, TextField, Grid, Typography
@@ -39,7 +40,7 @@ class ClientDialog extends Component {
   }
 }
 
-export default ClientDialog
+export default connect(state => ({ model: state.clients }))(ClientDialog)
 
 <style>
   .client-dialog {

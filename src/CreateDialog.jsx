@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react'
+import { connect } from 'react-redux'
 import autobind from 'autobind-decorator'
 import {
   Dialog, DialogContent, DialogActions, Grid, Snackbar,
@@ -202,7 +203,10 @@ class CreateModal extends Component {
   }
 }
 
-export default CreateModal
+export default connect(state => ({
+  salesmen: state.salesmen,
+  clients: state.clients
+}))(CreateModal)
 
 <style>
   .create-modal {

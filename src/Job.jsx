@@ -79,7 +79,7 @@ function Job (props) {
                 </tr>
               </tbody>
             </table>
-            <JobActions model={ props.model } clients={ props.clients } salesmen={ props.salesmen } />
+            <JobActions model={ props.model } />
           </Collapse>
         </td>
       </tr>
