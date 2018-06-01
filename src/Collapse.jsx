@@ -1,8 +1,14 @@
 import React, { Component } from 'react'
 import autobind from 'autobind-decorator'
+import PropTypes from 'prop-types'
 
 @autobind
 class Collapse extends Component {
+  static propTypes = {
+    isOpen: PropTypes.bool.isRequired,
+    children: PropTypes.node.isRequired
+  }
+
   constructor (props) {
     super(props)
 

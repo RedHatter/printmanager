@@ -1,5 +1,5 @@
 const Router = require('koa-router')
-const { Job, Client } = require('../schema.js')
+const { Job, Client } = require('../schema')
 const moment = require('moment')
 
 const router = new Router()

@@ -5,11 +5,18 @@ import {
   Dialog, DialogContent, DialogActions, Icon,
   Tabs, Tab, Button, TextField, Grid, Typography
 } from '@material-ui/core'
+import PropTypes from 'prop-types'
 
+import { ClientType } from './types.js'
 import Client from './Client.jsx'
 
 @autobind
 class ClientDialog extends Component {
+  static propTypes = {
+    model: PropTypes.arrayOf(ClientType).isRequired,
+    onClose: PropTypes.func.isRequired
+  }
+
   constructor (props) {
     super(props)
 

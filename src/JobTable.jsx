@@ -1,13 +1,19 @@
 import React, { Component } from 'react'
 import autobind from 'autobind-decorator'
 import { connect } from 'react-redux'
-
 import { ClickAwayListener  } from '@material-ui/core'
+import PropTypes from 'prop-types'
 
+import { JobType } from './types.js'
 import Job from './Job.jsx'
 
 @autobind
 class JobTable extends Component {
+  static propTypes = {
+    model: PropTypes.arrayOf(JobType).isRequired,
+    salesmen: PropTypes.object.isRequired,
+  }
+
   constructor (props) {
     super(props)
 

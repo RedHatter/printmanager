@@ -55,4 +55,11 @@ function formatDate (date) {
   return moment(date).format('MM/DD/YYYY')
 }
 
-module.exports = { enums, colorize, formatNumber, formatPhone, formatDate }
+const dateRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?Z$/
+
+function parseJSON (json) {
+  return JSON.parse(json, (property, value) =>
+    typeof value == 'string' && dateRegex.test(value) ? new Date(value) : value)
+}
+
+module.exports = { enums, colorize, formatNumber, formatPhone, formatDate, parseJSON }

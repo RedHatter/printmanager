@@ -2,9 +2,15 @@ import React, { Component, Fragment } from 'react'
 import autobind from 'autobind-decorator'
 import { Dialog, DialogContent, TextField, Grid } from '@material-ui/core'
 import classnames from 'classnames'
+import PropTypes from 'prop-types'
 
 @autobind
 class FoldPicker extends Component {
+  static propTypes = {
+    value: PropTypes.string.isRequired,
+    onChange: PropTypes.func
+  }
+
   constructor (props) {
     super(props)
 

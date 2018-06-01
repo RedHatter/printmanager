@@ -45,7 +45,8 @@ function javascript () {
       ],
       "plugins": [
         "transform-decorators-legacy",
-        "transform-object-rest-spread"
+        "transform-object-rest-spread",
+        "transform-class-properties"
       ],
       sourceMaps: true
     })

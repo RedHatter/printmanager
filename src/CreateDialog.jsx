@@ -8,12 +8,21 @@ import {
 import { DatePicker } from 'material-ui-pickers'
 import { Form, TextField } from 'material-ui-utils'
 import NumberFormat from 'react-number-format'
+import PropTypes from 'prop-types'
 
+import { ClientType, JobType } from './types.js'
 import FoldPicker from './FoldPicker.jsx'
 import { enums, colorize } from '../utils.js'
 
 @autobind
 class CreateModal extends Component {
+  static propTypes = {
+    model: JobType.isRequired,
+    clients: PropTypes.arrayOf(ClientType).isRequired,
+    salesmen: PropTypes.object.isRequired,
+    onClose: PropTypes.func.isRequired
+  }
+
   constructor (props) {
     super(props)
 

@@ -1,10 +1,19 @@
 import React, { Fragment } from 'react'
 import classnames from 'classnames'
+import PropTypes from 'prop-types'
+
+import { JobType } from './types.js'
 
 import Collapse from './Collapse.jsx'
 import JobActions from './JobActions.jsx'
 
 import { colorize, formatNumber, formatPhone, formatDate } from '../utils.js'
+
+Job.propTypes = {
+  model: JobType.isRequired,
+  onClick: PropTypes.func,
+  salesmen: PropTypes.object
+}
 
 function Job (props) {
   let listStatus = 'Count Pending'

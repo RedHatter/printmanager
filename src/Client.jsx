@@ -4,8 +4,14 @@ import { Button, Grid, Typography, Snackbar } from '@material-ui/core'
 import { Form, TextField } from 'material-ui-utils'
 import NumberFormat from 'react-number-format'
 
+import { ClientType } from './types.js'
+
 @autobind
 class Client extends Component {
+  static propTypes = {
+    model: ClientType
+  }
+
   constructor (props) {
     super(props)
 

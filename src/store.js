@@ -2,6 +2,8 @@ import { createStore } from 'redux'
 import io from 'socket.io-client'
 import { CognitoIdentityServiceProvider } from 'aws-sdk'
 
+import { parseJSON } from '../utils.js'
+
 const initialState = {
   jobs: [],
   clients: [],
@@ -30,7 +32,7 @@ export default store
 
 async function fetchJobs () {
   let res = await fetch('/api/job')
-  let data = await res.json()
+  let data = parseJSON(await res.text())
   store.dispatch({ type: 'REPLACE_JOBS', data })
 }
 
@@ -38,7 +40,7 @@ fetchJobs()
 
 async function fetchClients () {
   let res = await fetch('/api/client')
-  let data = await res.json()
+  let data = parseJSON(await res.text())
   store.dispatch({ type: 'REPLACE_CLIENTS', data })
 }
 
