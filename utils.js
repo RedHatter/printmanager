@@ -62,4 +62,8 @@ function parseJSON (json) {
     typeof value == 'string' && dateRegex.test(value) ? new Date(value) : value)
 }
 
-module.exports = { enums, colorize, formatNumber, formatPhone, formatDate, parseJSON }
+function mapObjectValues(obj, func) {
+  return Object.entries(obj).reduce((o, [ key, value ]) => (o[key] = func(value), o), {})
+}
+
+module.exports = { enums, colorize, formatNumber, formatPhone, formatDate, parseJSON, mapObjectValues }

@@ -2,6 +2,8 @@ const Router = require('koa-router')
 const { Job, Client } = require('../schema')
 const moment = require('moment')
 
+const { mapObjectValues } = require('../utils.js')
+
 const router = new Router()
 
 router.post('/job', async ctx => {
@@ -12,7 +14,7 @@ router.post('/job', async ctx => {
     let monthEnd = moment(monthStart).endOf('month').toDate()
 
     let n = await Job.count({
-      client: data.client,
+      client: model.client,
       dropDate: { $gte: monthStart, $lt: monthEnd }
     })
 
@@ -20,6 +22,8 @@ router.post('/job', async ctx => {
 
     model.name = `${client.acronym} ${moment().format('MMYY')}-${n + 1}`
   }
+
+  model = mapObjectValues(model, val => val === '' ? undefined : val)
 
   let job = new Job(model)
   try {
@@ -46,8 +50,9 @@ router.post('/job/:id', async ctx => {
   ctx.assert(ctx.request.body._id == ctx.params.id, 422, 'Model id must match update id.')
 
   try {
-    delete ctx.request.body._id
-    let job = await Job.findByIdAndUpdate(ctx.params.id, ctx.request.body, { runValidators: true, new: true })
+    let model = mapObjectValues(ctx.request.body, val => val === '' ? undefined : val)
+    delete model._id
+    let job = await Job.findByIdAndUpdate(ctx.params.id, model, { runValidators: true, new: true })
     ctx.response.type = 'json'
     ctx.body = job
     ctx.socketIo.emit('invalidateJobs')
@@ -64,7 +69,8 @@ router.post('/job/:id', async ctx => {
 
 router.post('/client', async ctx => {
   try {
-    let client = new Client(ctx.request.body)
+    let model = mapObjectValues(ctx.request.body, val => val === '' ? undefined : val)
+    let client = new Client(model)
     await client.save()
     ctx.status = 200
     ctx.socketIo.emit('invalidateClients')
@@ -83,8 +89,9 @@ router.post('/client/:id', async ctx => {
   ctx.assert(ctx.request.body._id == ctx.params.id, 422, 'Model id must match update id.')
 
   try {
-    delete ctx.request.body._id
-    let client = await Client.findByIdAndUpdate(ctx.params.id, ctx.request.body, { runValidators: true, new: true })
+    let model = mapObjectValues(ctx.request.body, val => val === '' ? undefined : val)
+    delete model._id
+    let client = await Client.findByIdAndUpdate(ctx.params.id, model, { runValidators: true, new: true })
     ctx.response.type = 'json'
     ctx.body = client
     ctx.socketIo.emit('invalidateClients')
