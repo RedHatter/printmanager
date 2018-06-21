@@ -67,6 +67,11 @@ router.post('/job/:id', async ctx => {
   }
 })
 
+router.delete('/job/:id', async ctx => {
+  await Job.findByIdAndDelete(ctx.params.id)
+  ctx.socketIo.emit('invalidateJobs')
+})
+
 router.post('/client', async ctx => {
   try {
     let model = mapObjectValues(ctx.request.body, val => val === '' ? undefined : val)

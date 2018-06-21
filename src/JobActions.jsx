@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import autobind from 'autobind-decorator'
-import { withStyles, Button } from '@material-ui/core'
+import { withStyles, Button, Snackbar, Dialog, DialogContent, DialogActions } from '@material-ui/core'
 
 import { JobType } from './types.js'
 import { clone } from '../utils.js'
@@ -66,6 +66,59 @@ class EditButton extends Component {
   }
 }
 
+@autobind
+class DeleteButton extends Component {
+  static propTypes = {
+    model: JobType.isRequired
+  }
+
+  constructor (props) {
+    super(props)
+
+    this.state = { isOpen: false }
+  }
+
+  render () {
+    return <Fragment>
+      <Snackbar open={ this.state.errorMessage != undefined } onClose={ this.clearError } autoHideDuration={ 5000 }
+        message={ this.state.errorMessage } anchorOrigin={ { vertical: 'bottom', horizontal: 'right' } } />
+      <Button onClick={ this.handleOpen }>Delete</Button>
+      { this.state.isOpen &&
+        <Dialog open>
+          <DialogContent>Are you sure you want to delete <i>{ this.props.model.name }</i>? This operation cannot be undone.</DialogContent>
+          <DialogActions>
+            <Button onClick={ this.handleClose }>Cancel</Button>
+            <Button onClick={ this.handleDelete }>Delete</Button>
+          </DialogActions>
+        </Dialog>
+      }
+    </Fragment>
+  }
+
+  handleOpen () {
+    this.setState({ isOpen: true })
+  }
+
+  handleClose () {
+    this.setState({ isOpen: false })
+  }
+
+  handleDelete () {
+    fetch('/api/job/' + this.props.model._id, { method: 'DELETE' })
+      .then(res => {
+        if (res.ok)
+          this.handleClose()
+        else
+          this.setState({ errorMessage: `Unable to delete job. Error code ${res.status}.` })
+      })
+      .catch(err => this.setState({ errorMessage: 'Unable to delete job. ' + err.message }))
+  }
+
+  clearError() {
+    this.setState({ errorMessage: undefined })
+  }
+}
+
 JobActions.propTypes = {
   model: JobType.isRequired,
 }
@@ -74,6 +127,7 @@ function JobActions (props) {
   return <Fragment>
     <EditButton model={ props.model } />
     <DuplicateButton model={ props.model } />
+    <DeleteButton model={props.model} />
   </Fragment>
 }
 
