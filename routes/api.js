@@ -10,12 +10,12 @@ router.post('/job', async ctx => {
   let model = ctx.request.body
 
   if (!model.name) {
-    let monthStart = moment('1', 'D').toDate()
-    let monthEnd = moment(monthStart).endOf('month').toDate()
-
     let n = await Job.count({
       client: model.client,
-      dropDate: { $gte: monthStart, $lt: monthEnd }
+      created: {
+        $gte: moment().startOf('month').toDate(),
+        $lt: moment().endOf('month').toDate()
+      }
     })
 
     let client = await Client.findById(model.client)
