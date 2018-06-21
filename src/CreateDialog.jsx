@@ -17,7 +17,7 @@ import { enums, colorize } from '../utils.js'
 @autobind
 class CreateModal extends Component {
   static propTypes = {
-    model: JobType.isRequired,
+    model: JobType,
     clients: PropTypes.arrayOf(ClientType).isRequired,
     salesmen: PropTypes.object.isRequired,
     onClose: PropTypes.func.isRequired
@@ -52,6 +52,11 @@ class CreateModal extends Component {
       this.state.model = JSON.parse(JSON.stringify(props.model))
       this.state.model.client = this.state.model.client._id
       this.state.editMode = true
+    }
+
+    if (!this.state.model._id) {
+      delete this.state.model.name
+      this.state.editMode = false
     }
   }
 
