@@ -11,12 +11,17 @@ import store from './store.js'
 
 import App from './App.jsx'
 
-ReactDOM.render((
-  <Authenticator configure={ {
+Amplify.configure({
+  Auth: {
     region: 'us-west-2',
+    identityPoolId: 'us-west-2:44b4cdbf-dac2-40a5-b0ef-a8adc1f30785',
     userPoolId: 'us-west-2_dQ6iTiYI4',
     userPoolWebClientId: 'tvlsfbfcqdipq9j651vhuc387'
-  } } logo={ <img src="/images/logo.png" /> }>
+  }
+})
+
+ReactDOM.render((
+  <Authenticator logo={ <img src="/images/logo.png" /> }>
     <ReduxProvider store={ store }>
       <MuiPickersUtilsProvider utils={ MomentUtils }>
         <App />
