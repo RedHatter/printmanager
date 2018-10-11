@@ -33,7 +33,7 @@ class ClientDialog extends Component {
           { this.props.model.map(client => <Tab key={ client._id } label={ client.name } />) }
         </Tabs>
         <DialogContent>
-          <Client model={ this.state.selectedTab > 0 ? this.props.model[this.state.selectedTab - 1] : false } />
+          <Client model={ this.state.selectedTab > 0 ? this.props.model[this.state.selectedTab - 1] : null } />
         </DialogContent>
         <DialogActions>
           <Button onClick={ this.props.onClose }>Close</Button>

@@ -35,7 +35,7 @@ class Client extends Component {
       }
     }
 
-    this.state = this.initalState
+    this.state = JSON.parse(JSON.stringify(this.initalState))
 
     if (props.model)
       this.state.model = JSON.parse(JSON.stringify(props.model))
@@ -77,7 +77,7 @@ class Client extends Component {
           <TextField fullWidth label="Name" value={ this.state.model.contact.name } onChange={ this.handleInputChange.bind(this, [ 'contact', 'name' ]) } required />
         </Grid>
         <Grid item sm={ 6 }>
-          <NumberFormat fullWidth customInput={ TextField } label="Phone" format="+1 (###) ### ####" isNumericString type="tel" pattern={ /^\d{10}$/ }
+          <NumberFormat fullWidth customInput={ TextField } label="Phone" format="+1 (###) ### ####" isNumericString type="tel" pattern={ /^\+1 \(\d{3}\) \d{3} \d{4}$/ }
             value={ this.state.model.contact.phone } onValueChange={ this.handleNumericChange.bind(this, [ 'contact', 'phone' ]) } required />
         </Grid>
         <Grid item sm={ 12 }>
@@ -87,23 +87,23 @@ class Client extends Component {
           <Typography variant="headline" aline="left">Call Tracking Numbers</Typography>
         </Grid>
         <Grid item sm={ 4 }>
-          <NumberFormat customInput={ TextField } label="Database" format="+1 (###) ### ####" isNumericString type="tel" pattern={ /^\d{10}$/ }
+          <NumberFormat fullWidth customInput={ TextField } label="Database" format="+1 (###) ### ####" isNumericString type="tel" pattern={ /^\+1 \(\d{3}\) \d{3} \d{4}$/ }
             value={ this.state.model.trackingNumbers.database } onValueChange={ this.handleNumericChange.bind(this, [ 'trackingNumbers', 'database' ]) } required />
         </Grid>
         <Grid item sm={ 4 }>
-          <NumberFormat customInput={ TextField } label="Saturation" format="+1 (###) ### ####" isNumericString type="tel" pattern={ /^\d{10}$/ }
+          <NumberFormat fullWidth customInput={ TextField } label="Saturation" format="+1 (###) ### ####" isNumericString type="tel" pattern={ /^\+1 \(\d{3}\) \d{3} \d{4}$/ }
             value={ this.state.model.trackingNumbers.saturation } onValueChange={ this.handleNumericChange.bind(this, [ 'trackingNumbers', 'saturation' ]) } required />
         </Grid>
         <Grid item sm={ 4 }>
-          <NumberFormat customInput={ TextField } label="Bankruptcy" format="+1 (###) ### ####" isNumericString type="tel" pattern={ /^\d{10}$/ }
+          <NumberFormat fullWidth customInput={ TextField } label="Bankruptcy" format="+1 (###) ### ####" isNumericString type="tel" pattern={ /^\+1 \(\d{3}\) \d{3} \d{4}$/ }
             value={ this.state.model.trackingNumbers.bankruptcy } onValueChange={ this.handleNumericChange.bind(this, [ 'trackingNumbers', 'bankruptcy' ]) } required />
         </Grid>
         <Grid item sm={ 4 }>
-          <NumberFormat customInput={ TextField } label="Credit" format="+1 (###) ### ####" isNumericString type="tel" pattern={ /^\d{10}$/ }
+          <NumberFormat fullWidth customInput={ TextField } label="Credit" format="+1 (###) ### ####" isNumericString type="tel" pattern={ /^\+1 \(\d{3}\) \d{3} \d{4}$/ }
             value={ this.state.model.trackingNumbers.credit } onValueChange={ this.handleNumericChange.bind(this, [ 'trackingNumbers', 'credit' ]) } required />
         </Grid>
         <Grid item sm={ 4 }>
-          <NumberFormat customInput={ TextField } label="Conquest" format="+1 (###) ### ####" isNumericString type="tel" pattern={ /^\d{10}$/ }
+          <NumberFormat fullWidth customInput={ TextField } label="Conquest" format="+1 (###) ### ####" isNumericString type="tel" pattern={ /^\+1 \(\d{3}\) \d{3} \d{4}$/ }
             value={ this.state.model.trackingNumbers.conquest } onValueChange={ this.handleNumericChange.bind(this, [ 'trackingNumbers', 'conquest' ]) } required />
         </Grid>
         <Grid item sm={ 12 }>
@@ -147,18 +147,23 @@ class Client extends Component {
   }
 
   handleSave () {
-    if (this.validate())
-      fetch(this.state.model._id ? '/api/client/' + this.state.model._id : '/api/client', {
-        method: 'POST',
-        body: JSON.stringify(this.state.model),
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-      .then(res => this.setState({ message: res.ok
-        ? this.state.model.name + ' saved.'
-        : `Unable to submit client. Error code ${res.status}.` }))
-      .catch(err => this.setState({ message: 'Unable to submit client. ' + err.message }))
+    fetch(this.state.model._id ? '/api/client/' + this.state.model._id : '/api/client', {
+      method: 'POST',
+      body: JSON.stringify(this.state.model),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(res => this.setState(res.ok
+      ? {
+        message: this.state.model.name + ' saved.',
+        model: JSON.parse(JSON.stringify(this.initalState.model))
+      }
+      : {
+        message: `Unable to submit client. Error code ${res.status}.`
+      }
+    ))
+    .catch(err => this.setState({ message: 'Unable to submit client. ' + err.message }))
   }
 
   clearMessage () {
