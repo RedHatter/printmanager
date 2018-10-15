@@ -1,6 +1,6 @@
 const Router = require('koa-router')
 const { Job, Client } = require('../schema')
-const moment = require('moment')
+const { format, startOfMonth, endOfMonth } = require('date-fns')
 
 const { mapObjectValues } = require('../utils.js')
 
@@ -9,18 +9,19 @@ const router = new Router()
 router.post('/job', async ctx => {
   let model = ctx.request.body
 
+  let today = new Date ()
   if (!model.name) {
     let n = await Job.count({
       client: model.client,
       created: {
-        $gte: moment().startOf('month').toDate(),
-        $lt: moment().endOf('month').toDate()
+        $gte: startOfMonth(today),
+        $lt: endOfMonth(today)
       }
     })
 
     let client = await Client.findById(model.client)
 
-    model.name = `${client.acronym} ${moment().format('MMYY')}-${n + 1}`
+    model.name = `${client.acronym} ${format(today, 'MMYY')}-${n + 1}`
   }
 
   model = mapObjectValues(model, val => val === '' ? undefined : val)

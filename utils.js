@@ -1,4 +1,4 @@
-const moment = require('moment')
+const { format } = require('date-fns')
 
 const enums = {
   fold: [ 'Half Fold', 'Tri Fold', 'Custom', 'No Fold' ],
@@ -52,7 +52,7 @@ function formatPhone (phone) {
 }
 
 function formatDate (date) {
-  return moment(date).format('MM/DD/YYYY')
+  return format(date, 'MM/DD/YYYY')
 }
 
 const dateRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?Z$/

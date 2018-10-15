@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom'
 import Amplify from 'aws-amplify'
 import { Authenticator } from 'material-ui-utils'
 import { Provider as ReduxProvider } from 'react-redux'
-import MomentUtils from 'material-ui-pickers/utils/moment-utils'
+import DateFnsUtils from 'material-ui-pickers/utils/date-fns-utils'
 import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsProvider'
 
 import store from './store.js'
@@ -27,7 +27,7 @@ Amplify.configure({
 ReactDOM.render((
   <Authenticator logo={ <img src="/images/logo.png" /> }>
     <ReduxProvider store={ store }>
-      <MuiPickersUtilsProvider utils={ MomentUtils }>
+      <MuiPickersUtilsProvider utils={ DateFnsUtils }>
         <App />
       </MuiPickersUtilsProvider>
     </ReduxProvider>
