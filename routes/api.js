@@ -42,9 +42,25 @@ router.post('/job', async ctx => {
   }
 })
 
-router.get('/job', async ctx => {
+function escapeRegExp(str) {
+  return str ? str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&") : str
+}
+
+router.post('/job/search', async ctx => {
+  let { search, artStatus, salesman, client, created } = ctx.request.body
+  let regex = new RegExp(`.*${escapeRegExp(search)}.*`, 'i')
+
   ctx.response.type = 'json'
-  ctx.body = await Job.find({}).populate('client').exec()
+  ctx.body = await Job.find({
+    ...search && { $or: [ { name: regex }, { comments: regex }, { vendor: regex } ] },
+    ...artStatus && { artStatus },
+    ...salesman && { salesman },
+    ...client && { client },
+    ...created && { created: {
+      $gte: created[0],
+      $lt: created[1]
+    } }
+  }).populate('client').exec()
 })
 
 router.post('/job/:id', async ctx => {

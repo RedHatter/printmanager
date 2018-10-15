@@ -8,9 +8,9 @@ import { parseJSON } from '../utils.js'
 const initialState = {
   jobs: [],
   clients: [],
-  salesmen: {}
   salesmen: {},
   files: {},
+  filter: { created: [ ] }
 }
 
 function reduce(state = initialState, action) {
@@ -50,13 +50,19 @@ const store = createStore(reduce)
 
 export default store
 
-async function fetchJobs () {
-  let res = await fetch('/api/job')
+async function fetchJobs (filter) {
+  let res = await fetch('/api/job/search', {
+    method: 'POST',
+    body: JSON.stringify(filter),
+    headers: {
+      'Content-Type': 'application/json',
+    }
+  })
   let data = parseJSON(await res.text())
   store.dispatch({ type: 'REPLACE_JOBS', data })
 }
 
-fetchJobs()
+fetchJobs(store.filter)
 
 async function fetchFiles () {
   let res = await Storage.list('')

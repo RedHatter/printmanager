@@ -3,9 +3,9 @@ import autobind from 'autobind-decorator'
 import { Paper, Button, AppBar, Toolbar } from '@material-ui/core'
 import { Auth } from 'aws-amplify'
 
+import Filters from './Filters.jsx'
 import JobTable from './JobTable.jsx'
 import CreateDialog from './CreateDialog.jsx'
-import ClientDialog from './ClientDialog.jsx'
 
 @autobind
 class App extends Component {
@@ -31,12 +31,13 @@ class App extends Component {
           </Toolbar>
         </AppBar>
         <Paper className="app">
+          <Filters />
           <Button variant="raised" color="primary" onClick={ this.openCreateDialog }>Create Job</Button>
           { this.state.isCreateDialogOpen && <CreateDialog onClose={ this.closeCreateDialog } /> }
 
           <Button variant="raised" color="primary" onClick={ this.openClientDialog }>Clients</Button>
           { this.state.isClientDialogOpen && <ClientDialog onClose={ this.closeClientDialog } /> }
-          <JobTable model={ this.state.jobs }></JobTable>
+          <JobTable />
         </Paper>
       </Fragment>
     )
