@@ -72,7 +72,6 @@ async function fetchFiles () {
     if (!files[parts[0]][parts[1]]) files[parts[0]][parts[1]] = []
 
     files[parts[0]][parts[1]].push({
-      url: 'https://s3-us-west-1.amazonaws.com/dealerdigitalgroup.printmanager/public/' + file.key,
       key: file.key,
       name: decodeURIComponent(parts[2])
     })

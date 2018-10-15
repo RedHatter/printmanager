@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react'
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
+import { Storage } from 'aws-amplify'
 
 import { JobType } from './types.js'
 
@@ -88,9 +89,9 @@ function Job (props) {
                   <td colSpan="3">{ props.model.comments }</td>
                 </tr>
                 { props.files && Object.entries(props.files).map(([key, value]) => (
-                  <tr key={ key }>
+                  <tr key={ key } className="files">
                     <th>{ key }</th>
-                    <td colspan="3">{ value.map(file => (<a target="_blank" href={ file.url }>{ file.name }</a>)) }</td>
+                    <td colSpan="3">{ value.map(file => (<span key={ file.key } onClick={ gotoFile.bind(this, file.key) }>{ file.name }</span>)) }</td>
                   </tr>
                 )) }
               </tbody>
@@ -101,6 +102,12 @@ function Job (props) {
       </tr>
     </Fragment>
   )
+}
+
+function gotoFile (key) {
+  Storage.get(key)
+    .then(url => window.open(url, '_blank'))
+    .catch(console.error)
 }
 
 export default Job
@@ -144,5 +151,13 @@ export default Job
     border: 1px solid #E0E0E0;
     max-width: 500px;
     padding: 10px;
+  }
+
+  .job-details .files span {
+    cursor: pointer;
+  }
+
+  .job-details .files span:hover {
+    color: gray;
   }
 </style>
