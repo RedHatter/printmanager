@@ -12,7 +12,8 @@ import { colorize, formatNumber, formatPhone, formatDate } from '../utils.js'
 Job.propTypes = {
   model: JobType.isRequired,
   onClick: PropTypes.func,
-  salesmen: PropTypes.object
+  salesmen: PropTypes.object,
+  files: PropTypes.object
 }
 
 function Job (props) {
@@ -86,6 +87,12 @@ function Job (props) {
                   <th>Comments</th>
                   <td colSpan="3">{ props.model.comments }</td>
                 </tr>
+                { props.files && Object.entries(props.files).map(([key, value]) => (
+                  <tr key={ key }>
+                    <th>{ key }</th>
+                    <td colspan="3">{ value.map(file => (<a target="_blank" href={ file.url }>{ file.name }</a>)) }</td>
+                  </tr>
+                )) }
               </tbody>
             </table>
             <JobActions model={ props.model } />

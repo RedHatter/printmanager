@@ -5,6 +5,7 @@ import { withStyles, Button, Snackbar, Dialog, DialogContent, DialogActions } fr
 import { JobType } from './types.js'
 import { clone } from '../utils.js'
 import CreateDialog from './CreateDialog.jsx'
+import FileDialog from './FileDialog.jsx'
 
 @autobind
 class DuplicateButton extends Component {
@@ -127,7 +128,8 @@ function JobActions (props) {
   return <Fragment>
     <EditButton model={ props.model } />
     <DuplicateButton model={ props.model } />
-    <DeleteButton model={props.model} />
+    <DeleteButton model={ props.model } />
+    <FileDialog path={ props.model._id } />
   </Fragment>
 }
 

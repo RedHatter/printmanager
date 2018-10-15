@@ -12,6 +12,7 @@ import PropTypes from 'prop-types'
 
 import { ClientType, JobType } from './types.js'
 import FoldPicker from './FoldPicker.jsx'
+import EditFiles from './EditFiles.jsx'
 import { enums, colorize } from '../utils.js'
 
 @autobind
@@ -20,6 +21,7 @@ class CreateModal extends Component {
     model: JobType,
     clients: PropTypes.arrayOf(ClientType).isRequired,
     salesmen: PropTypes.object.isRequired,
+    files: PropTypes.object.isRequired,
     onClose: PropTypes.func.isRequired
   }
 
@@ -45,7 +47,8 @@ class CreateModal extends Component {
         comments: '',
         artStatus: enums.artStatus[0]
       },
-      submitDisabled: false
+      submitDisabled: false,
+      selectedFiles: []
     }
 
     if (props.model) {
@@ -158,6 +161,12 @@ class CreateModal extends Component {
               <Grid item sm={ 12 }>
                 <TextField fullWidth multiline rows={ 3 } label="Comments" value={ this.state.model.comments } onChange={ this.handleInputChange('comments') } />
               </Grid>
+              { this.state.editMode && this.props.files[this.state.model._id] &&
+                <Grid item sm={ 12 }>
+                  <EditFiles files={ this.props.files[this.state.model._id] } selected={ this.state.selectedFiles }
+                    onChange={ selectedFiles => this.setState({ selectedFiles }) } />
+                </Grid>
+              }
             </Grid>
           </DialogContent>
           <DialogActions>
@@ -190,6 +199,8 @@ class CreateModal extends Component {
   }
 
   handleSubmit () {
+    let { deleteFiles, onClose } = this.props
+    deleteFiles(this.state.selectedFiles)
     fetch(this.state.editMode ? '/api/job/' + this.state.model._id : '/api/job', {
       method: 'POST',
       body: JSON.stringify(this.state.model),
@@ -200,7 +211,7 @@ class CreateModal extends Component {
       if (!res.ok)
         this.setState({ errorMessage: `Unable to submit job. Error code ${res.status}.` })
       else
-        this.props.onClose()
+        onClose()
     }).catch(err => this.setState({ errorMessage: 'Unable to submit job. ' + err.message }))
   }
 
@@ -217,10 +228,10 @@ class CreateModal extends Component {
   }
 }
 
-export default connect(state => ({
-  salesmen: state.salesmen,
-  clients: state.clients
-}))(CreateModal)
+export default connect(
+  state => ({ salesmen: state.salesmen, clients: state.clients, files: state.files }),
+  { deleteFiles: data => ({ type: 'DELETE_FILES', data }) }
+)(CreateModal)
 
 <style>
   .create-modal {

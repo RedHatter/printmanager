@@ -1,6 +1,7 @@
 import { createStore } from 'redux'
 import io from 'socket.io-client'
 import { CognitoIdentityServiceProvider } from 'aws-sdk'
+import { Storage } from 'aws-amplify'
 
 import { parseJSON } from '../utils.js'
 
@@ -8,6 +9,8 @@ const initialState = {
   jobs: [],
   clients: [],
   salesmen: {}
+  salesmen: {},
+  files: {},
 }
 
 function reduce(state = initialState, action) {
@@ -20,6 +23,23 @@ function reduce(state = initialState, action) {
       break
     case 'REPLACE_SALESMEN':
       state = Object.assign({}, state, { salesmen: action.data })
+      break
+    case 'REPLACE_FILES':
+      state = Object.assign({}, state, { files: action.data })
+      break
+    case 'FETCH_FILES':
+      fetchFiles()
+      break
+    case 'DELETE_FILES':
+      Promise
+        .all(action.data.map(key => Storage.remove(key)))
+        .then(fetchFiles)
+      break
+    case 'UPDATE_FILTER':
+      state = Object.assign({}, state, {
+        filter: Object.assign({}, state.filter, action.data)
+      })
+      fetchJobs(state.filter)
       break
   }
 
@@ -37,6 +57,25 @@ async function fetchJobs () {
 }
 
 fetchJobs()
+
+async function fetchFiles () {
+  let res = await Storage.list('')
+  let data = res.reduce((files, file) => {
+    let parts = file.key.split('/')
+    if (!files[parts[0]]) files[parts[0]] = {}
+    if (!files[parts[0]][parts[1]]) files[parts[0]][parts[1]] = []
+
+    files[parts[0]][parts[1]].push({
+      url: 'https://s3-us-west-1.amazonaws.com/dealerdigitalgroup.printmanager/public/' + file.key,
+      key: file.key,
+      name: decodeURIComponent(parts[2])
+    })
+
+    return files
+  }, {})
+
+  store.dispatch({ type: 'REPLACE_FILES', data })
+}
 
 async function fetchClients () {
   let res = await fetch('/api/client')
@@ -86,4 +125,5 @@ cognito.listUsersInGroup({
   }
 
   store.dispatch({ type: 'REPLACE_SALESMEN', data })
+  fetchFiles()
 })

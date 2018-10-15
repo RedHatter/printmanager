@@ -12,6 +12,7 @@ class JobTable extends Component {
   static propTypes = {
     model: PropTypes.arrayOf(JobType).isRequired,
     salesmen: PropTypes.object.isRequired,
+    files: PropTypes.object.isRequired
   }
 
   constructor (props) {
@@ -40,7 +41,9 @@ class JobTable extends Component {
         <ClickAwayListener onClickAway={ this.handleClose }>
           <tbody>
             { this.props.model.map(o => (
-              <Job key={ o._id } model={ o } salesmen={ this.props.salesmen } isOpen={ this.state.openId == o._id } onClick={ this.toggle.bind(this, o._id) } />
+              <Job key={ o._id } model={ o }
+                salesmen={ this.props.salesmen } files={ this.props.files[o._id] }
+                isOpen={ this.state.openId == o._id } onClick={ this.toggle.bind(this, o._id) } />
             )) }
           </tbody>
         </ClickAwayListener>
@@ -57,7 +60,7 @@ class JobTable extends Component {
   }
 }
 
-export default connect(state => ({ model: state.jobs, salesmen: state.salesmen }))(JobTable)
+export default connect(state => ({ model: state.jobs, salesmen: state.salesmen, files: state.files }))(JobTable)
 
 <style>
   table.job-table {
