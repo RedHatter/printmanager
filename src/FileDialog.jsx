@@ -45,9 +45,13 @@ class FileDialog extends Component {
           message={ this.state.message } anchorOrigin={ { vertical: 'bottom', horizontal: 'right' } } />
         <DialogContent>
           { files.join('<br>') }
-          <RadioGroup name="type" value={ this.state.type } onChange={ this.handleTypeChange } style={ { flexDirection: 'row' } }>
+          <RadioGroup name="type" value={ this.state.type } onChange={ this.handleTypeChange }>
             <FormControlLabel value="Proof" control={ <Radio /> } label="Proof" />
-            <FormControlLabel value="Data" control={ <Radio /> } label="Data List" />
+            <FormControlLabel value="Data List" control={ <Radio /> } label="Data List" />
+            <FormControlLabel value="Dealer invoice" control={ <Radio /> } label="Dealer invoice" />
+            <FormControlLabel value="Printer invoice" control={ <Radio /> } label="Printer invoice" />
+            <FormControlLabel value="Postal" control={ <Radio /> } label="Postal" />
+            <FormControlLabel value="Prize board" control={ <Radio /> } label="Prize board" />
             <FormControlLabel value="Other" control={ <Radio /> } label="Other" />
           </RadioGroup>
           { this.state.uploading && <LinearProgress /> }

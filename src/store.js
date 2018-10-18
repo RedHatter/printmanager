@@ -43,6 +43,19 @@ function reduce(state = initialState, action) {
       break
   }
 
+  if (action.type == 'REPLACE_JOBS' || action.type == 'REPLACE_SALESMEN') {
+    let jobs = state.jobs.map(job => {
+      if (job.salesman in state.salesmen) {
+        let salesman = state.salesmen[job.salesman]
+        salesman._id = job.salesman
+        job.salesman = salesman
+      }
+
+      return job
+    })
+    state = Object.assign({}, state, { jobs: action.data })
+  }
+
   return state
 }
 

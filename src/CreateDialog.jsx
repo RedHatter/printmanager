@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
 import autobind from 'autobind-decorator'
 import {
-  Dialog, DialogContent, DialogActions, Grid, Snackbar,
+  Dialog, DialogContent, DialogActions, Grid, Snackbar, FormControlLabel,
   Button, Input, MenuItem, Checkbox, ListItemText, Typography
 } from '@material-ui/core'
 import { DatePicker } from 'material-ui-pickers'
@@ -52,8 +52,10 @@ class CreateModal extends Component {
     }
 
     if (props.model) {
-      this.state.model = JSON.parse(JSON.stringify(props.model))
-      this.state.model.client = this.state.model.client._id
+      let model = JSON.parse(JSON.stringify(props.model))
+      model.client = model.client._id,
+      model.salesman = model.salesman._id
+      this.state.model = model
       this.state.editMode = true
     }
 
@@ -161,12 +163,20 @@ class CreateModal extends Component {
               <Grid item sm={ 12 }>
                 <TextField fullWidth multiline rows={ 3 } label="Comments" value={ this.state.model.comments } onChange={ this.handleInputChange('comments') } />
               </Grid>
-              { this.state.editMode && this.props.files[this.state.model._id] &&
-                <Grid item sm={ 12 }>
-                  <EditFiles files={ this.props.files[this.state.model._id] } selected={ this.state.selectedFiles }
-                    onChange={ selectedFiles => this.setState({ selectedFiles }) } />
+              { this.state.editMode && <Fragment>
+                { this.props.files[this.state.model._id] &&
+                  <Grid item sm={ 12 }>
+                    <EditFiles files={ this.props.files[this.state.model._id] } selected={ this.state.selectedFiles }
+                      onChange={ selectedFiles => this.setState({ selectedFiles }) } />
+                  </Grid>
+                }
+                <Grid item sm={12}>
+                  <FormControlLabel label="Force completed" control={
+                    <Checkbox checked={ this.state.model.forceComplete }
+                      onChange={ this.handleForceCompleteChange } />
+                  } />
                 </Grid>
-              }
+              </Fragment> }
             </Grid>
           </DialogContent>
           <DialogActions>
@@ -176,6 +186,10 @@ class CreateModal extends Component {
         </Form>
       </Dialog>
     )
+  }
+
+  handleForceCompleteChange (e) {
+    this.handleChange('forceComplete', e.target.checked)
   }
 
   handleInputChange (prop) {

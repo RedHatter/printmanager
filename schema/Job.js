@@ -54,10 +54,5 @@ module.exports = new Schema({
     enum: enums.artStatus
   },
   dropStatus: Date,
-  completed: {
-    postal: Boolean,
-    prizeBoard: Boolean,
-    dealerInvoice: Boolean,
-    printerInvoice: Boolean
-  }
+  forceComplete: Boolean
 })
