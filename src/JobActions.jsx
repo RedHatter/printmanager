@@ -6,6 +6,7 @@ import { JobType } from './types.js'
 import { clone } from '../utils.js'
 import CreateDialog from './CreateDialog.jsx'
 import FileDialog from './FileDialog.jsx'
+import SendDialog from './SendDialog.jsx'
 
 @autobind
 class DuplicateButton extends Component {
@@ -120,6 +121,34 @@ class DeleteButton extends Component {
   }
 }
 
+@autobind
+class SendButton extends Component {
+  static propTypes = {
+    model: JobType.isRequired
+  }
+
+  constructor (props) {
+    super(props)
+
+    this.state = { isOpen: false }
+  }
+
+  render () {
+    return <Fragment>
+      <Button onClick={ this.handleOpen }>Send</Button>
+      { this.state.isOpen && <SendDialog open model={ this.props.model } onClose={ this.handleClose } /> }
+    </Fragment>
+  }
+
+  handleOpen () {
+    this.setState({ isOpen: true })
+  }
+
+  handleClose () {
+    this.setState({ isOpen: false })
+  }
+}
+
 JobActions.propTypes = {
   model: JobType.isRequired,
 }
@@ -130,6 +159,7 @@ function JobActions (props) {
     <DuplicateButton model={ props.model } />
     <DeleteButton model={ props.model } />
     <FileDialog path={ props.model._id } />
+    <SendButton model={ props.model } />
   </Fragment>
 }
 
