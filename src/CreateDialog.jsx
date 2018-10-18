@@ -73,7 +73,7 @@ class CreateModal extends Component {
             <Snackbar open={ this.state.errorMessage != undefined } onClose={ this.clearError } autoHideDuration={ 5000 }
               message={ this.state.errorMessage } anchorOrigin={ { vertical: 'bottom', horizontal: 'right' } } />
             <Grid container spacing={ 16 }>
-              <Grid item sm={ 12 }><Typography variant="headline" aline="left">General</Typography></Grid>
+              <Grid item sm={ 12 }><Typography variant="headline" align="left">General</Typography></Grid>
 
               { this.state.editMode && <Fragment>
                 <Grid item sm={ 6 }>
@@ -97,7 +97,7 @@ class CreateModal extends Component {
                   { Object.entries(this.props.salesmen).map(([id, attributes]) => <MenuItem value={ id } key={ id }>{ attributes.name }</MenuItem>) }
                 </TextField>
               </Grid>
-              <Grid item sm={ 12 }><Typography variant="headline" aline="left">Dates</Typography></Grid>
+              <Grid item sm={ 12 }><Typography variant="headline" align="left">Dates</Typography></Grid>
               <Grid item sm={ 4 }>
                 <TextField required fullWidth autoOk clearable label="Drop date" component={ DatePicker }
                   value={ this.state.model.dropDate } onChange={ this.handleValueChange('dropDate') } />
@@ -111,7 +111,7 @@ class CreateModal extends Component {
                   value={ this.state.model.expire } onChange={ this.handleValueChange('expire') } />
               </Grid>
 
-              <Grid item sm={ 12 }><Typography variant="headline" aline="left">Details</Typography></Grid>
+              <Grid item sm={ 12 }><Typography variant="headline" align="left">Details</Typography></Grid>
               <Grid item sm={ 4 }>
                 <NumberFormat fullWidth pattern={ /^\+1 \(\d{3}\) \d{3} \d{4}$/ } label="Tracking number" type="tel"
                   customInput={ TextField } format="+1 (###) ### ####" isNumericString

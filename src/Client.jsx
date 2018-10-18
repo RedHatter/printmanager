@@ -59,7 +59,7 @@ class Client extends Component {
         message={ this.state.message } anchorOrigin={ { vertical: 'bottom', horizontal: 'right' } } />
       <Grid container spacing={ 16 } className="client">
         <Grid item sm={ 12 }>
-          <Typography variant="headline" aline="left">General</Typography>
+          <Typography variant="headline" align="left">General</Typography>
         </Grid>
         <Grid item sm={ 9 }>
           <TextField fullWidth label="Name" value={ this.state.model.name } onChange={ this.handleInputChange.bind(this, [ 'name' ]) } required />
@@ -71,7 +71,7 @@ class Client extends Component {
           <TextField fullWidth label="Address" value={ this.state.model.address } onChange={ this.handleInputChange.bind(this, [ 'address' ]) } required />
         </Grid>
         <Grid item sm={ 12 }>
-          <Typography variant="headline" aline="left">Contact Information</Typography>
+          <Typography variant="headline" align="left">Contact Information</Typography>
         </Grid>
         <Grid item sm={ 6 }>
           <TextField fullWidth label="Name" value={ this.state.model.contact.name } onChange={ this.handleInputChange.bind(this, [ 'contact', 'name' ]) } required />
@@ -84,7 +84,7 @@ class Client extends Component {
           <TextField fullWidth label="Email" value={ this.state.model.contact.email } onChange={ this.handleInputChange.bind(this, [ 'contact', 'email' ]) } required />
         </Grid>
         <Grid item sm={ 12 }>
-          <Typography variant="headline" aline="left">Call Tracking Numbers</Typography>
+          <Typography variant="headline" align="left">Call Tracking Numbers</Typography>
         </Grid>
         <Grid item sm={ 4 }>
           <NumberFormat fullWidth customInput={ TextField } label="Database" format="+1 (###) ### ####" isNumericString type="tel" pattern={ /^\+1 \(\d{3}\) \d{3} \d{4}$/ }

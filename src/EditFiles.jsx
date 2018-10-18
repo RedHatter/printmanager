@@ -7,9 +7,9 @@ function EditFiles (props) {
   if (props.files.length < 1) return null
 
   return <Fragment>
-    <Typography variant="headline" aline="left">Files</Typography>
+    <Typography variant="headline" align="left">Files</Typography>
     { Object.values(props.files).reduce((list, type) => list.concat(type.map(file => (
-      <label className="file-checkbox">
+      <label className="file-checkbox" key={ file.key }>
         <input type="checkbox" checked={ props.selected.includes(file.key) } value={ file.key } onChange={ e => props.onChange(
           e.target.checked ? props.selected.concat(e.target.value) : props.selected.filter(key => key != e.target.value)
         ) } />
