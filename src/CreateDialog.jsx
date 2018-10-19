@@ -98,19 +98,38 @@ class CreateModal extends Component {
                 </TextField>
               </Grid>
               <Grid item sm={ 12 }><Typography variant="headline" align="left">Dates</Typography></Grid>
-              <Grid item sm={ 4 }>
-                <TextField required fullWidth autoOk clearable label="Drop date" component={ DatePicker }
-                  value={ this.state.model.dropDate } onChange={ this.handleValueChange('dropDate') } />
-              </Grid>
-              <Grid item sm={ 4 }>
-                <TextField required fullWidth autoOk clearable label="Send to print" component={ DatePicker }
-                  value={ this.state.model.printDate } onChange={ this.handleValueChange('printDate') } />
-              </Grid>
-              <Grid item sm={ 4 }>
-                <TextField required fullWidth autoOk clearable label="Expire" component={ DatePicker }
-                  value={ this.state.model.expire } onChange={ this.handleValueChange('expire') } />
-              </Grid>
-
+              { this.state.editMode
+               ? <Fragment>
+                <Grid item sm={ 6 }>
+                  <TextField fullWidth autoOk clearable label="Droped On" component={ DatePicker }
+                    value={ this.state.model.dropStatus || null } onChange={ this.handleValueChange('dropStatus') } />
+                </Grid>
+                <Grid item sm={ 6 }>
+                  <TextField required fullWidth autoOk clearable label="Drop date" component={ DatePicker }
+                    value={ this.state.model.dropDate } onChange={ this.handleValueChange('dropDate') } />
+                </Grid>
+                <Grid item sm={ 6 }>
+                  <TextField required fullWidth autoOk clearable label="Send to print" component={ DatePicker }
+                    value={ this.state.model.printDate } onChange={ this.handleValueChange('printDate') } />
+                </Grid>
+                <Grid item sm={ 6 }>
+                  <TextField required fullWidth autoOk clearable label="Expire" component={ DatePicker }
+                    value={ this.state.model.expire } onChange={ this.handleValueChange('expire') } />
+                </Grid>
+              </Fragment> : <Fragment>
+                <Grid item sm={ 4 }>
+                  <TextField required fullWidth autoOk clearable label="Drop date" component={ DatePicker }
+                    value={ this.state.model.dropDate } onChange={ this.handleValueChange('dropDate') } />
+                </Grid>
+                <Grid item sm={ 4 }>
+                  <TextField required fullWidth autoOk clearable label="Send to print" component={ DatePicker }
+                    value={ this.state.model.printDate } onChange={ this.handleValueChange('printDate') } />
+                </Grid>
+                <Grid item sm={ 4 }>
+                  <TextField required fullWidth autoOk clearable label="Expire" component={ DatePicker }
+                    value={ this.state.model.expire } onChange={ this.handleValueChange('expire') } />
+                </Grid>
+              </Fragment> }
               <Grid item sm={ 12 }><Typography variant="headline" align="left">Details</Typography></Grid>
               <Grid item sm={ 4 }>
                 <NumberFormat fullWidth pattern={ /^\+1 \(\d{3}\) \d{3} \d{4}$/ } label="Tracking number" type="tel"

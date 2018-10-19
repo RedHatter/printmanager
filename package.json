@@ -10,6 +10,7 @@
     "build": "gulp"
   },
   "dependencies": {
+    "@material-ui/icons": "^3.0.1",
     "aws-amplify": "^0.4.8",
     "aws-sdk": "^2.266.1",
     "babel-polyfill": "^6.26.0",

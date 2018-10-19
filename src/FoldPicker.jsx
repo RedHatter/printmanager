@@ -23,38 +23,36 @@ class FoldPicker extends Component {
         <TextField fullWidth={ true } label="Fold"
           value={ this.props.value } onFocus={ this.handleOpen } onClick={ this.handleOpen } />
         <Dialog open={ this.state.isOpen }>
-          <DialogContent>
-            <Grid container spacing={ 16 }>
-              <Grid item sm={ 3 } className={ classnames("fold-picker-button", {
-                'selected': this.props.value == 'No Fold'
-              }) }
-                onClick={ this.handleOnClick("No Fold") }>
-                <img src="/images/fold-none.png" alt="No Fold" />
-                No Fold
-              </Grid>
-              <Grid item sm={ 3 } className={ classnames("fold-picker-button", {
-                'selected': this.props.value == 'Half Fold'
-              }) }
-                onClick={ this.handleOnClick("Half Fold") }>
-                <img src="/images/fold-half.png" alt="Half Fold" />
-                Half Fold
-              </Grid>
-              <Grid item sm={ 3 } className={ classnames("fold-picker-button", {
-                'selected': this.props.value == 'Tri Fold'
-              }) }
-                onClick={ this.handleOnClick("Tri Fold") }>
-                <img src="/images/fold-tri.png" alt="Tri Fold" />
-                Tri Fold
-              </Grid>
-              <Grid item sm={ 3 } className={ classnames("fold-picker-button", {
-                'selected': this.props.value == 'Custom Fold'
-              }) }
-                onClick={ this.handleOnClick("Custom Fold") }>
-                <img src="/images/fold-custom.png" alt="Custom Fold" />
-                Custom Fold
-              </Grid>
+          <Grid container spacing={ 16 } component={ DialogContent }>
+            <Grid item sm={ 3 } className={ classnames("fold-picker-button", {
+              'selected': this.props.value == 'No Fold'
+            }) }
+              onClick={ this.handleOnClick("No Fold") }>
+              <img src="/images/fold-none.png" alt="No Fold" />
+              No Fold
             </Grid>
-          </DialogContent>
+            <Grid item sm={ 3 } className={ classnames("fold-picker-button", {
+              'selected': this.props.value == 'Half Fold'
+            }) }
+              onClick={ this.handleOnClick("Half Fold") }>
+              <img src="/images/fold-half.png" alt="Half Fold" />
+              Half Fold
+            </Grid>
+            <Grid item sm={ 3 } className={ classnames("fold-picker-button", {
+              'selected': this.props.value == 'Tri Fold'
+            }) }
+              onClick={ this.handleOnClick("Tri Fold") }>
+              <img src="/images/fold-tri.png" alt="Tri Fold" />
+              Tri Fold
+            </Grid>
+            <Grid item sm={ 3 } className={ classnames("fold-picker-button", {
+              'selected': this.props.value == 'Custom Fold'
+            }) }
+              onClick={ this.handleOnClick("Custom Fold") }>
+              <img src="/images/fold-custom.png" alt="Custom Fold" />
+              Custom Fold
+            </Grid>
+          </Grid>
         </Dialog>
       </Fragment>
     )

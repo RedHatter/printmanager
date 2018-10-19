@@ -1,6 +1,9 @@
 import React, { Component, Fragment } from 'react'
 import autobind from 'autobind-decorator'
-import { withStyles, Button, Snackbar, Dialog, DialogContent, DialogActions } from '@material-ui/core'
+import {
+  withStyles, Button, Snackbar, Dialog,
+  DialogContent, DialogActions, ExpansionPanelActions
+} from '@material-ui/core'
 
 import { JobType } from './types.js'
 import { clone } from '../utils.js'
@@ -154,13 +157,13 @@ JobActions.propTypes = {
 }
 
 function JobActions (props) {
-  return <Fragment>
+  return <ExpansionPanelActions>
     <EditButton model={ props.model } />
     <DuplicateButton model={ props.model } />
     <DeleteButton model={ props.model } />
     <FileDialog path={ props.model._id } />
     <SendButton model={ props.model } />
-  </Fragment>
+  </ExpansionPanelActions>
 }
 
 export default JobActions

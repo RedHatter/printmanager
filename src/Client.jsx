@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import autobind from 'autobind-decorator'
-import { Button, Grid, Typography, Snackbar } from '@material-ui/core'
+import { Button, Grid, Typography, Snackbar, Paper } from '@material-ui/core'
 import { Form, TextField } from 'material-ui-utils'
 import NumberFormat from 'react-number-format'
 
@@ -54,10 +54,11 @@ class Client extends Component {
   }
 
   render () {
-    return (<Form onSubmit={ this.handleSave } onValid={ this.handleValid } onInvalid={ this.handleInvalid } >
+    return (<Paper className="client-panel">
+      <Grid container spacing={ 16 } className="client" component={ Form }
+        onSubmit={ this.handleSave } onValid={ this.handleValid } onInvalid={ this.handleInvalid }>
       <Snackbar open={ this.state.message != undefined } onClose={ this.clearMessage } autoHideDuration={ 5000 }
-        message={ this.state.message } anchorOrigin={ { vertical: 'bottom', horizontal: 'right' } } />
-      <Grid container spacing={ 16 } className="client">
+          message={ this.state.message } anchorOrigin={ { vertical: 'bottom', horizontal: 'right' } } />
         <Grid item sm={ 12 }>
           <Typography variant="headline" align="left">General</Typography>
         </Grid>
@@ -110,7 +111,7 @@ class Client extends Component {
           <Button type="submit" className="client-save-button" disabled={ this.state.submitDisabled }>Save</Button>
         </Grid>
       </Grid>
-    </Form>)
+    </Paper>)
   }
 
   handleValid () {
@@ -176,5 +177,18 @@ export default Client
 <style>
   .client-save-button {
     float: right;
+  }
+
+  .client-panel {
+    padding: 30px;
+    width: 600px;
+  }
+
+  .client h1 {
+    margin-top: 50px;
+  }
+
+  .client div:first-child h1 {
+    margin-top: 0;
   }
 </style>

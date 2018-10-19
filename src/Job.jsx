@@ -2,9 +2,11 @@ import React, { Fragment } from 'react'
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
 import { Storage } from 'aws-amplify'
+import { Grid, ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails } from '@material-ui/core'
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import { startOfDay } from 'date-fns'
 
 import { JobType } from './types.js'
-
 import Collapse from './Collapse.jsx'
 import JobActions from './JobActions.jsx'
 
@@ -12,149 +14,154 @@ import { colorize, formatNumber, formatPhone, formatDate } from '../utils.js'
 
 Job.propTypes = {
   model: JobType.isRequired,
-  onClick: PropTypes.func,
   files: PropTypes.object
 }
 
 function Job (props) {
+  let { model, files } = props
+  let {
+    name, fold, size, type, quantity, dropDate, printDate, artStatus, dropStatus,
+    listType, created, salesman, client, addons, envelope, vendor, trackingNumber,
+    expire, comments, forceComplete
+  } = model
+
   let listStatus = 'Count Pending'
-  if (props.model.listFile)
+  if (files && 'Data List' in files)
     listStatus = 'List Uploaded'
-  else if (props.model.listType = 'Saturation')
+  else if (listType = 'Saturation')
     listStatus = 'List Pending'
 
-  let dropStatus = props.model.dropStatus || 'Incomplete'
+  let today = startOfDay(new Date())
 
   return (
-    <Fragment>
-      <tr onClick={ props.onClick } className={ classnames({
-        complete: props.model.forceComplete || (props.files && [
+    <ExpansionPanel>
+      <ExpansionPanelSummary expandIcon={ <ExpandMoreIcon /> } className={ classnames({
+        complete: forceComplete || (files && [
           'Proof', 'Data List', 'Dealer invoice',
           'Printer invoice', 'Postal', 'Prize board'
-        ].every(key => key in props.files))
-      }) }>
-        <td>{ props.model.name }</td>
-        <td>{ props.model.fold } &mdash; { props.model.size }</td>
-        <td>{ formatNumber(props.model.quantity) }</td>
-        <td>
-          <span className={ classnames('statusBlock', colorize(dropStatus)) }>{ dropStatus }</span>
-          { formatDate(props.model.dropDate) }
-        </td>
-        <td>
-          <span className={ classnames('statusBlock', colorize(props.model.artStatus)) }>{ props.model.artStatus }</span>
-          { formatDate(props.model.printDate) }
-        </td>
-        <td>
+        ].every(key => key in files)),
+        late: dropDate < today && !dropStatus
+      }, 'job-row') }>
+        <Grid item xs>{ name }</Grid>
+        <Grid item xs>{ fold } &mdash; { size }</Grid>
+        <Grid item xs>{ formatNumber(quantity) }</Grid>
+        <Grid item xs>
+          <span className={ classnames('statusBlock', colorize(dropStatus)) }>
+            { dropStatus ? formatDate(dropStatus) : 'Incomplete' }
+          </span>
+        </Grid>
+        <Grid item xs>{ formatDate(dropDate) }</Grid>
+        <Grid item xs>
+          <span className={ classnames('statusBlock', colorize(artStatus)) }>{ artStatus }</span>
+        </Grid>
+        <Grid item xs>{ formatDate(printDate) }</Grid>
+        <Grid item xs>
           <span className={ classnames('statusBlock', colorize(listStatus)) }>{ listStatus }</span>
-          { props.model.listType }
-        </td>
-        <td>{ formatDate(props.model.created) }</td>
-        <td>{ props.model.salesman.name }</td>
-      </tr>
-      <tr>
-        <td colSpan="10" className="job-details">
-          <Collapse isOpen={ props.isOpen }>
-            <table>
-              <tbody>
+        </Grid>
+        <Grid item xs>{ listType }</Grid>
+        <Grid item xs>{ formatDate(created) }</Grid>
+        <Grid item xs>{ salesman.name }</Grid>
+      </ExpansionPanelSummary>
+      <ExpansionPanelDetails className="job-details">
+        <table>
+          <tbody>
+            <tr>
+              <th>Client</th>
+              <td>
+                { client.name }
+                <br />
+                { client.address }
+              </td>
+              <th>Addons</th>
+              <td>{ addons.join(', ') }</td>
+            </tr>
+            <tr>
+              <th rowSpan="2">Contact</th>
+              <td rowSpan="2">
+                { client.contact.name }
+                <br />
+                { client.contact.email }
+                <br />
+                { formatPhone(client.contact.phone) }
+              </td>
+              <th>Envelope</th>
+              <td>{ envelope }</td>
+            </tr>
+            <tr>
+              <th>Vendor</th>
+              <td>{ vendor }</td>
+            </tr>
+            <tr>
+              <th>Tracking Number</th>
+              <td>{ formatPhone(trackingNumber) }</td>
+              <th>Expiration</th>
+              <td>{ formatDate(expire) }</td>
+            </tr>
+            <tr>
+              <th>Comments</th>
+              <td colSpan="3">{ comments }</td>
+            </tr>
+          </tbody>
+        </table>
+        { files &&
+          <table className="files">
+            <tbody>
+              <tr><th colSpan="4" className="section-header">Files</th></tr>
+              <tr>
+                <th>Proof</th>
+                <td>{ 'Proof' in files ?
+                  files.Proof.map(file => (
+                    <span key={ file.key } onClick={ handleFileClick(file.key) }>{ file.name }</span>
+                  )) : 'None'
+                }</td>
+                <th>Data List</th>
+                <td>{ 'Data List' in files ?
+                  files['Data List'].map(file => (
+                    <span key={ file.key } onClick={ handleFileClick(file.key) }>{ file.name }</span>
+                  )) : 'None'
+                }</td>
+              </tr>
+              <tr>
+                <th>Dealer invoice</th>
+                <td>{ 'Dealer invoice' in files ?
+                  files['Dealer invoice'].map(file => (
+                    <span key={ file.key } onClick={ handleFileClick(file.key) }>{ file.name }</span>
+                  )) : 'None'
+                }</td>
+                <th>Printer invoice</th>
+                <td>{ 'Printer invoice' in files ?
+                  files['Printer invoice'].map(file => (
+                    <span key={ file.key } onClick={ handleFileClick(file.key) }>{ file.name }</span>
+                  )) : 'None'
+                }</td>
+              </tr>
+              <tr>
+                <th>Postal</th>
+                <td>{ 'Postal' in files ?
+                  files.Postal.map(file => (
+                    <span key={ file.key } onClick={ handleFileClick(file.key) }>{ file.name }</span>
+                  )) : 'None'
+                }</td>
+                <th>Prize board</th>
+                <td>{ 'Prize board' in files ?
+                  files['Prize board'].map(file => (
+                    <span key={ file.key } onClick={ handleFileClick(file.key) }>{ file.name }</span>
+                  )) : 'None'
+                }</td>
+              </tr>
+              { 'Other' in files &&
                 <tr>
-                  <th>Client</th>
-                  <td>
-                    { props.model.client.name }
-                    <br />
-                    { props.model.client.address }
-                  </td>
-                  <th>Addons</th>
-                  <td>{ props.model.addons.join(', ') }</td>
+                  <th>Other</th>
+                  <td>{ files.Other.map(file => (
+                      <span key={ file.key } onClick={ handleFileClick(file.key) }>{ file.name }</span>
+                  )) }</td>
                 </tr>
-                <tr>
-                  <th rowSpan="2">Contact</th>
-                  <td rowSpan="2">
-                    { props.model.client.contact.name }
-                    <br />
-                    { props.model.client.contact.email }
-                    <br />
-                    { formatPhone(props.model.client.contact.phone) }
-                  </td>
-                  <th>Envelope</th>
-                  <td>{ props.model.envelope }</td>
-                </tr>
-                <tr>
-                  <th>Vendor</th>
-                  <td>{ props.model.vendor }</td>
-                </tr>
-                <tr>
-                  <th>Tracking Number</th>
-                  <td>{ formatPhone(props.model.trackingNumber) }</td>
-                  <th>Expiration</th>
-                  <td>{ formatDate(props.model.expire) }</td>
-                </tr>
-                <tr>
-                  <th>Comments</th>
-                  <td colSpan="3">{ props.model.comments }</td>
-                </tr>
-              </tbody>
-            </table>
-            { props.files &&
-              <table className="files">
-                <tbody>
-                  <tr><th colSpan="4" className="section-header">Files</th></tr>
-                  <tr>
-                    <th>Proof</th>
-                    <td>{ 'Proof' in props.files ?
-                      props.files.Proof.map(file => (
-                        <span key={ file.key } onClick={ handleFileClick(file.key) }>{ file.name }</span>
-                      )) : 'None'
-                    }</td>
-                    <th>Data List</th>
-                    <td>{ 'Data List' in props.files ?
-                      props.files['Data List'].map(file => (
-                        <span key={ file.key } onClick={ handleFileClick(file.key) }>{ file.name }</span>
-                      )) : 'None'
-                    }</td>
-                  </tr>
-                  <tr>
-                    <th>Dealer invoice</th>
-                    <td>{ 'Dealer invoice' in props.files ?
-                      props.files['Dealer invoice'].map(file => (
-                        <span key={ file.key } onClick={ handleFileClick(file.key) }>{ file.name }</span>
-                      )) : 'None'
-                    }</td>
-                    <th>Printer invoice</th>
-                    <td>{ 'Printer invoice' in props.files ?
-                      props.files['Printer invoice'].map(file => (
-                        <span key={ file.key } onClick={ handleFileClick(file.key) }>{ file.name }</span>
-                      )) : 'None'
-                    }</td>
-                  </tr>
-                  <tr>
-                    <th>Postal</th>
-                    <td>{ 'Postal' in props.files ?
-                      props.files.Postal.map(file => (
-                        <span key={ file.key } onClick={ handleFileClick(file.key) }>{ file.name }</span>
-                      )) : 'None'
-                    }</td>
-                    <th>Prize board</th>
-                    <td>{ 'Prize board' in props.files ?
-                      props.files['Prize board'].map(file => (
-                        <span key={ file.key } onClick={ handleFileClick(file.key) }>{ file.name }</span>
-                      )) : 'None'
-                    }</td>
-                  </tr>
-                  { 'Other' in props.files &&
-                    <tr>
-                      <th>Other</th>
-                      <td>{ props.files.Other.map(file => (
-                          <span key={ file.key } onClick={ handleFileClick(file.key) }>{ file.name }</span>
-                      )) }</td>
-                    </tr>
-                  }
-              </tbody>
-            </table> }
-            <JobActions model={ props.model } />
-          </Collapse>
-        </td>
-      </tr>
-    </Fragment>
+              }
+          </tbody>
+        </table> }
+      </ExpansionPanelDetails>
+      <JobActions model={ model } />
+  </ExpansionPanel>
   )
 }
 
@@ -167,8 +174,14 @@ function handleFileClick (key) {
 export default Job
 
 <style>
-  tr.complete {
-    background-color: #E8F5E9;
+  .complete {
+    border-left: 5px solid #4CAF50 !important;
+    padding-left: 19px !important;
+  }
+
+  .late {
+    border-left: 5px solid #F44336 !important;
+    padding-left: 19px !important;
   }
 
   span.statusBlock {
@@ -191,6 +204,15 @@ export default Job
   span.green {
     background-color: #4CAF50;
     color: white;
+  }
+
+  .job-row div > div {
+    margin: auto 15px;
+    white-space: nowrap;
+  }
+
+  .job-details {
+    flex-direction: column;
   }
 
   .job-details table {
