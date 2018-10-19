@@ -56,7 +56,7 @@ router.post('/job/search', async ctx => {
     ...artStatus && { artStatus },
     ...salesman && { salesman },
     ...client && { client },
-    ...created && { created: {
+    ...created && created.length > 0 && { created: {
       $gte: created[0],
       $lt: created[1]
     } }

@@ -34,12 +34,12 @@ const theme = createMuiTheme({
 
 ReactDOM.render((
   <MuiThemeProvider theme={theme}>
-    <Authenticator logo={ <img src="/images/logo.png" /> }>
-      <ReduxProvider store={ store }>
-        <MuiPickersUtilsProvider utils={ DateFnsUtils }>
+    <ReduxProvider store={ store }>
+      <MuiPickersUtilsProvider utils={ DateFnsUtils }>
+        <Authenticator logo={ <img src="/images/logo.png" /> }>
           <App />
-        </MuiPickersUtilsProvider>
-      </ReduxProvider>
-    </Authenticator>
+        </Authenticator>
+      </MuiPickersUtilsProvider>
+    </ReduxProvider>
   </MuiThemeProvider>
 ), document.getElementById('root'))
