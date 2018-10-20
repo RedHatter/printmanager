@@ -18,7 +18,7 @@ Job.propTypes = {
 }
 
 function Job (props) {
-  let { model, files } = props
+  let { model, files, ...remaining } = props
   let {
     name, fold, size, type, quantity, dropDate, printDate, artStatus, dropStatus,
     listType, created, salesman, client, addons, envelope, vendor, trackingNumber,
@@ -34,7 +34,7 @@ function Job (props) {
   let today = startOfDay(new Date())
 
   return (
-    <ExpansionPanel>
+    <ExpansionPanel { ...remaining }>
       <ExpansionPanelSummary expandIcon={ <ExpandMoreIcon /> } className={ classnames({
         complete: forceComplete || (files && [
           'Proof', 'Data List', 'Dealer invoice',

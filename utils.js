@@ -70,4 +70,19 @@ function mapObjectValues(obj, func) {
   return Object.entries(obj).reduce((o, [ key, value ]) => (o[key] = func(value), o), {})
 }
 
-module.exports = { enums, colorize, formatNumber, formatPhone, formatDate, parseJSON, clone, mapObjectValues }
+function range(start, end) {
+    var total = [];
+
+    if (!end) {
+        end = start;
+        start = 0;
+    }
+
+    for (var i = start; i < end; i += 1) {
+        total.push(i);
+    }
+
+    return total;
+}
+
+module.exports = { enums, colorize, formatNumber, formatPhone, formatDate, parseJSON, clone, mapObjectValues, range }

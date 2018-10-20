@@ -11,6 +11,7 @@ import Client from './Client.jsx'
 import JobTable from './JobTable.jsx'
 import CreateDialog from './CreateDialog.jsx'
 import Filters from './Filters.jsx'
+import Calendar from './Calendar.jsx'
 
 @autobind
 class App extends Component {
@@ -50,6 +51,7 @@ class App extends Component {
             <Typography variant="headline">Views</Typography>
             <Tabs value={ selectedTab } onChange={ this.handleTabChange }>
               <Tab label="All Jobs" />
+              <Tab label="Calendar" />
             </Tabs>
             <Typography variant="headline">Clients</Typography>
             <Tabs value={ selectedClient } onChange={ this.handleClientChange }>
@@ -61,7 +63,7 @@ class App extends Component {
           </div>
           <div className="content-container">
             { selectedTab >= 0
-              ? [ <JobTable />, <CreateDialog /> ][selectedTab]
+              ? [ <JobTable />, <Calendar /> ][selectedTab]
               : <Client model={ clients[selectedClient] } />
             }
           </div>
