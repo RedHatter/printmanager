@@ -11,6 +11,7 @@ import PropTypes from 'prop-types'
 
 import { range } from '../utils.js'
 import { JobType } from './types.js'
+import { SlideDown, Fade } from './transitions.jsx'
 import Job from './Job.jsx'
 
 @autobind
@@ -23,17 +24,13 @@ class Calendar extends Component {
     super(props)
 
     this.state = {
-      selectedDay: new Date()
+      selectedDay: new Date(),
+      selectedEvent: undefined,
+      isDetailsOpen: false
     }
   }
 
   render () {
-    if (this.state.selectedEvent)
-      return <Fragment>
-        <Job model={ this.state.selectedEvent } expanded={ true } />
-        <Button onClick={ this.handleCloseEvent }>Back to Calendar</Button>
-      </Fragment>
-
     let model = this.props.model.reduce((model, job) => {
       if (!model[job.dropDate])
         model[job.dropDate] = []
@@ -48,63 +45,73 @@ class Calendar extends Component {
       return model
     }, {})
 
-    let { selectedDay } = this.state
+    let { selectedDay, selectedEvent, isDetailsOpen } = this.state
     let today = startOfDay(new Date())
     let day = setDay(startOfMonth(new Date(selectedDay)), 0)
-    return <Paper className="calendar">
-      <table>
-        <thead>
-          <tr>
-            <th className="previous" onClick={ this.handlePrevious }></th>
-            <th colSpan="5">{ format(selectedDay, 'MMMM YYYY') }</th>
-            <th className="next" onClick={ this.handleNext }></th>
-          </tr>
-          <tr>
-            <th>Sunday</th>
-            <th>Monday</th>
-            <th>Tuesday</th>
-            <th>Wednsday</th>
-            <th>Thursday</th>
-            <th>Friday</th>
-            <th>Saturday</th>
-          </tr>
-        </thead>
-        <tbody>
-          { range(6).map(w =>
-            <tr key={ w }>
-              { range(7).map(d =>
-                <td key={ d } className={ classnames({ today: isEqual(day, today) }) }>
-                  <div className={ classnames({
-                    inactive: !isSameMonth(day, selectedDay)
-                  }) }>{ format(day, 'DD') }</div>
-                  { day in model && model[day].map(job => (
-                      <div key={ job._id }
-                        onClick={ this.handleSelectEvent.bind(this, job) }
-                        className={ classnames({
-                          print: isEqual(day, job.printDate),
-                          drop: isEqual(day, job.dropDate)
-                        })
-                      }>
-                      { job.name }
-                    </div>
-                  ))}
-                  { (day = addDays(day, 1), false) }
-                </td>
+    return <Fragment>
+      <SlideDown in={ isDetailsOpen }>
+        <div>
+          <Job model={ selectedEvent } expanded={ true } />
+          <Button onClick={ this.handleCloseEvent } className="back-to-calendar">Back to Calendar</Button>
+        </div>
+      </SlideDown>
+      <Fade in={ !isDetailsOpen }>
+        <Paper className="calendar">
+          <table>
+            <thead>
+              <tr>
+                <th className="previous" onClick={ this.handlePrevious }></th>
+                <th colSpan="5">{ format(selectedDay, 'MMMM YYYY') }</th>
+                <th className="next" onClick={ this.handleNext }></th>
+              </tr>
+              <tr>
+                <th>Sunday</th>
+                <th>Monday</th>
+                <th>Tuesday</th>
+                <th>Wednsday</th>
+                <th>Thursday</th>
+                <th>Friday</th>
+                <th>Saturday</th>
+              </tr>
+            </thead>
+            <tbody>
+              { range(6).map(w =>
+                <tr key={ w }>
+                  { range(7).map(d =>
+                    <td key={ d } className={ classnames({ today: isEqual(day, today) }) }>
+                      <div className={ classnames({
+                        inactive: !isSameMonth(day, selectedDay)
+                      }) }>{ format(day, 'DD') }</div>
+                      { day in model && model[day].map(job => (
+                          <div key={ job._id }
+                            onClick={ this.handleSelectEvent.bind(this, job) }
+                            className={ classnames({
+                              print: isEqual(day, job.printDate),
+                              drop: isEqual(day, job.dropDate)
+                            })
+                          }>
+                          { job.name }
+                        </div>
+                      ))}
+                      { (day = addDays(day, 1), false) }
+                    </td>
+                  )}
+                </tr>
               )}
-            </tr>
-          )}
-        </tbody>
-      </table>
-    </Paper>
+            </tbody>
+          </table>
+        </Paper>
+      </Fade>
+    </Fragment>
   }
 
   handleSelectEvent (job) {
-    this.setState({ selectedEvent: job })
+    this.setState({ selectedEvent: job, isDetailsOpen: true })
   }
 
   handleCloseEvent (e) {
     e.stopPropagation()
-    this.setState({ selectedEvent: undefined })
+    this.setState({ isDetailsOpen: false })
   }
 
   handlePrevious (e) {
@@ -125,6 +132,7 @@ export default connect(state => ({ model: state.jobs }))(Calendar)
 
   .calendar table {
     border-collapse: collapse;
+    width: 1421px;
   }
 
   .calendar .previous,
@@ -226,5 +234,9 @@ export default connect(state => ({ model: state.jobs }))(Calendar)
 
   .calendar td .drop {
     background-color: #673AB7;
+  }
+
+  .back-to-calendar {
+    float: left;
   }
 </style>

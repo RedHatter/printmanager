@@ -1,11 +1,15 @@
 import React, { Component, Fragment } from 'react'
 import autobind from 'autobind-decorator'
 import { connect } from 'react-redux'
-import { Paper, Button, AppBar, Toolbar, Tab, Icon, Typography } from '@material-ui/core'
+import {
+  Paper, Button, AppBar, Toolbar, Tab,
+  Icon, Typography, Fade, Slide
+} from '@material-ui/core'
 import PropTypes from 'prop-types'
 import { Auth } from 'aws-amplify'
 
 import { ClientType } from './types.js'
+import { SlideRight } from './transitions.jsx'
 import Tabs from './Tabs.jsx'
 import Client from './Client.jsx'
 import JobTable from './JobTable.jsx'
@@ -62,10 +66,9 @@ class App extends Component {
             <Filters />
           </div>
           <div className="content-container">
-            { selectedTab >= 0
-              ? [ <JobTable />, <Calendar /> ][selectedTab]
-              : <Client model={ clients[selectedClient] } />
-            }
+            <SlideRight in={ selectedTab == 0 }><JobTable /></SlideRight>
+            <SlideRight in={ selectedTab == 1 }><Calendar /></SlideRight>
+            <SlideRight in={ selectedClient != undefined }><Client model={ clients[selectedClient] } /></SlideRight>
           </div>
         </div>
       </Fragment>
@@ -114,7 +117,8 @@ export default connect(state => ({ clients: state.clients }))(App)
   }
 
   .content-container {
-     margin: 24px 16px;
+    position: relative;
+    margin: 24px 16px;
   }
 
   .app .sidebar h1 {

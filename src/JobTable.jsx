@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import autobind from 'autobind-decorator'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
@@ -22,7 +22,7 @@ class JobTable extends Component {
     let { model, files } = this.props
 
     return (
-      <Fragment>
+      <div>
         <Grid container component={ Paper } className="header">
           <Grid item xs>Job Name</Grid>
           <Grid item xs>Mailer Type</Grid>
@@ -37,7 +37,7 @@ class JobTable extends Component {
           <Grid item xs>Salesman</Grid>
         </Grid>
         { model.map(o => (<Job key={ o._id } model={ o } files={ files[o._id] } />)) }
-      </Fragment>
+      </div>
     )
   }
 }
