@@ -16,6 +16,7 @@
     "aws-sdk": "^2.266.1",
     "babel-polyfill": "^6.26.0",
     "classnames": "^2.2.6",
+    "cognito-express": "^2.0.12",
     "date-fns": "2.0.0-alpha.7",
     "dateformat": "^3.0.2",
     "koa": "^2.3.0",

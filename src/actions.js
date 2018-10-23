@@ -17,6 +17,7 @@ async function createApiAction (type, url, error, { body, method }) {
       body: body ? JSON.stringify(body) : undefined,
       headers: {
         'Content-Type': 'application/json',
+        Authorization: (await Auth.currentSession()).idToken.jwtToken
       }
     })
 

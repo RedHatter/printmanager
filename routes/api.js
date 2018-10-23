@@ -1,10 +1,32 @@
 const Router = require('koa-router')
-const { Job, Client } = require('../schema')
 const { format, startOfMonth, endOfMonth } = require('date-fns')
 const nodemailer = require('nodemailer')
+const { Storage } = require('aws-amplify')
+const Cognito = require('cognito-express')
+const util = require('util')
+
+const { Job, Client } = require('../schema')
 const { mapObjectValues } = require('../utils.js')
 
+const cognito = new Cognito({
+    region: 'us-west-2',
+    cognitoUserPoolId: 'us-west-2_dQ6iTiYI4',
+    tokenUse: 'id'
+})
+
+const validate = util.promisify(cognito.validate).bind(cognito)
+
 const router = new Router()
+
+router.use(async (ctx, next) => {
+  try {
+    let response = await validate(ctx.headers.authorization)
+    ctx.state.user = response
+    return next()
+  } catch (err) {
+    ctx.throw(403, err)
+  }
+})
 
 router.post('/job', async ctx => {
   let model = ctx.request.body
