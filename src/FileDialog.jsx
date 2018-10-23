@@ -6,7 +6,6 @@ import {
   RadioGroup, FormControlLabel, Radio, withStyles
 } from '@material-ui/core'
 import { styles as buttonStyles } from '@material-ui/core/Button/Button'
-import { Auth, Storage } from 'aws-amplify'
 import PropTypes from 'prop-types'
 
 import { uploadFiles } from './actions.js'

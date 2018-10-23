@@ -22,7 +22,8 @@ class SendDialog extends Component {
     super(props)
 
     this.state = {
-      message: 'Please review the attachment for your approval or send me any changes you may have.\n\nThank you ',
+      message: 'Please review the attachment for your approval or send me any changes you may have.\n\nThank you',
+      subject: props.model.name,
       recipients: [ props.model.client.contact.email ],
       attachments: [],
       chipError: undefined
@@ -30,14 +31,15 @@ class SendDialog extends Component {
   }
 
   render () {
-    let { errorMessage, recipients, chipError, attachments, message } = this.state
-    let { onClose, files, model } = this.props
+    let { recipients, chipError, attachments, subject, message } = this.state
+    let { onClose, files } = this.props
 
     return <Dialog open>
       <DialogContent className="send-dialog-content">
         <ChipInput onAdd={ this.handleAddChip.bind(this) } onDelete={ this.handleDeleteChip.bind(this) }
-          newChipKeyCodes={ [ 13, 32 ] } value={ recipients } label="Recipients"
+          newChipKeyCodes={ [ 9, 13, 32 ] } value={ recipients } label="Recipients"
           fullWidth helperText={ chipError } error={ chipError != undefined } />
+        <TextField fullWidth label="Subject" value={ subject } onChange={ this.handleSubjectChange } />
         <TextField fullWidth multiline label="Message" rows={ 4 } value={ message } onChange={ this.handleMessageChange } />
         { Object.entries(files).map(([ key, value ]) => (
           <Fragment key={ key }>
@@ -65,6 +67,8 @@ class SendDialog extends Component {
     this.setState({ message: e.target.value })
   }
 
+  handlesSubjectChange (e) {
+    this.setState({ subject: e.target.value })
   }
 
   handleAddChip (chip) {

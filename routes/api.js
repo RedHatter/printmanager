@@ -1,7 +1,6 @@
 const Router = require('koa-router')
 const { format, startOfMonth, endOfMonth } = require('date-fns')
 const nodemailer = require('nodemailer')
-const { Storage } = require('aws-amplify')
 const Cognito = require('cognito-express')
 const util = require('util')
 
@@ -163,26 +162,30 @@ let mail = nodemailer.createTransport({
   port: 465,
   auth: {
     user: 'ericag@dealerdigitalgroup.com',
-    pass: 'ericag2018!'
-  },
-  tls: { rejectUnauthorized: false }
+    pass: '?Sf=hzfhCu)(5#pCyH'
+  }
 }, {
-  from: 'Erica" <ericag@dealerdigitalgroup.com>'
+  from: '"Erica Garcia" <ericag@dealerdigitalgroup.com>'
 })
 
 router.post('/send', async ctx => {
-  let { recipients, attachments, replyTo, message } = ctx.request.body
-  ctx.assert(recipients.length > 0, 422, 'Recipients missing.')
-  console.log(await new Promise((resolve, reject) =>
+  let { recipients, attachments, subject, message } = ctx.request.body
+  ctx.assert(recipients && recipients.length > 0, 422, 'Missing recipients.')
+  ctx.assert(subject, 422, 'Missing subject.')
+  ctx.assert(message, 422, 'Missing message.')
+
+  ctx.body = await new Promise((resolve, reject) =>
     mail.sendMail({
         to: recipients.join(','),
         subject, text: message,
+        attachments: attachments.map(path => ({
+          path, filename: path.substring(path.lastIndexOf('/') + 1, path.lastIndexOf('?'))
+        }))
     }, (err, info) => {
       if (err) reject(err)
       else resolve(info)
     })
-  ))
-  ctx.status = 200
+  )
 })
 
 module.exports = router.routes()

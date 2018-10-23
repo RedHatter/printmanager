@@ -49,7 +49,20 @@ export async function deleteJob (id) {
 }
 
 export async function send (body) {
-  return createApiAction ('SEND', '/api/send', 'Unable to send email.', { body })
+  try {
+    if (body.attachments) {
+      body.attachments = await Promise.all(
+        body.attachments.map(key => Storage.get(key)))
+    }
+
+    return createApiAction ('SEND', '/api/send', 'Unable to send email.', { body })
+  } catch (err) {
+    return {
+      type: 'SEND',
+      payload: new Error('Unable to resolve attachment URLs. ' + (err.message || err)),
+      error: true
+    }
+  }
 }
 
 export async function fetchClients () {
