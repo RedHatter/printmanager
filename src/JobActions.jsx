@@ -1,11 +1,14 @@
 import React, { Component, Fragment } from 'react'
 import autobind from 'autobind-decorator'
+import { connect } from 'react-redux'
 import {
-  withStyles, Button, Snackbar, Dialog,
-  DialogContent, DialogActions, ExpansionPanelActions
+  withStyles, Button, Dialog, DialogContent,
+  DialogActions, ExpansionPanelActions
 } from '@material-ui/core'
+import PropTypes from 'prop-types'
 
 import { JobType } from './types.js'
+import { deleteJob } from './actions.js'
 import { clone } from '../utils.js'
 import CreateDialog from './CreateDialog.jsx'
 import FileDialog from './FileDialog.jsx'
@@ -85,8 +88,6 @@ class DeleteButton extends Component {
 
   render () {
     return <Fragment>
-      <Snackbar open={ this.state.errorMessage != undefined } onClose={ this.clearError } autoHideDuration={ 5000 }
-        message={ this.state.errorMessage } anchorOrigin={ { vertical: 'bottom', horizontal: 'right' } } />
       <Button onClick={ this.handleOpen }>Delete</Button>
       { this.state.isOpen &&
         <Dialog open>
@@ -109,25 +110,18 @@ class DeleteButton extends Component {
   }
 
   handleDelete () {
-    fetch('/api/job/' + this.props.model._id, { method: 'DELETE' })
-      .then(res => {
-        if (res.ok)
-          this.handleClose()
-        else
-          this.setState({ errorMessage: `Unable to delete job. Error code ${res.status}.` })
-      })
-      .catch(err => this.setState({ errorMessage: 'Unable to delete job. ' + err.message }))
-  }
-
-  clearError() {
-    this.setState({ errorMessage: undefined })
+    let { deleteJob, model } = this.props
+    deleteJob(model._id)
   }
 }
+
+DeleteButton = connect(null, { deleteJob })(DeleteButton)
 
 @autobind
 class SendButton extends Component {
   static propTypes = {
-    model: JobType.isRequired
+    model: JobType.isRequired,
+    files: PropTypes.object
   }
 
   constructor (props) {
@@ -137,9 +131,11 @@ class SendButton extends Component {
   }
 
   render () {
+    let { model, files } = this.props
+
     return <Fragment>
       <Button onClick={ this.handleOpen }>Send</Button>
-      { this.state.isOpen && <SendDialog open model={ this.props.model } onClose={ this.handleClose } /> }
+      { this.state.isOpen && <SendDialog open model={ model } files={ files } onClose={ this.handleClose } /> }
     </Fragment>
   }
 
@@ -154,15 +150,16 @@ class SendButton extends Component {
 
 JobActions.propTypes = {
   model: JobType.isRequired,
+  files: PropTypes.object
 }
 
-function JobActions (props) {
+function JobActions ({ model, files }) {
   return <ExpansionPanelActions>
-    <EditButton model={ props.model } />
-    <DuplicateButton model={ props.model } />
-    <DeleteButton model={ props.model } />
-    <FileDialog path={ props.model._id } />
-    <SendButton model={ props.model } />
+    <EditButton model={ model } />
+    <DuplicateButton model={ model } />
+    <DeleteButton model={ model } />
+    <FileDialog path={ model._id } />
+    { files && <SendButton model={ model } files={ files } /> }
   </ExpansionPanelActions>
 }
 

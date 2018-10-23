@@ -3,11 +3,13 @@ import autobind from 'autobind-decorator'
 import { connect } from 'react-redux'
 import {
   Dialog, DialogContent, DialogActions, Button, LinearProgress,
-  Snackbar, RadioGroup, FormControlLabel, Radio, withStyles
+  RadioGroup, FormControlLabel, Radio, withStyles
 } from '@material-ui/core'
 import { styles as buttonStyles } from '@material-ui/core/Button/Button'
 import { Auth, Storage } from 'aws-amplify'
 import PropTypes from 'prop-types'
+
+import { uploadFiles } from './actions.js'
 
 const FileButton = withStyles(buttonStyles, { name: 'FileButton' })(
   function ({ classes, children, onSelect }) {
@@ -41,8 +43,6 @@ class FileDialog extends Component {
       return <FileButton onSelect={ this.handleSelect }>Upload</FileButton>
     else
       return <Dialog open>
-        <Snackbar open={ this.state.message != undefined } onClose={ this.clearMessage } autoHideDuration={ 5000 }
-          message={ this.state.message } anchorOrigin={ { vertical: 'bottom', horizontal: 'right' } } />
         <DialogContent>
           { files.join('<br>') }
           <RadioGroup name="type" value={ this.state.type } onChange={ this.handleTypeChange }>
@@ -77,24 +77,17 @@ class FileDialog extends Component {
 
   handleClose () {
     this.setState({ files: [], type: '' })
-    this.props.fetchFiles()
   }
 
   handleUpload () {
-    let promises = []
+    let { path, uploadFiles } = this.props
+    let { type, files } = this.state
 
     this.setState({ uploading: true })
-
-    for (let file of this.state.files)
-      promises.push(Storage.put(`${this.props.path}/${this.state.type || 'other'}/${encodeURIComponent(file.name)}`, file, {
-        contentType: file.type
-      }))
-
-    Promise.all(promises)
+    uploadFiles(files, `${path}/${type || 'other'}`)
       .then(this.handleClose)
-      .catch(err => this.setState({ message: 'Unable to upload file. ' + err.message }))
       .finally(() => this.setState({ uploading: false }))
   }
 }
 
-export default connect(null, { fetchFiles: () => ({ type: 'FETCH_FILES' }) })(FileDialog)
+export default connect(null, { uploadFiles })(FileDialog)

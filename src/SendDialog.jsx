@@ -1,14 +1,15 @@
 import React, { Component, Fragment } from 'react'
 import autobind from 'autobind-decorator'
-import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 import {
-  Dialog, DialogContent, DialogActions, Button, Snackbar,
+  Dialog, DialogContent, DialogActions, Button,
   TextField, Typography, FormControlLabel, Checkbox
 } from '@material-ui/core'
 import ChipInput from 'material-ui-chip-input'
 
 import { JobType } from './types.js'
+import { send } from './actions.js'
 
 @autobind
 class SendDialog extends Component {
@@ -24,8 +25,7 @@ class SendDialog extends Component {
       message: 'Please review the attachment for your approval or send me any changes you may have.\n\nThank you ',
       recipients: [ props.model.client.contact.email ],
       attachments: [],
-      chipError: undefined,
-      errorMessage: undefined
+      chipError: undefined
     }
   }
 
@@ -35,13 +35,11 @@ class SendDialog extends Component {
 
     return <Dialog open>
       <DialogContent className="send-dialog-content">
-        <Snackbar open={ errorMessage != undefined } onClose={ this.clearError } autoHideDuration={ 5000 }
-          message={ errorMessage } anchorOrigin={ { vertical: 'bottom', horizontal: 'right' } } />
         <ChipInput onAdd={ this.handleAddChip.bind(this) } onDelete={ this.handleDeleteChip.bind(this) }
           newChipKeyCodes={ [ 13, 32 ] } value={ recipients } label="Recipients"
           fullWidth helperText={ chipError } error={ chipError != undefined } />
         <TextField fullWidth multiline label="Message" rows={ 4 } value={ message } onChange={ this.handleMessageChange } />
-        { Object.entries(files[model._id]).map(([ key, value ]) => (
+        { Object.entries(files).map(([ key, value ]) => (
           <Fragment key={ key }>
             <Typography variant="headline" align="left">{ key }</Typography>
             { value.map(file => (
@@ -67,8 +65,6 @@ class SendDialog extends Component {
     this.setState({ message: e.target.value })
   }
 
-  clearError () {
-    this.setState({ errorMessage: undefined })
   }
 
   handleAddChip (chip) {
@@ -94,28 +90,12 @@ class SendDialog extends Component {
   }
 
   handleSend () {
-    let { recipients, message, attachments } = this.state
-    let { model } = this.props
-    fetch('/api/send', {
-      method: 'POST',
-      body: JSON.stringify({
-        recipients, message, attachments,
-        replyTo: model.salesman.email,
-        subject: model.name
-      }),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }).then(res => {
-      if (!res.ok)
-        this.setState({ errorMessage: `Unable to submit job. Error code ${res.status}.` })
-      else
-        onClose()
-    }).catch(err => this.setState({ errorMessage: 'Unable to submit job. ' + err.errorMessage }))
+    let { recipients, subject, message, attachments } = this.state
+    send({ recipients, subject, message, attachments }).then(this.props.onClose)
   }
 }
 
-export default connect(state => ({ files: state.files }))(SendDialog)
+export default connect(null, { send })(SendDialog)
 
 <style>
   .send-dialog-content > div {

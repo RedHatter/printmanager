@@ -2,14 +2,19 @@ import React, { Component, Fragment } from 'react'
 import autobind from 'autobind-decorator'
 import { connect } from 'react-redux'
 import {
-  Paper, Button, AppBar, Toolbar, Tab,
-  Icon, Typography, Fade, Slide
+  Paper, Button, AppBar, Toolbar, Tab, IconButton,
+  Icon, Typography, Fade, Slide, Snackbar
 } from '@material-ui/core'
+import CloseIcon from '@material-ui/icons/Close'
 import PropTypes from 'prop-types'
 import { Auth } from 'aws-amplify'
 
+
 import { ClientType } from './types.js'
 import { SlideRight } from './transitions.jsx'
+import {
+  fetchJobs, fetchFiles, fetchClients, fetchSalesmen, clearError
+} from './actions.js'
 import Tabs from './Tabs.jsx'
 import Client from './Client.jsx'
 import JobTable from './JobTable.jsx'
@@ -31,14 +36,22 @@ class App extends Component {
       selectedTab: 0,
       selectedClient: undefined
     }
+
+    this.props.fetchSalesmen()
+      .then(this.props.fetchJobs)
+    this.props.fetchFiles()
+    this.props.fetchClients()
   }
 
   render () {
-    let { authData, clients } = this.props
+    let { authData, clients, error, clearError } = this.props
     let { selectedTab, selectedClient } = this.state
 
     return (
       <Fragment>
+        <Snackbar open={ error != undefined } message={ error } key={ error }
+          anchorOrigin={ { vertical: 'bottom', horizontal: 'right' } }
+          action={ <IconButton color="inherit" onClick={ clearError }><CloseIcon /></IconButton> } />
         <AppBar position="static" color="default">
           <Toolbar>
             <img src="/images/logo.png" />
@@ -98,7 +111,10 @@ class App extends Component {
   }
 }
 
-export default connect(state => ({ clients: state.clients }))(App)
+export default connect(
+  state => ({ clients: state.clients, error: state.errors[0] }),
+  { fetchJobs, fetchFiles, fetchClients, fetchSalesmen, clearError }
+)(App)
 
 <style>
   body {

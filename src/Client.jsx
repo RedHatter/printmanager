@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
 import autobind from 'autobind-decorator'
-import { Button, Grid, Typography, Snackbar, Paper } from '@material-ui/core'
+import { connect } from 'react-redux'
+import { Button, Grid, Typography, Paper } from '@material-ui/core'
 import { Form, TextField } from 'material-ui-utils'
 import NumberFormat from 'react-number-format'
 
 import { ClientType } from './types.js'
+import { updateClient } from './actions.js'
 
 @autobind
 class Client extends Component {
@@ -57,8 +59,6 @@ class Client extends Component {
     return (<Paper className="client-panel">
       <Grid container spacing={ 16 } className="client" component={ Form }
         onSubmit={ this.handleSave } onValid={ this.handleValid } onInvalid={ this.handleInvalid }>
-      <Snackbar open={ this.state.message != undefined } onClose={ this.clearMessage } autoHideDuration={ 5000 }
-          message={ this.state.message } anchorOrigin={ { vertical: 'bottom', horizontal: 'right' } } />
         <Grid item sm={ 12 }>
           <Typography variant="headline" align="left">General</Typography>
         </Grid>
@@ -148,31 +148,12 @@ class Client extends Component {
   }
 
   handleSave () {
-    fetch(this.state.model._id ? '/api/client/' + this.state.model._id : '/api/client', {
-      method: 'POST',
-      body: JSON.stringify(this.state.model),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-    .then(res => this.setState(res.ok
-      ? {
-        message: this.state.model.name + ' saved.',
-        model: JSON.parse(JSON.stringify(this.initalState.model))
-      }
-      : {
-        message: `Unable to submit client. Error code ${res.status}.`
-      }
-    ))
-    .catch(err => this.setState({ message: 'Unable to submit client. ' + err.message }))
-  }
-
-  clearMessage () {
-    this.setState({ message: undefined })
+    this.props.updateClient(this.state.model)
+      .then(() => this.setState({ model: JSON.parse(JSON.stringify(this.initalState.model)) }))
   }
 }
 
-export default Client
+export default connect(null, { updateClient })(Client)
 
 <style>
   .client-save-button {

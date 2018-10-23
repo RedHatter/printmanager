@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
 import autobind from 'autobind-decorator'
 import {
-  Dialog, DialogContent, DialogActions, Grid, Snackbar, FormControlLabel,
+  Dialog, DialogContent, DialogActions, Grid, FormControlLabel,
   Button, Input, MenuItem, Checkbox, ListItemText, Typography
 } from '@material-ui/core'
 import { DatePicker } from 'material-ui-pickers'
@@ -14,6 +14,7 @@ import { ClientType, JobType } from './types.js'
 import FoldPicker from './FoldPicker.jsx'
 import EditFiles from './EditFiles.jsx'
 import { enums, colorize } from '../utils.js'
+import { deleteFiles, updateJob } from './actions.js'
 
 @autobind
 class CreateModal extends Component {
@@ -70,8 +71,6 @@ class CreateModal extends Component {
       <Dialog open className="create-modal">
         <Form onSubmit={ this.handleSubmit } onValid={ this.handleValid } onInvalid={ this.handleInvalid }>
           <DialogContent>
-            <Snackbar open={ this.state.errorMessage != undefined } onClose={ this.clearError } autoHideDuration={ 5000 }
-              message={ this.state.errorMessage } anchorOrigin={ { vertical: 'bottom', horizontal: 'right' } } />
             <Grid container spacing={ 16 }>
               <Grid item sm={ 12 }><Typography variant="headline" align="left">General</Typography></Grid>
 
@@ -232,20 +231,11 @@ class CreateModal extends Component {
   }
 
   handleSubmit () {
-    let { deleteFiles, onClose } = this.props
-    deleteFiles(this.state.selectedFiles)
-    fetch(this.state.editMode ? '/api/job/' + this.state.model._id : '/api/job', {
-      method: 'POST',
-      body: JSON.stringify(this.state.model),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }).then(res => {
-      if (!res.ok)
-        this.setState({ errorMessage: `Unable to submit job. Error code ${res.status}.` })
-      else
-        onClose()
-    }).catch(err => this.setState({ errorMessage: 'Unable to submit job. ' + err.message }))
+    let { deleteFiles, updateJob, onClose } = this.props
+    let { selectedFiles, model } = this.state
+    Promise.all([deleteFiles(selectedFiles), updateJob(model)])
+      .then(onClose)
+
   }
 
   clearError () {
@@ -262,8 +252,11 @@ class CreateModal extends Component {
 }
 
 export default connect(
-  state => ({ salesmen: state.salesmen, clients: state.clients, files: state.files }),
-  { deleteFiles: data => ({ type: 'DELETE_FILES', data }) }
+  state => ({
+    salesmen: state.salesmen,
+    clients: state.clients,
+    files: state.files
+  }), { deleteFiles, updateJob }
 )(CreateModal)
 
 <style>

@@ -160,7 +160,7 @@ function Job (props) {
           </tbody>
         </table> }
       </ExpansionPanelDetails>
-      <JobActions model={ model } />
+      <JobActions model={ model } files={ files } />
   </ExpansionPanel>
   )
 }
