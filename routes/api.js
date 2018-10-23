@@ -51,7 +51,8 @@ router.post('/job', async ctx => {
   let job = new Job(model)
   try {
     await job.save()
-    ctx.status = 200
+    ctx.response.type = 'json'
+    ctx.body = job
     ctx.socketIo.emit('invalidateJobs')
   } catch (err) {
     if (err.name == 'ValidationError') {
@@ -107,7 +108,8 @@ router.post('/job/:id', async ctx => {
 })
 
 router.delete('/job/:id', async ctx => {
-  await Job.findByIdAndDelete(ctx.params.id)
+  ctx.response.type = 'json'
+  ctx.body = await Job.findByIdAndDelete(ctx.params.id)
   ctx.socketIo.emit('invalidateJobs')
 })
 
@@ -116,7 +118,8 @@ router.post('/client', async ctx => {
     let model = mapObjectValues(ctx.request.body, val => val === '' ? undefined : val)
     let client = new Client(model)
     await client.save()
-    ctx.status = 200
+    ctx.response.type = 'json'
+    ctx.body = client
     ctx.socketIo.emit('invalidateClients')
   } catch (err) {
     if (err.name == 'ValidationError') {
