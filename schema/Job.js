@@ -54,5 +54,9 @@ module.exports = new Schema({
     enum: enums.artStatus
   },
   dropStatus: Date,
-  forceComplete: Boolean
+  forceComplete: Boolean,
+  pixels: [ {
+    type: ObjectId,
+    ref: 'Pixel'
+  } ]
 })

@@ -4,7 +4,7 @@ const nodemailer = require('nodemailer')
 const Cognito = require('cognito-express')
 const util = require('util')
 
-const { Job, Client } = require('../schema')
+const { Job, Client, Pixel } = require('../schema')
 const { mapObjectValues } = require('../utils.js')
 
 const cognito = new Cognito({
@@ -82,7 +82,7 @@ router.post('/job/search', async ctx => {
       $gte: created[0],
       $lt: created[1]
     } }
-  }).populate('client').exec()
+  }).populate('client').populate('pixels').exec()
 })
 
 router.post('/job/:id', async ctx => {
@@ -169,15 +169,22 @@ let mail = nodemailer.createTransport({
 })
 
 router.post('/send', async ctx => {
-  let { recipients, attachments, subject, message } = ctx.request.body
+  let { recipients, attachments, subject, message, jobId } = ctx.request.body
   ctx.assert(recipients && recipients.length > 0, 422, 'Missing recipients.')
   ctx.assert(subject, 422, 'Missing subject.')
   ctx.assert(message, 422, 'Missing message.')
 
+  let pixel = new Pixel()
+  await pixel.save()
+
+  let job = await Job.findById(jobId)
+  job.pixels.push(pixel)
+  await job.save()
+
   ctx.body = await new Promise((resolve, reject) =>
     mail.sendMail({
-        to: recipients.join(','),
-        subject, text: message,
+        to: recipients, subject,
+        html: `${message.replace(/\n/g, '<br>')}<img src="https://printmanager.dealerdigitalgroup.com/pixel/${pixel._id}.png">`,
         attachments: attachments.map(path => ({
           path, filename: path.substring(path.lastIndexOf('/') + 1, path.lastIndexOf('?'))
         }))

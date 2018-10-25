@@ -67,7 +67,7 @@ function styles () {
     .pipe(gulp.dest('./public/'))
 }
 
-gulp.task('clean', () => del([ './public/**', '!./public', '!./public/index.html' ]))
+gulp.task('clean', () => del([ './public/**', '!./public', '!./public/index.html', '!./public/images/pxl.png' ]))
 
 gulp.task('default', gulp.parallel(gulp.series(javascript, styles), svg))
 

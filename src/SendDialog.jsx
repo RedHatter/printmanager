@@ -94,8 +94,12 @@ class SendDialog extends Component {
   }
 
   handleSend () {
+    let { onClose, model } = this.props
     let { recipients, subject, message, attachments } = this.state
-    send({ recipients, subject, message, attachments }).then(this.props.onClose)
+    send({
+      recipients, subject, message, attachments,
+      jobId: model._id
+    }).then(onClose)
   }
 }
 

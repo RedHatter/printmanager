@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import { Storage } from 'aws-amplify'
 import { Grid, ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails } from '@material-ui/core'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
-import { startOfDay } from 'date-fns'
+import { startOfDay, format } from 'date-fns'
 
 import { JobType } from './types.js'
 import Collapse from './Collapse.jsx'
@@ -22,7 +22,7 @@ function Job (props) {
   let {
     name, fold, size, type, quantity, dropDate, printDate, artStatus, dropStatus,
     listType, created, salesman, client, addons, envelope, vendor, trackingNumber,
-    expire, comments, forceComplete
+    expire, comments, forceComplete, pixels
   } = model
 
   let listStatus = 'Count Pending'
@@ -159,6 +159,14 @@ function Job (props) {
               }
           </tbody>
         </table> }
+        { pixels.length > 0 && <table className="emails">
+          <tr><th colSpan="2" className="section-header">E-mails</th></tr>
+          <tr><th>Sent</th><th>Viewed</th></tr>
+          { pixels.map(o => <tr>
+            <td>{ format(o.created, 'h:mm a MM/DD/YYYY') }</td>
+            <td>{ o.viewed ? format(o.viewed, 'h:mm a MM/DD/YYYY') : 'No' }</td>
+          </tr> ) }
+        </table> }
       </ExpansionPanelDetails>
       <JobActions model={ model } files={ files } />
   </ExpansionPanel>
@@ -242,5 +250,13 @@ export default Job
 
   .job-details .files span:hover {
     border-bottom: 1px dotted #757575;
+  }
+
+  .job-details .emails th {
+    text-align: center;
+  }
+
+  .job-details .emails td {
+    padding: 5px 10px;
   }
 </style>

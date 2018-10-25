@@ -2,6 +2,7 @@ import fromSchema from 'prop-types-from-mongoose'
 
 import JobSchema from '../schema/Job.js'
 import ClientSchema from '../schema/Client.js'
+import PixelSchema from '../schema/Pixel.js'
 
 export const
   JobType = fromSchema({
@@ -20,5 +21,8 @@ export const
         }
       }
     })
-  }, { Client: ClientSchema }),
+  }, {
+    Client: ClientSchema,
+    Pixel: PixelSchema
+  }),
   ClientType = fromSchema(ClientSchema)
