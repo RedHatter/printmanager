@@ -32,7 +32,7 @@ class CreateModal extends Component {
       model: {
         client: '',
         salesman: '',
-        dropDate: null,
+        dropDate: [ null, null ],
         printDate: null,
         expire: null,
         trackingNumber: '',
@@ -98,32 +98,40 @@ class CreateModal extends Component {
               <Grid item sm={ 12 }><Typography variant="headline" align="left">Dates</Typography></Grid>
               { this.state.editMode
                ? <Fragment>
-                <Grid item sm={ 6 }>
+                <Grid item sm={ 4 }>
                   <TextField fullWidth autoOk clearable label="Droped On" component={ DatePicker }
                     value={ this.state.model.dropStatus || null } onChange={ this.handleValueChange('dropStatus') } />
                 </Grid>
-                <Grid item sm={ 6 }>
+                <Grid item sm={ 4 }>
                   <TextField required fullWidth autoOk clearable label="Drop date" component={ DatePicker }
-                    value={ this.state.model.dropDate } onChange={ this.handleValueChange('dropDate') } />
+                    value={ this.state.model.dropDate[0] } onChange={ this.handleIndexChange('dropDate', 0) } />
                 </Grid>
-                <Grid item sm={ 6 }>
+                <Grid item sm={ 4 }>
+                  <TextField fullWidth autoOk clearable label="Second drop date" component={ DatePicker }
+                    value={ this.state.model.dropDate[1] } onChange={ this.handleIndexChange('dropDate', 1) } />
+                </Grid>
+                <Grid item sm={ 4 }>
                   <TextField required fullWidth autoOk clearable label="Send to print" component={ DatePicker }
                     value={ this.state.model.printDate } onChange={ this.handleValueChange('printDate') } />
                 </Grid>
-                <Grid item sm={ 6 }>
+                <Grid item sm={ 4 }>
                   <TextField required fullWidth autoOk clearable label="Expire" component={ DatePicker }
                     value={ this.state.model.expire } onChange={ this.handleValueChange('expire') } />
                 </Grid>
               </Fragment> : <Fragment>
-                <Grid item sm={ 4 }>
+                <Grid item sm={ 6 }>
                   <TextField required fullWidth autoOk clearable label="Drop date" component={ DatePicker }
-                    value={ this.state.model.dropDate } onChange={ this.handleValueChange('dropDate') } />
+                    value={ this.state.model.dropDate[0] } onChange={ this.handleIndexChange('dropDate', 0) } />
                 </Grid>
-                <Grid item sm={ 4 }>
+                <Grid item sm={ 6 }>
+                  <TextField fullWidth autoOk clearable label="Second drop date" component={ DatePicker }
+                    value={ this.state.model.dropDate[1] } onChange={ this.handleIndexChange('dropDate', 1) } />
+                </Grid>
+                <Grid item sm={ 6 }>
                   <TextField required fullWidth autoOk clearable label="Send to print" component={ DatePicker }
                     value={ this.state.model.printDate } onChange={ this.handleValueChange('printDate') } />
                 </Grid>
-                <Grid item sm={ 4 }>
+                <Grid item sm={ 6 }>
                   <TextField required fullWidth autoOk clearable label="Expire" component={ DatePicker }
                     value={ this.state.model.expire } onChange={ this.handleValueChange('expire') } />
                 </Grid>
@@ -221,6 +229,16 @@ class CreateModal extends Component {
 
   handleValueChange (prop) {
     return value => this.handleChange(prop, value)
+  }
+
+  handleIndexChange (prop, i) {
+    return value =>
+      this.setState(state => {
+        let model = JSON.parse(JSON.stringify(state.model))
+        console.log(prop, i, value, model)
+        model[prop][i] = value
+        return { model }
+      })
   }
 
   handleChange (prop, value) {

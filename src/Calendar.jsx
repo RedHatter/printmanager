@@ -33,15 +33,10 @@ class Calendar extends Component {
 
   render () {
     let model = this.props.model.reduce((model, job) => {
-      if (!model[job.dropDate])
-        model[job.dropDate] = []
-
-      model[job.dropDate].push(job)
-
-      if (!model[job.printDate])
-        model[job.printDate] = []
-
-      model[job.printDate].push(job)
+      job.dropDate.concat(job.printDate).forEach(date => {
+        if (!model[date]) model[date] = []
+        model[date].push(job)
+      })
 
       return model
     }, {})
@@ -89,7 +84,7 @@ class Calendar extends Component {
                             onClick={ this.handleSelectEvent.bind(this, job) }
                             className={ classnames({
                               print: isEqual(day, job.printDate),
-                              drop: isEqual(day, job.dropDate)
+                              drop: job.dropDate.some(date => isEqual(day, date))
                             })
                           }>
                           { job.name }

@@ -43,7 +43,7 @@ function Job (props) {
           'Proof', 'Data List', 'Dealer invoice',
           'Printer invoice', 'Postal', 'Prize board'
         ].every(key => key in files)),
-        late: dropDate < today && !dropStatus
+        late: dropDate[0] < today && !dropStatus
       }, 'job-row') }>
         <Column group="name">{ name }</Column>
         <Column group="quantity">{ formatNumber(quantity) }</Column>
@@ -52,7 +52,7 @@ function Job (props) {
             { dropStatusFromatted }
           </span>
         </Column>
-        <Column group="dropDate">{ formatDate(dropDate) }</Column>
+        <Column group="dropDate">{ dropDate.map(date => <Fragment key={ date }>{ formatDate(date) }<br /></Fragment>) }</Column>
         <Column group="artStatus">
           <span className={ classnames('statusBlock', colorize(artStatus)) }>{ artStatus }</span>
         </Column>
