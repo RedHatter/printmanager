@@ -84,8 +84,8 @@ class Calendar extends Component {
                       <div className={ classnames({
                         inactive: !isSameMonth(day, selectedDay)
                       }) }>{ format(day, 'DD') }</div>
-                      { day in model && model[day].map(job => (
-                          <div key={ job._id }
+                      { day in model && model[day].map((job, i) => (
+                          <div key={ job._id + i }
                             onClick={ this.handleSelectEvent.bind(this, job) }
                             className={ classnames({
                               print: isEqual(day, job.printDate),
