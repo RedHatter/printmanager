@@ -1,13 +1,18 @@
 const { format } = require('date-fns')
 
 const enums = {
-  fold: [ 'Half Fold', 'Tri Fold', 'Custom', 'No Fold' ],
+  jobType: [ 'Postcard', 'Tri-fold service', 'Tri-fold offer sales',
+   'Invoice w/ voucher buy back', 'Invoice w/ck', 'Invoice bilingual w/voucher',
+   'Email buy back', 'Letter orignal bankruptcy', 'Letter w/voucher w/offers',
+   'Letter certificate prequal', 'Letter tax double window bilingual',
+   'Letter w/offers buy back', 'Check stub w/voucher prequal', 'Carbon',
+   'Tax snap buy back' ],
   addons: [
     "Scratcher", "Key", "Hologram Scratcher","KBB Append", "Handwriting",
     "4x6 Note", "Lamination", "Pull Tab", "Post-It-Note", "Bus. Card 1-sided",
     "BB Append", "Bus. Card 2-sided", "Credit Card", "Spanish", "Custom"
   ],
-  listType: [ 'Database', 'Saturation', 'Bankruptcy', 'Credit', 'Conquest' ],
+  listType: [ 'Database', 'Saturation', 'Bankruptcy', 'Prequalified' ],
   postage: [
     'Indicia, Standard', 'Indicia, 1st Class',
     'Stamp, Standard', 'Stamp, 1st Class'
@@ -17,12 +22,14 @@ const enums = {
     '6 x 9', '6 x 9 Windowed', '6 x 9 Double-Windowed'
   ],
   size: [
-    '4 x 6', '5 x 7', '5.5 x 11', '8.5 x 11', '8.5 x 14',
-    '11 x 15', '11 x 17', '19 x 27', '21 x 34', 'Double 21 x 34',
-    '8.5 x 11 Snap Pack', '8.5 x 11 Windowed Snap Pack',
-    '8 Page 11 x 17 Magazine', '8 Page 11 x 17 Newsprint', 'Die Cut'
+    '8.5 x 11',
+    '8.5 x 14',
+    '9 x 7',
+    '11 x 15',
+    '11 x 17'
   ],
-  artStatus: [ 'In Progress', 'Needs Revisions', 'Sent to Client', 'Approved' ]
+  artStatus: [ 'In Progress', 'Needs Revisions', 'Sent to Client', 'Approved' ],
+  eventTypes: [ 'created', 'changed' ]
 }
 
 function colorize (status) {

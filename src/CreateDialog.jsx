@@ -11,7 +11,6 @@ import NumberFormat from 'react-number-format'
 import PropTypes from 'prop-types'
 
 import { ClientType, JobType } from './types.js'
-import FoldPicker from './FoldPicker.jsx'
 import EditFiles from './EditFiles.jsx'
 import { enums, colorize } from '../utils.js'
 import { deleteFiles, updateJob } from './actions.js'
@@ -39,8 +38,8 @@ class CreateModal extends Component {
         trackingNumber: '',
         vendor: '',
         quantity: '',
-        fold: 'No Fold',
         addons: [],
+        jobType: '',
         envelope: 'None',
         size: '',
         listType: '',
@@ -142,10 +141,22 @@ class CreateModal extends Component {
                 <NumberFormat fullWidth required isNumericString thousandSeparator label="Quantity" customInput={ TextField }
                   value={ this.state.model.quantity } onValueChange={ this.handleNumericChange('quantity') }/>
               </Grid>
-              <Grid item sm={ 3 }>
-                <FoldPicker value={ this.state.model.fold } onChange={ this.handleInputChange('fold') } />
+              <Grid item sm={ 6 }>
+                <TextField required fullWidth label="Type" select value={ this.state.model.jobType } onChange={ this.handleInputChange('jobType') }>
+                  { enums.jobType.map(value => <MenuItem key={ value } value={ value }>{ value }</MenuItem>) }
+                </TextField>
               </Grid>
-              <Grid item sm={ 9 }>
+              <Grid item sm={ 6 }>
+                <TextField required fullWidth label="Size" select value={ this.state.model.size } onChange={ this.handleInputChange('size') }>
+                  { enums.size.map(value => <MenuItem key={ value } value={ value }>{ value }</MenuItem>) }
+                </TextField>
+              </Grid>
+              <Grid item sm={ 6 }>
+                <TextField required fullWidth label="Envelope" select value={ this.state.model.envelope } onChange={ this.handleInputChange('envelope') }>
+                  { enums.envelope.map(value => <MenuItem key={ value } value={ value }>{ value }</MenuItem>) }
+                </TextField>
+              </Grid>
+              <Grid item sm={ 6 }>
                 <TextField value={ this.state.model.addons } onChange={ this.handleInputChange('addons') }
                   fullWidth label="Addons" select SelectProps={
                     { multiple: true, renderValue: selected => selected.join(', ') }
@@ -156,16 +167,6 @@ class CreateModal extends Component {
                       <ListItemText primary={ value } />
                     </MenuItem>
                   )) }
-                </TextField>
-              </Grid>
-              <Grid item sm={ 6 }>
-                <TextField required fullWidth label="Envelope" select value={ this.state.model.envelope } onChange={ this.handleInputChange('envelope') }>
-                  { enums.envelope.map(value => <MenuItem key={ value } value={ value }>{ value }</MenuItem>) }
-                </TextField>
-              </Grid>
-              <Grid item sm={ 6 }>
-                <TextField required fullWidth label="Size" select value={ this.state.model.size } onChange={ this.handleInputChange('size') }>
-                  { enums.size.map(value => <MenuItem key={ value } value={ value }>{ value }</MenuItem>) }
                 </TextField>
               </Grid>
               <Grid item sm={ 6 }>

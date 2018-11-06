@@ -42,7 +42,72 @@ router.post('/job', async ctx => {
 
     let client = await Client.findById(model.client)
 
-    model.name = `${client.acronym} ${format(today, 'MMYY')}-${n + 1}`
+    let type = ''
+    switch (model.jobType) {
+      case 'Postcard':
+        type = 'PCARD'
+        break;
+      case 'Tri-fold service':
+        type = 'TFLD_SV'
+        break;
+      case 'Tri-fold offer sales':
+        type = 'TFLD_OFR'
+        break;
+      case 'Invoice w/ voucher buy back':
+        type = 'INV_VOU_BB'
+        break;
+      case 'Invoice w/ck':
+        type = 'INV_CK'
+        break;
+      case 'Invoice bilingual w/voucher':
+        type = 'INV_VOU_BI'
+        break;
+      case 'Email buy back':
+        type = 'EML_BB'
+        break;
+      case 'Letter orignal bankruptcy':
+        type = 'LTR_OG_BK'
+        break;
+      case 'Letter w/voucher w/offers':
+        type = 'LTR_VOU_OFR'
+        break;
+      case 'Letter certificate prequal':
+        type = 'LTR_CERT_PRQ'
+        break;
+      case 'Letter tax double window bilingual':
+        type = 'LTR_TX_DW_DI'
+        break;
+      case 'Letter w/offers buy back':
+        type = 'LTR_OFR_BB'
+        break;
+      case 'Check stub w/voucher prequal':
+        type = 'CSTB_VOU_PRQ'
+        break;
+      case 'Carbon':
+        type = 'CARB'
+        break;
+      case 'Tax snap buy back':
+        type = 'TSNAP_BB'
+        break;
+    }
+
+    let list = ''
+    switch (model.listType) {
+      case 'Database':
+        list = '_DB'
+        break;
+      case 'Saturation':
+        list = '_SAT'
+        break;
+      case 'Bankruptcy':
+        list = '_BK'
+        break;
+      case 'Prequalified':
+        list = '_PREQUAL'
+        break;
+    }
+
+    model.name = `${client.acronym} ${format(today, 'MMYY')}-${n + 1} ${type}${list}`
   }
 
   model = mapObjectValues(model, val => val === '' ? undefined : val)

@@ -14,13 +14,13 @@ module.exports = new Schema({
     ref: 'Client',
     required: true
   },
+  jobType: {
+    type: String,
+    enum: enums.jobType,
+    required: true
+  },
   envelope: { type: String, required: true },
   size: { type: String, required: true },
-  fold: {
-    type: String,
-    required: true,
-    enum: enums.fold
-  },
   addons: [ {
     type: String,
     enum: enums.addons,

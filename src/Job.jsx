@@ -20,7 +20,7 @@ Job.propTypes = {
 function Job (props) {
   let { model, files, ...rest } = props
   let {
-    name, fold, size, type, quantity, dropDate, printDate, artStatus, dropStatus,
+    name, jobType, size, type, quantity, dropDate, printDate, artStatus, dropStatus,
     listType, created, salesman, client, addons, envelope, vendor, trackingNumber,
     expire, comments, forceComplete, pixels
   } = model
@@ -43,7 +43,7 @@ function Job (props) {
         late: dropDate < today && !dropStatus
       }, 'job-row') }>
         <Grid item xs>{ name }</Grid>
-        <Grid item xs>{ fold } &mdash; { size }</Grid>
+        <Grid item xs>{ jobType } &mdash; { size }</Grid>
         <Grid item xs>{ formatNumber(quantity) }</Grid>
         <Grid item xs>
           <span className={ classnames('statusBlock', colorize(dropStatus)) }>
