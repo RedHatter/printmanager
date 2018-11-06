@@ -26,6 +26,8 @@ function Job (props) {
     expire, comments, forceComplete, pixels
   } = model
 
+  let dropStatusFromatted = dropStatus ? formatDate(dropStatus) : 'Incomplete'
+
   let listStatus = 'Count Pending'
   if (files && 'Data List' in files)
     listStatus = 'List Uploaded'
@@ -46,8 +48,8 @@ function Job (props) {
         <Column group="name">{ name }</Column>
         <Column group="quantity">{ formatNumber(quantity) }</Column>
         <Column group="dropStatus">
-          <span className={ classnames('statusBlock', colorize(dropStatus)) }>
-            { dropStatus ? formatDate(dropStatus) : 'Incomplete' }
+          <span className={ classnames('statusBlock', colorize(dropStatusFromatted)) }>
+            { dropStatusFromatted }
           </span>
         </Column>
         <Column group="dropDate">{ formatDate(dropDate) }</Column>
