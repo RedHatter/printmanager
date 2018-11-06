@@ -2,13 +2,14 @@ import React, { Fragment } from 'react'
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
 import { Storage } from 'aws-amplify'
-import { Grid, ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails } from '@material-ui/core'
+import { ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails } from '@material-ui/core'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import { startOfDay, format } from 'date-fns'
 
 import { JobType } from './types.js'
 import Collapse from './Collapse.jsx'
 import JobActions from './JobActions.jsx'
+import Column from './Column.jsx'
 
 import { colorize, formatNumber, formatPhone, formatDate } from '../utils.js'
 
@@ -42,25 +43,25 @@ function Job (props) {
         ].every(key => key in files)),
         late: dropDate < today && !dropStatus
       }, 'job-row') }>
-        <Grid item xs>{ name }</Grid>
-        <Grid item xs>{ jobType } &mdash; { size }</Grid>
-        <Grid item xs>{ formatNumber(quantity) }</Grid>
-        <Grid item xs>
+        <Column group="name">{ name }</Column>
+        <Column group="jobType">{ jobType } &mdash; { size }</Column>
+        <Column group="quantity">{ formatNumber(quantity) }</Column>
+        <Column group="dropStatus">
           <span className={ classnames('statusBlock', colorize(dropStatus)) }>
             { dropStatus ? formatDate(dropStatus) : 'Incomplete' }
           </span>
-        </Grid>
-        <Grid item xs>{ formatDate(dropDate) }</Grid>
-        <Grid item xs>
+        </Column>
+        <Column group="dropDate">{ formatDate(dropDate) }</Column>
+        <Column group="artStatus">
           <span className={ classnames('statusBlock', colorize(artStatus)) }>{ artStatus }</span>
-        </Grid>
-        <Grid item xs>{ formatDate(printDate) }</Grid>
-        <Grid item xs>
+        </Column>
+        <Column group="printDate">{ formatDate(printDate) }</Column>
+        <Column group="listStatus">
           <span className={ classnames('statusBlock', colorize(listStatus)) }>{ listStatus }</span>
-        </Grid>
-        <Grid item xs>{ listType }</Grid>
-        <Grid item xs>{ formatDate(created) }</Grid>
-        <Grid item xs>{ salesman.name }</Grid>
+        </Column>
+        <Column group="listType">{ listType }</Column>
+        <Column group="created">{ formatDate(created) }</Column>
+        <Column group="salesman">{ salesman.name }</Column>
       </ExpansionPanelSummary>
       <ExpansionPanelDetails className="job-details">
         <table>

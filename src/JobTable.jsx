@@ -2,10 +2,11 @@ import React, { Component } from 'react'
 import autobind from 'autobind-decorator'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { Paper, Grid } from '@material-ui/core'
+import { Paper } from '@material-ui/core'
 
 import { JobType } from './types.js'
 import Job from './Job.jsx'
+import Column from './Column.jsx'
 
 @autobind
 class JobTable extends Component {
@@ -28,19 +29,19 @@ class JobTable extends Component {
 
     return (
       <div>
-        <Grid container component={ Paper } className="header">
-          <Grid item xs>Job Name</Grid>
-          <Grid item xs>Mailer Type</Grid>
-          <Grid item xs>Quanity</Grid>
-          <Grid item xs>Drop Status</Grid>
-          <Grid item xs>Drop Date</Grid>
-          <Grid item xs>Job Status</Grid>
-          <Grid item xs>Print Date</Grid>
-          <Grid item xs>List Status</Grid>
-          <Grid item xs>List Type</Grid>
-          <Grid item xs>Order Date</Grid>
-          <Grid item xs>Salesman</Grid>
-        </Grid>
+        <Paper className="header">
+          <Column group="name">Job Name</Column>
+          <Column group="jobType">Mailer Type</Column>
+          <Column group="quantity">Quanity</Column>
+          <Column group="dropStatus">Drop Status</Column>
+          <Column group="dropDate">Drop Date</Column>
+          <Column group="artStatus">Job Status</Column>
+          <Column group="printDate">Print Date</Column>
+          <Column group="listStatus">List Status</Column>
+          <Column group="listType">List Type</Column>
+          <Column group="created">Order Date</Column>
+          <Column group="salesman">Salesman</Column>
+        </Paper>
         { model.map(o => (<Job key={ o._id } model={ o } files={ files[o._id] }
           expanded={expanded == o._id } onChange={ this.handleChange.bind(this, o._id) } />)) }
         { model.length == 0 && <Paper className="empty">No results.</Paper> }
@@ -65,6 +66,7 @@ export default connect(state => ({ model: state.jobs, files: state.files }))(Job
   .header > div {
     white-space: nowrap;
     min-width: 100px;
+    margin: auto 15px;
   }
 
   .empty {
