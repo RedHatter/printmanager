@@ -5,8 +5,8 @@ import { connect } from 'react-redux'
 import { Paper } from '@material-ui/core'
 
 import { JobType } from './types.js'
+import JobHeader from './JobHeader.jsx'
 import Job from './Job.jsx'
-import Column from './Column.jsx'
 
 @autobind
 class JobTable extends Component {
@@ -29,18 +29,7 @@ class JobTable extends Component {
 
     return (
       <div>
-        <Paper className="header">
-          <Column group="name">Job Name</Column>
-          <Column group="quantity">Quanity</Column>
-          <Column group="dropStatus">Drop Status</Column>
-          <Column group="dropDate">Drop Date</Column>
-          <Column group="artStatus">Job Status</Column>
-          <Column group="printDate">Print Date</Column>
-          <Column group="listStatus">List Status</Column>
-          <Column group="listType">List Type</Column>
-          <Column group="created">Order Date</Column>
-          <Column group="salesman">Salesman</Column>
-        </Paper>
+        <JobHeader />
         { model.map(o => (<Job key={ o._id } model={ o } files={ files[o._id] }
           expanded={expanded == o._id } onChange={ this.handleChange.bind(this, o._id) } />)) }
         { model.length == 0 && <Paper className="empty">No results.</Paper> }

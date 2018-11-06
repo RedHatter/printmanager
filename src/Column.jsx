@@ -17,7 +17,7 @@ class Column extends Component {
 
     let next = Column.funcs[props.group]
     Column.funcs[props.group] = width => {
-      if (width > this.width)
+      if (width > this.width && this.ref.current)
         this.ref.current.style.width = width + 'px'
 
       if (next) next(width)

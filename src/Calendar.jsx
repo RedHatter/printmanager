@@ -12,6 +12,7 @@ import PropTypes from 'prop-types'
 import { range } from '../utils.js'
 import { JobType } from './types.js'
 import { SlideDown, Fade } from './transitions.jsx'
+import JobHeader from './JobHeader.jsx'
 import Job from './Job.jsx'
 
 @autobind
@@ -51,6 +52,7 @@ class Calendar extends Component {
     return <Fragment>
       <SlideDown in={ isDetailsOpen }>
         <div>
+          <JobHeader />
           <Job model={ selectedEvent } expanded={ true } />
           <Button onClick={ this.handleCloseEvent } className="back-to-calendar">Back to Calendar</Button>
         </div>
