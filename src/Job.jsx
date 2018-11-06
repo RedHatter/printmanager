@@ -112,18 +112,18 @@ function Job (props) {
         { files &&
           <table className="files">
             <tbody>
-              <tr><th colSpan="4" className="section-header">Files</th></tr>
+              <tr><th coldiv="4" className="section-header">Files</th></tr>
               <tr>
                 <th>Proof</th>
                 <td>{ 'Proof' in files ?
                   files.Proof.map(file => (
-                    <span key={ file.key } onClick={ handleFileClick(file.key) }>{ file.name }</span>
+                    <div key={ file.key } onClick={ handleFileClick(file.key) }>{ file.name }</div>
                   )) : 'None'
                 }</td>
                 <th>Data List</th>
                 <td>{ 'Data List' in files ?
                   files['Data List'].map(file => (
-                    <span key={ file.key } onClick={ handleFileClick(file.key) }>{ file.name }</span>
+                    <div key={ file.key } onClick={ handleFileClick(file.key) }>{ file.name }</div>
                   )) : 'None'
                 }</td>
               </tr>
@@ -131,13 +131,13 @@ function Job (props) {
                 <th>Dealer invoice</th>
                 <td>{ 'Dealer invoice' in files ?
                   files['Dealer invoice'].map(file => (
-                    <span key={ file.key } onClick={ handleFileClick(file.key) }>{ file.name }</span>
+                    <div key={ file.key } onClick={ handleFileClick(file.key) }>{ file.name }</div>
                   )) : 'None'
                 }</td>
                 <th>Printer invoice</th>
                 <td>{ 'Printer invoice' in files ?
                   files['Printer invoice'].map(file => (
-                    <span key={ file.key } onClick={ handleFileClick(file.key) }>{ file.name }</span>
+                    <div key={ file.key } onClick={ handleFileClick(file.key) }>{ file.name }</div>
                   )) : 'None'
                 }</td>
               </tr>
@@ -145,13 +145,13 @@ function Job (props) {
                 <th>Postal</th>
                 <td>{ 'Postal' in files ?
                   files.Postal.map(file => (
-                    <span key={ file.key } onClick={ handleFileClick(file.key) }>{ file.name }</span>
+                    <div key={ file.key } onClick={ handleFileClick(file.key) }>{ file.name }</div>
                   )) : 'None'
                 }</td>
                 <th>Prize board</th>
                 <td>{ 'Prize board' in files ?
                   files['Prize board'].map(file => (
-                    <span key={ file.key } onClick={ handleFileClick(file.key) }>{ file.name }</span>
+                    <div key={ file.key } onClick={ handleFileClick(file.key) }>{ file.name }</div>
                   )) : 'None'
                 }</td>
               </tr>
@@ -159,7 +159,7 @@ function Job (props) {
                 <tr>
                   <th>Other</th>
                   <td>{ files.Other.map(file => (
-                      <span key={ file.key } onClick={ handleFileClick(file.key) }>{ file.name }</span>
+                      <div key={ file.key } onClick={ handleFileClick(file.key) }>{ file.name }</div>
                   )) }</td>
                 </tr>
               }
