@@ -100,7 +100,7 @@ function Job (props) {
             </tr>
             <tr>
               <th>Comments</th>
-              <td colSpan="3">{ comments }</td>
+              <td colSpan="3"><pre>{ comments }</pre></td>
             </tr>
           </tbody>
         </table>
