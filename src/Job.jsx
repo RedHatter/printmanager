@@ -44,7 +44,6 @@ function Job (props) {
         late: dropDate < today && !dropStatus
       }, 'job-row') }>
         <Column group="name">{ name }</Column>
-        <Column group="jobType">{ jobType } &mdash; { size }</Column>
         <Column group="quantity">{ formatNumber(quantity) }</Column>
         <Column group="dropStatus">
           <span className={ classnames('statusBlock', colorize(dropStatus)) }>
@@ -67,12 +66,16 @@ function Job (props) {
         <table>
           <tbody>
             <tr>
-              <th>Client</th>
-              <td>
+              <th rowSpan="2">Client</th>
+              <td rowSpan="2">
                 { client.name }
                 <br />
                 { client.address }
               </td>
+              <th>Mailer Type</th>
+              <td>{ jobType } &mdash; { size }</td>
+            </tr>
+            <tr>
               <th>Addons</th>
               <td>{ addons.join(', ') }</td>
             </tr>
@@ -232,6 +235,7 @@ export default Job
     font-weight: normal;
     text-align: right;
     padding: 5px 15px;
+    vertical-align: top;
   }
 
   .job-details td {

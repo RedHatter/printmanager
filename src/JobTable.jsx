@@ -31,7 +31,6 @@ class JobTable extends Component {
       <div>
         <Paper className="header">
           <Column group="name">Job Name</Column>
-          <Column group="jobType">Mailer Type</Column>
           <Column group="quantity">Quanity</Column>
           <Column group="dropStatus">Drop Status</Column>
           <Column group="dropDate">Drop Date</Column>
