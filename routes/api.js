@@ -65,14 +65,14 @@ router.post('/job', async ctx => {
       case 'Email buy back':
         type = 'EML_BB'
         break;
-      case 'Letter orignal bankruptcy':
-        type = 'LTR_OG_BK'
+      case 'Letter orignal':
+        type = 'LTR_OG'
         break;
       case 'Letter w/voucher w/offers':
         type = 'LTR_VOU_OFR'
         break;
-      case 'Letter certificate prequal':
-        type = 'LTR_CERT_PRQ'
+      case 'Letter certificate':
+        type = 'LTR_CERT'
         break;
       case 'Letter tax double window bilingual':
         type = 'LTR_TX_DW_DI'
@@ -80,8 +80,8 @@ router.post('/job', async ctx => {
       case 'Letter w/offers buy back':
         type = 'LTR_OFR_BB'
         break;
-      case 'Check stub w/voucher prequal':
-        type = 'CSTB_VOU_PRQ'
+      case 'Check stub w/voucher':
+        type = 'CSTB_VOU'
         break;
       case 'Carbon':
         type = 'CARB'
@@ -103,7 +103,7 @@ router.post('/job', async ctx => {
         list = '_BK'
         break;
       case 'Prequalified':
-        list = '_PREQUAL'
+        list = '_PRQ'
         break;
     }
 

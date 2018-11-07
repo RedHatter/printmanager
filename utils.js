@@ -3,9 +3,9 @@ const { format } = require('date-fns')
 const enums = {
   jobType: [ 'Postcard', 'Tri-fold service', 'Tri-fold offer sales',
    'Invoice w/ voucher buy back', 'Invoice w/ck', 'Invoice bilingual w/voucher',
-   'Email buy back', 'Letter orignal bankruptcy', 'Letter w/voucher w/offers',
-   'Letter certificate prequal', 'Letter tax double window bilingual',
-   'Letter w/offers buy back', 'Check stub w/voucher prequal', 'Carbon',
+   'Email buy back', 'Letter orignal', 'Letter w/voucher w/offers',
+   'Letter certificate', 'Letter tax double window bilingual',
+   'Letter w/offers buy back', 'Check stub w/voucher', 'Carbon',
    'Tax snap buy back' ],
   addons: [
     "Scratcher", "Key", "Hologram Scratcher","KBB Append", "Handwriting",
