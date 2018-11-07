@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from 'react'
-import autobind from 'autobind-decorator'
 import { Typography } from '@material-ui/core'
 import { PropTypes } from 'prop-types'
 

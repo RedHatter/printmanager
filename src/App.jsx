@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import autobind from 'autobind-decorator'
+import bound from 'bound-decorator'
 import { connect } from 'react-redux'
 import {
   Paper, Button, AppBar, Toolbar, Tab, IconButton,
@@ -22,7 +22,6 @@ import CreateDialog from './CreateDialog.jsx'
 import Filters from './Filters.jsx'
 import Calendar from './Calendar.jsx'
 
-@autobind
 class App extends Component {
   static propTypes = {
     clients: PropTypes.arrayOf(ClientType).isRequired,
@@ -56,7 +55,7 @@ class App extends Component {
           <Toolbar>
             <img src="/images/logo.png" />
             <div className="header-button-container">
-              { authData && authData.email }
+              { authData?.email }
               <Button onClick={ this.handleSignOut }>Sign Out</Button>
             </div>
           </Toolbar>
@@ -88,24 +87,29 @@ class App extends Component {
     )
   }
 
+  @bound
   handleTabChange (e, value) {
     this.setState({ selectedTab: value, selectedClient: undefined })
   }
 
+  @bound
   handleClientChange (e, value) {
     this.setState({ selectedTab: undefined, selectedClient: value })
   }
 
+  @bound
   handleSignOut () {
     Auth.signOut()
       .then(() => this.props.onStateChange('signIn'))
       .catch(console.error)
   }
 
+  @bound
   closeCreateDialog () {
     this.setState({ isCreateDialogOpen: false })
   }
 
+  @bound
   openCreateDialog () {
     this.setState({ isCreateDialogOpen: true })
   }

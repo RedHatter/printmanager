@@ -1,4 +1,4 @@
-import 'babel-polyfill'
+import '@babel/polyfill'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import Amplify from 'aws-amplify'
@@ -16,7 +16,8 @@ import App from './App.jsx'
 Amplify.configure({
   Storage: {
     region: 'us-west-1',
-    bucket: 'dealerdigitalgroup.printmanager'
+    bucket: 'dealerdigitalgroup.printmanager',
+    identityPoolId: '44b4cdbf-dac2-40a5-b0ef-a8adc1f30785'
   },
   Auth: {
     region: 'us-west-2',

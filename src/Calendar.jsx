@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import autobind from 'autobind-decorator'
+import bound from 'bound-decorator'
 import { connect } from 'react-redux'
 import { Paper, Dialog, DialogContent, DialogActions, Button } from '@material-ui/core'
 import {
@@ -15,7 +15,6 @@ import { SlideDown, Fade } from './transitions.jsx'
 import JobHeader from './JobHeader.jsx'
 import Job from './Job.jsx'
 
-@autobind
 class Calendar extends Component {
   static propTypes = {
     model: PropTypes.arrayOf(JobType).isRequired
@@ -33,10 +32,8 @@ class Calendar extends Component {
 
   render () {
     let model = this.props.model.reduce((model, job) => {
-      job.dropDate.concat(job.printDate).forEach(date => {
-        if (!model[date]) model[date] = []
-        model[date].push(job)
-      })
+      job.dropDate.concat(job.printDate).forEach(date =>
+        (model[date] ||= []).push(job))
 
       return model
     }, {})
@@ -79,7 +76,7 @@ class Calendar extends Component {
                       <div className={ classnames({
                         inactive: !isSameMonth(day, selectedDay)
                       }) }>{ format(day, 'DD') }</div>
-                      { day in model && model[day].map((job, i) => (
+                      { model[day]?.map((job, i) => (
                           <div key={ job._id + i }
                             onClick={ this.handleSelectEvent.bind(this, job) }
                             className={ classnames({
@@ -106,15 +103,18 @@ class Calendar extends Component {
     this.setState({ selectedEvent: job, isDetailsOpen: true })
   }
 
+  @bound
   handleCloseEvent (e) {
     e.stopPropagation()
     this.setState({ isDetailsOpen: false })
   }
 
+  @bound
   handlePrevious (e) {
     this.setState(state => ({ selectedDay: addMonths(state.selectedDay, -1) }))
   }
 
+  @bound
   handleNext (e) {
     this.setState(state => ({ selectedDay: addMonths(state.selectedDay, 1) }))
   }

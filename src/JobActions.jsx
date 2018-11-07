@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import autobind from 'autobind-decorator'
+import bound from 'bound-decorator'
 import { connect } from 'react-redux'
 import {
   withStyles, Button, Dialog, DialogContent,
@@ -14,7 +14,6 @@ import CreateDialog from './CreateDialog.jsx'
 import FileDialog from './FileDialog.jsx'
 import SendDialog from './SendDialog.jsx'
 
-@autobind
 class DuplicateButton extends Component {
   static propTypes = {
     model: JobType.isRequired
@@ -33,6 +32,7 @@ class DuplicateButton extends Component {
     </Fragment>
   }
 
+  @bound
   handleOpen () {
     let model = clone(this.props.model)
     delete model._id
@@ -41,12 +41,12 @@ class DuplicateButton extends Component {
     this.setState({ isOpen: true, model })
   }
 
+  @bound
   handleClose () {
     this.setState({ isOpen: false, model: undefined })
   }
 }
 
-@autobind
 class EditButton extends Component {
   static propTypes = {
     model: JobType.isRequired
@@ -65,16 +65,17 @@ class EditButton extends Component {
     </Fragment>
   }
 
+  @bound
   handleOpen () {
     this.setState({ isOpen: true })
   }
 
+  @bound
   handleClose () {
     this.setState({ isOpen: false })
   }
 }
 
-@autobind
 class DeleteButton extends Component {
   static propTypes = {
     model: JobType.isRequired
@@ -101,14 +102,17 @@ class DeleteButton extends Component {
     </Fragment>
   }
 
+  @bound
   handleOpen () {
     this.setState({ isOpen: true })
   }
 
+  @bound
   handleClose () {
     this.setState({ isOpen: false })
   }
 
+  @bound
   handleDelete () {
     let { deleteJob, model } = this.props
     deleteJob(model._id)
@@ -117,7 +121,6 @@ class DeleteButton extends Component {
 
 DeleteButton = connect(null, { deleteJob })(DeleteButton)
 
-@autobind
 class SendButton extends Component {
   static propTypes = {
     model: JobType.isRequired,
@@ -139,10 +142,12 @@ class SendButton extends Component {
     </Fragment>
   }
 
+  @bound
   handleOpen () {
     this.setState({ isOpen: true })
   }
 
+  @bound
   handleClose () {
     this.setState({ isOpen: false })
   }

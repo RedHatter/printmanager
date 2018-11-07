@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import autobind from 'autobind-decorator'
+import bound from 'bound-decorator'
 import { connect } from 'react-redux'
 import {
   Dialog, DialogContent, DialogActions, Button, LinearProgress,
@@ -17,7 +17,6 @@ const FileButton = withStyles(buttonStyles, { name: 'FileButton' })(
   }
 )
 
-@autobind
 class FileDialog extends Component {
   static propTypes = {
     path: PropTypes.string.isRequired
@@ -62,22 +61,22 @@ class FileDialog extends Component {
       </Dialog>
   }
 
-  clearMessage () {
-    this.setState({ message: undefined })
-  }
-
+  @bound
   handleTypeChange (e, type) {
     this.setState({ type })
   }
 
+  @bound
   handleSelect (e) {
     this.setState({ files: e.target.files, type: '' })
   }
 
+  @bound
   handleClose () {
     this.setState({ files: [], type: '' })
   }
 
+  @bound
   handleUpload () {
     let { path, uploadFiles } = this.props
     let { type, files } = this.state

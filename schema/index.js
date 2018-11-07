@@ -4,7 +4,7 @@ const JobSchema = require('./Job.js')
 const PixelSchema = require('./Pixel.js')
 
 mongoose.Promise = Promise
-mongoose.connect('mongodb://localhost/printmanager')
+mongoose.connect('mongodb://localhost/printmanager', { useNewUrlParser: true })
 mongoose.connection
   .on('error', console.error.bind(console, 'connection error:'))
 

@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
-import autobind from 'autobind-decorator'
 import PropTypes from 'prop-types'
 
-@autobind
 class Column extends Component {
   static propTypes = {
     group: PropTypes.string.isRequired
@@ -20,7 +18,7 @@ class Column extends Component {
       if (width > this.width && this.ref.current)
         this.ref.current.style.width = width + 'px'
 
-      if (next) next(width)
+      next?.(width)
     }
 
     this.componentDidMount = this.componentDidUpdate

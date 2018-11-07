@@ -78,9 +78,8 @@ export async function fetchFiles () {
     let res = await Storage.list('')
     let payload = res.reduce((files, file) => {
       let parts = file.key.split('/')
-      if (!files[parts[0]]) files[parts[0]] = {}
-      if (!files[parts[0]][parts[1]]) files[parts[0]][parts[1]] = []
-
+      files[parts[0]] ||= {}
+      files[parts[0]][parts[1]] ||= []
       files[parts[0]][parts[1]].push({
         key: file.key,
         name: decodeURIComponent(parts[2])

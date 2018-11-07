@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import autobind from 'autobind-decorator'
+import bound from 'bound-decorator'
 import { connect } from 'react-redux'
 import { Button, Grid, Typography, Paper } from '@material-ui/core'
 import { Form, TextField } from 'material-ui-utils'
@@ -8,7 +8,6 @@ import NumberFormat from 'react-number-format'
 import { ClientType } from './types.js'
 import { updateClient } from './actions.js'
 
-@autobind
 class Client extends Component {
   static propTypes = {
     model: ClientType
@@ -43,7 +42,7 @@ class Client extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    if ((this.props.model && nextProps.model && this.props.model._id == nextProps.model._id)
+    if (this.props.model?._id == nextProps.model?._id
       || (!this.props.model && !nextProps.model))
      return
 
@@ -109,14 +108,17 @@ class Client extends Component {
     </Paper>)
   }
 
+  @bound
   handleValid () {
     this.setState({ submitDisabled: false })
   }
 
+  @bound
   handleInvalid () {
     this.setState({ submitDisabled: true })
   }
 
+  @bound
   handleAcronymChange (e) {
     this.setValue([ 'acronym' ], e.target.value.toUpperCase())
   }
@@ -142,6 +144,7 @@ class Client extends Component {
     })
   }
 
+  @bound
   handleSave () {
     this.props.updateClient(this.state.model)
       .then(() => this.setState({ model: JSON.parse(JSON.stringify(this.initalState.model)) }))

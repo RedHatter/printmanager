@@ -40,13 +40,15 @@ function javascript () {
     })
     .transform('babelify', {
       "presets": [
-        "env",
-        "react"
+        "@babel/preset-env",
+        "@babel/preset-react"
       ],
       "plugins": [
-        "transform-decorators-legacy",
-        "transform-object-rest-spread",
-        "transform-class-properties"
+        ["@babel/plugin-proposal-decorators", { decoratorsBeforeExport: true }],
+        "@babel/plugin-proposal-class-properties",
+        "@babel/plugin-proposal-object-rest-spread",
+        "@babel/plugin-proposal-optional-chaining",
+        "@babel/plugin-proposal-logical-assignment-operators"
       ],
       sourceMaps: true
     })

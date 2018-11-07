@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import autobind from 'autobind-decorator'
 import PropTypes from 'prop-types'
 
 let ref = React.createRef()

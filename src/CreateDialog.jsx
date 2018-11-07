@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
-import autobind from 'autobind-decorator'
+import bound from 'bound-decorator'
 import {
   Dialog, DialogContent, DialogActions, Grid, FormControlLabel,
   Button, Input, MenuItem, Checkbox, ListItemText, Typography
@@ -15,7 +15,6 @@ import EditFiles from './EditFiles.jsx'
 import { enums, colorize } from '../utils.js'
 import { deleteFiles, updateJob } from './actions.js'
 
-@autobind
 class CreateModal extends Component {
   static propTypes = {
     model: JobType,
@@ -191,7 +190,7 @@ class CreateModal extends Component {
                 <TextField fullWidth multiline rows={ 3 } label="Comments" value={ this.state.model.comments } onChange={ this.handleInputChange('comments') } />
               </Grid>
               { this.state.editMode && <Fragment>
-                { this.props.files[this.state.model._id] &&
+                { this.state.model._id in this.props.files &&
                   <Grid item sm={ 12 }>
                     <EditFiles files={ this.props.files[this.state.model._id] } selected={ this.state.selectedFiles }
                       onChange={ selectedFiles => this.setState({ selectedFiles }) } />
@@ -215,6 +214,7 @@ class CreateModal extends Component {
     )
   }
 
+  @bound
   handleForceCompleteChange (e) {
     this.handleChange('forceComplete', e.target.checked)
   }
@@ -256,6 +256,7 @@ class CreateModal extends Component {
     })
   }
 
+  @bound
   handleSubmit () {
     let { deleteFiles, updateJob, onClose } = this.props
     let { selectedFiles, model } = this.state
@@ -264,14 +265,12 @@ class CreateModal extends Component {
 
   }
 
-  clearError () {
-    this.setState({ errorMessage: undefined })
-  }
-
+  @bound
   handleValid () {
     this.setState({ submitDisabled: false })
   }
 
+  @bound
   handleInvalid () {
     this.setState({ submitDisabled: true })
   }

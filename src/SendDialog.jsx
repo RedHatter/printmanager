@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import autobind from 'autobind-decorator'
+import bound from 'bound-decorator'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import {
@@ -11,7 +11,6 @@ import ChipInput from 'material-ui-chip-input'
 import { JobType } from './types.js'
 import { send } from './actions.js'
 
-@autobind
 class SendDialog extends Component {
   static propTypes = {
     model: JobType.isRequired,
@@ -36,7 +35,7 @@ class SendDialog extends Component {
 
     return <Dialog open>
       <DialogContent className="send-dialog-content">
-        <ChipInput onAdd={ this.handleAddChip.bind(this) } onDelete={ this.handleDeleteChip.bind(this) }
+        <ChipInput onAdd={ this.handleAddChip } onDelete={ this.handleDeleteChip }
           newChipKeyCodes={ [ 9, 13, 32 ] } value={ recipients } label="Recipients"
           fullWidth helperText={ chipError } error={ chipError != undefined } />
         <TextField fullWidth label="Subject" value={ subject } onChange={ this.handleSubjectChange } />
@@ -63,14 +62,17 @@ class SendDialog extends Component {
     </Dialog>
   }
 
+  @bound
   handleMessageChange (e) {
     this.setState({ message: e.target.value })
   }
 
-  handlesSubjectChange (e) {
+  @bound
+  handleSubjectChange (e) {
     this.setState({ subject: e.target.value })
   }
 
+  @bound
   handleAddChip (chip) {
     if (/^.+@.+\..+$/.test(chip))
       this.setState(state => ({ recipients: state.recipients.concat([ chip ]), chipError: undefined }))
@@ -78,6 +80,7 @@ class SendDialog extends Component {
       this.setState({ chipError: 'Recipient must be a valid e-mail address.' })
   }
 
+  @bound
   handleDeleteChip (chip, index) {
     this.setState(state => ({ recipients: state.recipients.filter(o => o != chip) }))
   }
@@ -93,6 +96,7 @@ class SendDialog extends Component {
     }
   }
 
+  @bound
   handleSend () {
     let { onClose, model } = this.props
     let { recipients, subject, message, attachments } = this.state
