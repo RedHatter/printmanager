@@ -137,6 +137,16 @@ class CreateModal extends Component {
                 </Grid>
               </Fragment> }
               <Grid item sm={ 12 }><Typography variant="headline" align="left">Details</Typography></Grid>
+              <Grid item sm={ 6 }>
+                <TextField required fullWidth label="Type" select value={ this.state.model.jobType } onChange={ this.handleInputChange('jobType') }>
+                  { enums.jobType.map(value => <MenuItem key={ value } value={ value }>{ value }</MenuItem>) }
+                </TextField>
+              </Grid>
+              <Grid item sm={ 6 }>
+                <TextField required fullWidth label="List type" select value={ this.state.model.listType } onChange={ this.handleInputChange('listType') }>
+                  { enums.listType.map(value => <MenuItem key={ value } value={ value }>{ value }</MenuItem>) }
+                </TextField>
+              </Grid>
               <Grid item sm={ 4 }>
                 <NumberFormat fullWidth pattern={ /^\+1 \(\d{3}\) \d{3} \d{4}$/ } label="Tracking number" type="tel"
                   customInput={ TextField } format="+1 (###) ### ####" isNumericString
@@ -148,11 +158,6 @@ class CreateModal extends Component {
               <Grid item sm={ 4 }>
                 <NumberFormat fullWidth required isNumericString thousandSeparator label="Quantity" customInput={ TextField }
                   value={ this.state.model.quantity } onValueChange={ this.handleNumericChange('quantity') }/>
-              </Grid>
-              <Grid item sm={ 6 }>
-                <TextField required fullWidth label="Type" select value={ this.state.model.jobType } onChange={ this.handleInputChange('jobType') }>
-                  { enums.jobType.map(value => <MenuItem key={ value } value={ value }>{ value }</MenuItem>) }
-                </TextField>
               </Grid>
               <Grid item sm={ 6 }>
                 <TextField required fullWidth label="Size" select value={ this.state.model.size } onChange={ this.handleInputChange('size') }>
@@ -175,11 +180,6 @@ class CreateModal extends Component {
                       <ListItemText primary={ value } />
                     </MenuItem>
                   )) }
-                </TextField>
-              </Grid>
-              <Grid item sm={ 6 }>
-                <TextField required fullWidth label="List type" select value={ this.state.model.listType } onChange={ this.handleInputChange('listType') }>
-                  { enums.listType.map(value => <MenuItem key={ value } value={ value }>{ value }</MenuItem>) }
                 </TextField>
               </Grid>
               <Grid item sm={ 6 }>
@@ -245,6 +245,13 @@ class CreateModal extends Component {
     this.setState(state => {
       let model = JSON.parse(JSON.stringify(state.model))
       model[prop] = value
+
+      if ((prop == 'client' || prop == 'listType')
+        && model.client && model.listType) {
+        model.trackingNumber = this.props.clients.find(c => c._id == model.client)
+          .trackingNumbers[model.listType.toLowerCase()]
+      }
+
       return { model }
     })
   }

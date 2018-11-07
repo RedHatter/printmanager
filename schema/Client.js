@@ -37,12 +37,7 @@ module.exports = new Schema({
       required: true,
       match: /^[0-9]{10}$/
     },
-    credit: {
-      type: String,
-      required: true,
-      match: /^[0-9]{10}$/
-    },
-    conquest: {
+    prequalified: {
       type: String,
       required: true,
       match: /^[0-9]{10}$/

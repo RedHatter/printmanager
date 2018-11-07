@@ -31,8 +31,7 @@ class Client extends Component {
           database: '',
           saturation: '',
           bankruptcy: '',
-          credit: '',
-          conquest: ''
+          prequalified: ''
         }
       }
     }
@@ -100,12 +99,8 @@ class Client extends Component {
             value={ this.state.model.trackingNumbers.bankruptcy } onValueChange={ this.handleNumericChange.bind(this, [ 'trackingNumbers', 'bankruptcy' ]) } required />
         </Grid>
         <Grid item sm={ 4 }>
-          <NumberFormat fullWidth customInput={ TextField } label="Credit" format="+1 (###) ### ####" isNumericString type="tel" pattern={ /^\+1 \(\d{3}\) \d{3} \d{4}$/ }
-            value={ this.state.model.trackingNumbers.credit } onValueChange={ this.handleNumericChange.bind(this, [ 'trackingNumbers', 'credit' ]) } required />
-        </Grid>
-        <Grid item sm={ 4 }>
-          <NumberFormat fullWidth customInput={ TextField } label="Conquest" format="+1 (###) ### ####" isNumericString type="tel" pattern={ /^\+1 \(\d{3}\) \d{3} \d{4}$/ }
-            value={ this.state.model.trackingNumbers.conquest } onValueChange={ this.handleNumericChange.bind(this, [ 'trackingNumbers', 'conquest' ]) } required />
+          <NumberFormat fullWidth customInput={ TextField } label="Prequalified" format="+1 (###) ### ####" isNumericString type="tel" pattern={ /^\+1 \(\d{3}\) \d{3} \d{4}$/ }
+            value={ this.state.model.trackingNumbers.prequalified } onValueChange={ this.handleNumericChange.bind(this, [ 'trackingNumbers', 'prequalified' ]) } required />
         </Grid>
         <Grid item sm={ 12 }>
           <Button type="submit" className="client-save-button" disabled={ this.state.submitDisabled }>Save</Button>
