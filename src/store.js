@@ -70,5 +70,5 @@ const store = createStore(reduce, applyMiddleware(resolve))
 export default store
 
 const socket = io()
-socket.on('invalidateJobs', fetchJobs)
-socket.on('invalidateClients', fetchClients)
+socket.on('invalidateJobs', () => store.dispatch(fetchJobs()))
+socket.on('invalidateClients', () => store.dispatch(fetchClients()))
