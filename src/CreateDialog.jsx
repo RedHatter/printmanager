@@ -65,6 +65,14 @@ class CreateModal extends Component {
   }
 
   render () {
+    let { clients, salesmen, files, onClose } = this.props
+    let { selectedFiles, submitDisabled, editMode } = this.state
+    let {
+      _id, created, name, client, jobType, envelope, size, addons, listType,
+      salesman, postage, quantity, dropDate, printDate, expire, vendor,
+      trackingNumber, comments, artStatus, dropStatus, forceComplete
+    } = this.state.model
+
     return (
       <Dialog open className="create-modal">
         <Form onSubmit={ this.handleSubmit } onValid={ this.handleValid } onInvalid={ this.handleInvalid }>
@@ -72,133 +80,133 @@ class CreateModal extends Component {
             <Grid container spacing={ 16 }>
               <Grid item sm={ 12 }><Typography variant="headline" align="left">General</Typography></Grid>
 
-              { this.state.editMode && <Fragment>
+              { editMode && <Fragment>
                 <Grid item sm={ 6 }>
                   <TextField required fullWidth label="Name" pattern={ /^[A-Z]{3,5} \d{4}-\d+/ }
-                    value={ this.state.model.name } onChange={ this.handleInputChange('name') } />
+                    value={ name } onChange={ this.handleInputChange('name') } />
                 </Grid>
                 <Grid item sm={ 6 }>
-                  <TextField fullWidth select label="Art Status" value={ this.state.model.artStatus } onChange={ this.handleInputChange('artStatus') }>
+                  <TextField fullWidth select label="Art Status" value={ artStatus } onChange={ this.handleInputChange('artStatus') }>
                     { enums.artStatus.map(value => <MenuItem key={ value } value={ value } className={ colorize(value) }>{ value }</MenuItem>) }
                   </TextField>
                 </Grid>
               </Fragment>}
 
               <Grid item sm={ 6 }>
-                <TextField required value={ this.state.model.client } onChange={ this.handleInputChange('client') } label="Client" select fullWidth>
-                  { this.props.clients.map(client => <MenuItem value={ client._id } key={ client._id }>{ client.name }</MenuItem>) }
+                <TextField required value={ client } onChange={ this.handleInputChange('client') } label="Client" select fullWidth>
+                  { clients.map(c => <MenuItem value={ c._id } key={ c._id }>{ c.name }</MenuItem>) }
                 </TextField>
               </Grid>
               <Grid item sm={ 6 }>
-                <TextField required value={ this.state.model.salesman } onChange={ this.handleInputChange('salesman') } label="Salesman" select fullWidth>
-                  { Object.entries(this.props.salesmen).map(([id, attributes]) => <MenuItem value={ id } key={ id }>{ attributes.name }</MenuItem>) }
+                <TextField required value={ salesman } onChange={ this.handleInputChange('salesman') } label="Salesman" select fullWidth>
+                  { Object.entries(salesmen).map(([id, attributes]) => <MenuItem value={ id } key={ id }>{ attributes.name }</MenuItem>) }
                 </TextField>
               </Grid>
               <Grid item sm={ 12 }><Typography variant="headline" align="left">Dates</Typography></Grid>
-              { this.state.editMode
+              { editMode
                ? <Fragment>
                 <Grid item sm={ 4 }>
                   <TextField fullWidth autoOk clearable label="Droped On" component={ DatePicker }
-                    value={ this.state.model.dropStatus || null } onChange={ this.handleValueChange('dropStatus') } />
+                    value={ dropStatus || null } onChange={ this.handleValueChange('dropStatus') } />
                 </Grid>
                 <Grid item sm={ 4 }>
                   <TextField required fullWidth autoOk clearable label="Drop date" component={ DatePicker }
-                    value={ this.state.model.dropDate[0] } onChange={ this.handleIndexChange('dropDate', 0) } />
+                    value={ dropDate[0] } onChange={ this.handleIndexChange('dropDate', 0) } />
                 </Grid>
                 <Grid item sm={ 4 }>
                   <TextField fullWidth autoOk clearable label="Second drop date" component={ DatePicker }
-                    value={ this.state.model.dropDate[1] } onChange={ this.handleIndexChange('dropDate', 1) } />
+                    value={ dropDate[1] } onChange={ this.handleIndexChange('dropDate', 1) } />
                 </Grid>
                 <Grid item sm={ 4 }>
                   <TextField required fullWidth autoOk clearable label="Send to print" component={ DatePicker }
-                    value={ this.state.model.printDate } onChange={ this.handleValueChange('printDate') } />
+                    value={ printDate } onChange={ this.handleValueChange('printDate') } />
                 </Grid>
                 <Grid item sm={ 4 }>
                   <TextField required fullWidth autoOk clearable label="Expire" component={ DatePicker }
-                    value={ this.state.model.expire } onChange={ this.handleValueChange('expire') } />
+                    value={ expire } onChange={ this.handleValueChange('expire') } />
                 </Grid>
               </Fragment> : <Fragment>
                 <Grid item sm={ 6 }>
                   <TextField required fullWidth autoOk clearable label="Drop date" component={ DatePicker }
-                    value={ this.state.model.dropDate[0] } onChange={ this.handleIndexChange('dropDate', 0) } />
+                    value={ dropDate[0] } onChange={ this.handleIndexChange('dropDate', 0) } />
                 </Grid>
                 <Grid item sm={ 6 }>
                   <TextField fullWidth autoOk clearable label="Second drop date" component={ DatePicker }
-                    value={ this.state.model.dropDate[1] } onChange={ this.handleIndexChange('dropDate', 1) } />
+                    value={ dropDate[1] } onChange={ this.handleIndexChange('dropDate', 1) } />
                 </Grid>
                 <Grid item sm={ 6 }>
                   <TextField required fullWidth autoOk clearable label="Send to print" component={ DatePicker }
-                    value={ this.state.model.printDate } onChange={ this.handleValueChange('printDate') } />
+                    value={ printDate } onChange={ this.handleValueChange('printDate') } />
                 </Grid>
                 <Grid item sm={ 6 }>
                   <TextField required fullWidth autoOk clearable label="Expire" component={ DatePicker }
-                    value={ this.state.model.expire } onChange={ this.handleValueChange('expire') } />
+                    value={ expire } onChange={ this.handleValueChange('expire') } />
                 </Grid>
               </Fragment> }
               <Grid item sm={ 12 }><Typography variant="headline" align="left">Details</Typography></Grid>
               <Grid item sm={ 6 }>
-                <TextField required fullWidth label="Type" select value={ this.state.model.jobType } onChange={ this.handleInputChange('jobType') }>
+                <TextField required fullWidth label="Type" select value={ jobType } onChange={ this.handleInputChange('jobType') }>
                   { enums.jobType.map(value => <MenuItem key={ value } value={ value }>{ value }</MenuItem>) }
                 </TextField>
               </Grid>
               <Grid item sm={ 6 }>
-                <TextField required fullWidth label="List type" select value={ this.state.model.listType } onChange={ this.handleInputChange('listType') }>
+                <TextField required fullWidth label="List type" select value={ listType } onChange={ this.handleInputChange('listType') }>
                   { enums.listType.map(value => <MenuItem key={ value } value={ value }>{ value }</MenuItem>) }
                 </TextField>
               </Grid>
               <Grid item sm={ 4 }>
                 <NumberFormat fullWidth pattern={ /^\+1 \(\d{3}\) \d{3} \d{4}$/ } label="Tracking number" type="tel"
                   customInput={ TextField } format="+1 (###) ### ####" isNumericString
-                  value={ this.state.model.trackingNumber } onValueChange={ this.handleNumericChange('trackingNumber') } />
+                  value={ trackingNumber } onValueChange={ this.handleNumericChange('trackingNumber') } />
               </Grid>
               <Grid item sm={ 4 }>
-                <TextField fullWidth required label="Vendor" value={ this.state.model.vendor } onChange={ this.handleInputChange('vendor') } />
+                <TextField fullWidth required label="Vendor" value={ vendor } onChange={ this.handleInputChange('vendor') } />
               </Grid>
               <Grid item sm={ 4 }>
                 <NumberFormat fullWidth required isNumericString thousandSeparator label="Quantity" customInput={ TextField }
-                  value={ this.state.model.quantity } onValueChange={ this.handleNumericChange('quantity') }/>
+                  value={ quantity } onValueChange={ this.handleNumericChange('quantity') }/>
               </Grid>
               <Grid item sm={ 6 }>
-                <TextField required fullWidth label="Size" select value={ this.state.model.size } onChange={ this.handleInputChange('size') }>
+                <TextField required fullWidth label="Size" select value={ size } onChange={ this.handleInputChange('size') }>
                   { enums.size.map(value => <MenuItem key={ value } value={ value }>{ value }</MenuItem>) }
                 </TextField>
               </Grid>
               <Grid item sm={ 6 }>
-                <TextField required fullWidth label="Envelope" select value={ this.state.model.envelope } onChange={ this.handleInputChange('envelope') }>
+                <TextField required fullWidth label="Envelope" select value={ envelope } onChange={ this.handleInputChange('envelope') }>
                   { enums.envelope.map(value => <MenuItem key={ value } value={ value }>{ value }</MenuItem>) }
                 </TextField>
               </Grid>
               <Grid item sm={ 6 }>
-                <TextField value={ this.state.model.addons } onChange={ this.handleInputChange('addons') }
+                <TextField value={ addons } onChange={ this.handleInputChange('addons') }
                   fullWidth label="Addons" select SelectProps={
                     { multiple: true, renderValue: selected => selected.join(', ') }
                   }>
                   { enums.addons.map(value => (
                     <MenuItem key={ value } value={ value }>
-                      <Checkbox checked={ this.state.model.addons.indexOf(value) > -1 } />
+                      <Checkbox checked={ addons.indexOf(value) > -1 } />
                       <ListItemText primary={ value } />
                     </MenuItem>
                   )) }
                 </TextField>
               </Grid>
               <Grid item sm={ 6 }>
-                <TextField required fullWidth label="Postage" select value={ this.state.model.postage } onChange={ this.handleInputChange('postage') }>
+                <TextField required fullWidth label="Postage" select value={ postage } onChange={ this.handleInputChange('postage') }>
                   { enums.postage.map(value => <MenuItem key={ value } value={ value }>{ value }</MenuItem>) }
                 </TextField>
               </Grid>
               <Grid item sm={ 12 }>
-                <TextField fullWidth multiline rows={ 3 } label="Comments" value={ this.state.model.comments } onChange={ this.handleInputChange('comments') } />
+                <TextField fullWidth multiline rows={ 3 } label="Comments" value={ comments } onChange={ this.handleInputChange('comments') } />
               </Grid>
-              { this.state.editMode && <Fragment>
-                { this.state.model._id in this.props.files &&
+              { editMode && <Fragment>
+                { _id in files &&
                   <Grid item sm={ 12 }>
-                    <EditFiles files={ this.props.files[this.state.model._id] } selected={ this.state.selectedFiles }
+                    <EditFiles files={ files[_id] } selected={ selectedFiles }
                       onChange={ selectedFiles => this.setState({ selectedFiles }) } />
                   </Grid>
                 }
                 <Grid item sm={12}>
                   <FormControlLabel label="Force completed" control={
-                    <Checkbox checked={ this.state.model.forceComplete }
+                    <Checkbox checked={ forceComplete }
                       onChange={ this.handleForceCompleteChange } />
                   } />
                 </Grid>
@@ -206,8 +214,8 @@ class CreateModal extends Component {
             </Grid>
           </DialogContent>
           <DialogActions>
-            <Button onClick={ this.props.onClose }>Cancel</Button>
-            <Button type="submit" disabled={ this.state.submitDisabled }>{ this.state.editMode ? 'Save' : 'Create' }</Button>
+            <Button onClick={ onClose }>Cancel</Button>
+            <Button type="submit" disabled={ submitDisabled }>{ editMode ? 'Save' : 'Create' }</Button>
           </DialogActions>
         </Form>
       </Dialog>
