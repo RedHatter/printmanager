@@ -1,7 +1,7 @@
 import React from 'react'
 import { Paper } from '@material-ui/core'
 
-import Column from './Column.jsx'
+import Column from '../Column.jsx'
 
 function JobHeader (props) {
   return <Paper className="header">
@@ -19,3 +19,18 @@ function JobHeader (props) {
 }
 
 export default JobHeader
+
+<style>
+  .header {
+    margin: 16px 0;
+    padding: 20px 72px 20 24px;
+    color: rgba(0, 0, 0, 0.54);
+    white-space: nowrap;
+  }
+
+  .header > div {
+    white-space: nowrap;
+    min-width: 100px;
+    margin: auto 15px;
+  }
+</style>

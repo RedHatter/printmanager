@@ -8,7 +8,7 @@ import {
 import { styles as buttonStyles } from '@material-ui/core/Button/Button'
 import PropTypes from 'prop-types'
 
-import { uploadFiles } from './actions.js'
+import { uploadFiles } from '../actions.js'
 
 const FileButton = withStyles(buttonStyles, { name: 'FileButton' })(
   function ({ classes, children, onSelect }) {

@@ -3,8 +3,8 @@ import { connect } from 'react-redux'
 import { TextField, MenuItem } from '@material-ui/core'
 import { DatePicker } from 'material-ui-pickers'
 
-import { updateFilter, fetchJobs } from './actions.js'
-import { enums, colorize } from '../utils.js'
+import { updateFilter, fetchJobs } from '../actions.js'
+import { enums, colorize } from '../../utils.js'
 
 function Filters ({ filter, updateFilter, fetchJobs, salesmen, clients }) {
   const handleChange = o => updateFilter(o).then(fetchJobs)

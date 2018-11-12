@@ -10,10 +10,10 @@ import { Form, TextField } from 'material-ui-utils'
 import NumberFormat from 'react-number-format'
 import PropTypes from 'prop-types'
 
-import { ClientType, JobType } from './types.js'
+import { ClientType, JobType } from '../types.js'
 import EditFiles from './EditFiles.jsx'
-import { enums, colorize } from '../utils.js'
-import { deleteFiles, updateJob } from './actions.js'
+import { enums, colorize } from '../../utils.js'
+import { deleteFiles, updateJob } from '../actions.js'
 
 class CreateModal extends Component {
   static propTypes = {

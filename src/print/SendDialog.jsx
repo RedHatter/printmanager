@@ -8,8 +8,8 @@ import {
 } from '@material-ui/core'
 import ChipInput from 'material-ui-chip-input'
 
-import { JobType } from './types.js'
-import { send } from './actions.js'
+import { JobType } from '../types.js'
+import { send } from '../actions.js'
 
 class SendDialog extends Component {
   static propTypes = {

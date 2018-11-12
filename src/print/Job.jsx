@@ -6,12 +6,10 @@ import { ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails } from '@m
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import { startOfDay, format } from 'date-fns'
 
-import { JobType } from './types.js'
-import Collapse from './Collapse.jsx'
+import { JobType } from '../types.js'
 import JobActions from './JobActions.jsx'
-import Column from './Column.jsx'
-
-import { colorize, formatNumber, formatPhone, formatDate } from '../utils.js'
+import Column from '../Column.jsx'
+import { colorize, formatNumber, formatPhone, formatDate } from '../../utils.js'
 
 Job.propTypes = {
   model: JobType.isRequired,
@@ -200,7 +198,7 @@ export default Job
 
   span.statusBlock {
     display: block;
-    width: 110px;
+    width: 120px;
     text-align: center;
     padding: 5px;
   }

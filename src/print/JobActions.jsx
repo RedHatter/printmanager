@@ -7,9 +7,9 @@ import {
 } from '@material-ui/core'
 import PropTypes from 'prop-types'
 
-import { JobType } from './types.js'
-import { deleteJob } from './actions.js'
-import { clone } from '../utils.js'
+import { JobType } from '../types.js'
+import { deleteJob } from '../actions.js'
+import { clone } from '../../utils.js'
 import CreateDialog from './CreateDialog.jsx'
 import FileDialog from './FileDialog.jsx'
 import SendDialog from './SendDialog.jsx'

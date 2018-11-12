@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Paper } from '@material-ui/core'
 
-import { JobType } from './types.js'
+import { JobType } from '../types.js'
 import JobHeader from './JobHeader.jsx'
 import Job from './Job.jsx'
 
@@ -43,18 +43,6 @@ class JobTable extends Component {
 export default connect(state => ({ model: state.jobs, files: state.files }))(JobTable)
 
 <style>
-  .header {
-    margin: 16px 0;
-    padding: 20px 72px 20 24px;
-    color: rgba(0, 0, 0, 0.54);
-  }
-
-  .header > div {
-    white-space: nowrap;
-    min-width: 100px;
-    margin: auto 15px;
-  }
-
   .empty {
     color: gray;
     font-style: italic;

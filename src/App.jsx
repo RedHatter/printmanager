@@ -17,10 +17,10 @@ import {
 } from './actions.js'
 import Tabs from './Tabs.jsx'
 import Client from './Client.jsx'
-import JobTable from './JobTable.jsx'
-import CreateDialog from './CreateDialog.jsx'
-import Filters from './Filters.jsx'
-import Calendar from './Calendar.jsx'
+import JobTable from './print/JobTable.jsx'
+import CreateDialog from './print/CreateDialog.jsx'
+import Filters from './print/Filters.jsx'
+import Calendar from './print/Calendar.jsx'
 
 class App extends Component {
   static propTypes = {

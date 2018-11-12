@@ -9,9 +9,9 @@ import {
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
 
-import { range } from '../utils.js'
-import { JobType } from './types.js'
-import { SlideDown, Fade } from './transitions.jsx'
+import { range } from '../../utils.js'
+import { JobType } from '../types.js'
+import { SlideDown, Fade } from '../transitions.jsx'
 import JobHeader from './JobHeader.jsx'
 import Job from './Job.jsx'
 
