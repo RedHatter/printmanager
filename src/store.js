@@ -1,4 +1,5 @@
 import { createStore, applyMiddleware } from 'redux'
+import produce, { original } from "immer"
 import io from 'socket.io-client'
 
 import { fetchJobs, fetchClients } from './actions.js'
@@ -12,51 +13,53 @@ const initialState = {
   errors: []
 }
 
-function reduce(state = initialState, action) {
+const reduce = produce((draft, action) => {
   if (action.error) {
-    return Object.assign({}, state, { errors: state.errors.concat(action.payload.message) })
+    draft.errors.push(action.payload.message)
+    return
   }
 
   switch (action.type) {
     case 'CLEAR_ERROR':
-      let errors = JSON.parse(JSON.stringify(state.errors))
-      errors.shift()
-      state = Object.assign({}, state, { errors })
+      draft.errors.shift()
       break
+
     case 'FETCH_JOBS':
-      state = Object.assign({}, state, { jobs: action.payload })
+      draft.jobs = action.payload
       break
+
     case 'FETCH_CLIENTS':
-      state = Object.assign({}, state, { clients: action.payload })
+      draft.clients = action.payload
       break
+
     case 'FETCH_SALESMEN':
-      state = Object.assign({}, state, { salesmen: action.payload })
+      draft.salesmen = action.payload
       break
+
     case 'FETCH_FILES':
-      state = Object.assign({}, state, { files: action.payload })
+      draft.files = action.payload
       break
+
+    case 'FETCH_EBLASTS':
+      draft.eblasts = action.payload
+      break
+
+    }
     case 'UPDATE_FILTER':
-      state = Object.assign({}, state, {
-        filter: Object.assign({}, state.filter, action.payload)
-      })
+      Object.assign(draft.filter, action.payload)
       break
   }
 
   if (action.type == 'FETCH_JOBS' || action.type == 'FETCH_SALESMEN') {
-    let jobs = state.jobs.map(job => {
-      if (job.salesman in state.salesmen) {
-        let salesman = state.salesmen[job.salesman]
+    for (let job of draft.jobs) {
+      if (job.salesman in draft.salesmen) {
+        let salesman = draft.salesmen[job.salesman]
         salesman._id = job.salesman
         job.salesman = salesman
       }
-
-      return job
-    })
-    state = Object.assign({}, state, { jobs })
+    }
   }
-
-  return state
-}
+}, initialState)
 
 function resolve ({ dispatch }) {
   return next => action =>
