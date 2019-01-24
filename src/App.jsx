@@ -9,14 +9,16 @@ import CloseIcon from '@material-ui/icons/Close'
 import PropTypes from 'prop-types'
 import { Auth } from 'aws-amplify'
 
-
 import { ClientType } from './types.js'
 import { SlideRight } from './transitions.jsx'
 import {
-  fetchJobs, fetchFiles, fetchClients, fetchSalesmen, clearError
+  fetchJobs, fetchFiles, fetchClients, fetchSalesmen,
+  fetchEblasts, clearError, createEblast
 } from './actions.js'
+import UploadButton from './UploadButton.jsx'
 import Tabs from './Tabs.jsx'
 import Client from './Client.jsx'
+import Eblast from './eblast/Eblast.jsx'
 import JobTable from './print/JobTable.jsx'
 import CreateDialog from './print/CreateDialog.jsx'
 import Filters from './print/Filters.jsx'
@@ -40,11 +42,12 @@ class App extends Component {
       .then(this.props.fetchJobs)
     this.props.fetchFiles()
     this.props.fetchClients()
+    this.props.fetchEblasts()
   }
 
   render () {
-    let { authData, clients, error, clearError } = this.props
-    let { selectedTab, selectedClient } = this.state
+    const { authData, clients, error, clearError, createEblast } = this.props
+    const { selectedTab, selectedClient } = this.state
 
     return (
       <Fragment>
@@ -62,12 +65,23 @@ class App extends Component {
         </AppBar>
         <div className="app">
           <div className="sidebar">
-            <Button color="primary" onClick={ this.openCreateDialog }>Create Job</Button>
+            <Button onClick={ this.openCreateDialog }>Create Job</Button>
+            <br />
+            <UploadButton
+              onSelect={ e => {
+                createEblast(e.target.files[0])
+                this.handleTabChange(null, 2)
+              } }
+              accept="image/*"
+            >
+              Create e-blast
+            </UploadButton>
             { this.state.isCreateDialogOpen && <CreateDialog onClose={ this.closeCreateDialog } /> }
             <Typography variant="headline">Views</Typography>
             <Tabs value={ selectedTab } onChange={ this.handleTabChange }>
               <Tab label="All Jobs" />
               <Tab label="Calendar" />
+              <Tab label="E-blasts" />
             </Tabs>
             <Typography variant="headline">Clients</Typography>
             <Tabs value={ selectedClient } onChange={ this.handleClientChange }>
@@ -80,6 +94,7 @@ class App extends Component {
           <div className="content-container">
             <SlideRight in={ selectedTab == 0 }><JobTable /></SlideRight>
             <SlideRight in={ selectedTab == 1 }><Calendar /></SlideRight>
+            <SlideRight in={ selectedTab == 2 }><Eblast /></SlideRight>
             <SlideRight in={ selectedClient != undefined }><Client model={ clients[selectedClient] } /></SlideRight>
           </div>
         </div>
@@ -117,7 +132,10 @@ class App extends Component {
 
 export default connect(
   state => ({ clients: state.clients, error: state.errors[0] }),
-  { fetchJobs, fetchFiles, fetchClients, fetchSalesmen, clearError }
+  {
+    fetchJobs, fetchFiles, fetchClients, fetchSalesmen,
+    fetchEblasts, clearError, createEblast
+  }
 )(App)
 
 <style>

@@ -2,7 +2,7 @@ import { createStore, applyMiddleware } from 'redux'
 import produce, { original } from "immer"
 import io from 'socket.io-client'
 
-import { fetchJobs, fetchClients } from './actions.js'
+import { fetchJobs, fetchClients, fetchEblasts } from './actions.js'
 
 const initialState = {
   jobs: [],
@@ -10,6 +10,7 @@ const initialState = {
   salesmen: {},
   files: {},
   filter: { created: [ ] },
+  eblasts: [],
   errors: []
 }
 
@@ -44,6 +45,16 @@ const reduce = produce((draft, action) => {
       draft.eblasts = action.payload
       break
 
+    case 'ADD_EBLAST_CELL': {
+      let { id, data } = action.payload
+      draft.eblasts.find(o => o._id == id).cells.push(data)
+      break
+    }
+    case 'UPDATE_EBLAST_CELL': {
+      let { id, index, data } = action.payload
+      let eblast = draft.eblasts.find(o => o._id == id)
+      Object.assign(eblast.cells[index], data)
+      break
     }
     case 'UPDATE_FILTER':
       Object.assign(draft.filter, action.payload)
@@ -75,3 +86,4 @@ export default store
 const socket = io()
 socket.on('invalidateJobs', () => store.dispatch(fetchJobs()))
 socket.on('invalidateClients', () => store.dispatch(fetchClients()))
+socket.on('invalidateEblasts', () => store.dispatch(fetchEblasts()))

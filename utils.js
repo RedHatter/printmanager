@@ -92,4 +92,6 @@ function range(start, end) {
     return total;
 }
 
-module.exports = { enums, colorize, formatNumber, formatPhone, formatDate, parseJSON, clone, mapObjectValues, range }
+module.exports = {
+  enums, colorize, formatNumber, formatPhone, formatDate, parseJSON, clone, mapObjectValues, range
+}

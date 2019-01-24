@@ -33,6 +33,33 @@ async function createApiAction (type, url, error, { body, method }) {
   }
 }
 
+export async function createEblast (file) {
+  let path = encodeURIComponent(file.name.replace(/ /g, '_'))
+  Storage.put(path, file, { contentType: file.type, bucket: 'dealerdigitalgroup.media' })
+    .catch(err => ({
+      type: 'CREATE_EBLAST',
+      payload: new Error('Unable to upload e-blast. ' + (err.message || err)),
+      error: true
+    }))
+
+  return createApiAction ('CREATE_EBLAST', '/api/eblast', 'Unable to create e-blast.', { body: {
+    name: file.name.substring(0, file.name.lastIndexOf('.')),
+    image: 'https://s3-us-west-1.amazonaws.com/dealerdigitalgroup.media/public/' + path
+  } })
+}
+
+export async function updateEblast (body) {
+  return createApiAction ('UPDATE_EBLAST', '/api/eblast/' + body._id, 'Unable to update e-blasts.', { body })
+}
+
+export async function deleteEblast (id) {
+  return createApiAction ('DELETE_EBLAST', '/api/eblast/' + id, 'Unable to delete e-blast.', { method: 'DELETE' })
+}
+
+export async function fetchEblasts () {
+  return createApiAction ('FETCH_EBLASTS', '/api/eblast', 'Unable to retrieve e-blasts.', { method: 'GET' })
+}
+
 export async function fetchJobs () {
   return createApiAction ('FETCH_JOBS', '/api/job/search', 'Unable to retrieve jobs.', { body: store.getState().filter })
 }

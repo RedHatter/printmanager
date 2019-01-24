@@ -3,19 +3,12 @@ import bound from 'bound-decorator'
 import { connect } from 'react-redux'
 import {
   Dialog, DialogContent, DialogActions, Button, LinearProgress,
-  RadioGroup, FormControlLabel, Radio, withStyles
+  RadioGroup, FormControlLabel, Radio
 } from '@material-ui/core'
-import { styles as buttonStyles } from '@material-ui/core/Button/Button'
 import PropTypes from 'prop-types'
 
 import { uploadFiles } from '../actions.js'
-
-const FileButton = withStyles(buttonStyles, { name: 'FileButton' })(
-  function ({ classes, children, onSelect }) {
-    return <label className={ classes.root } style={{ cursor: 'pointer' }}>
-      { children }<input onChange={ onSelect } type="file" style={{ display: 'none' }} /></label>
-  }
-)
+import UploadButton from '../UploadButton.jsx'
 
 class FileDialog extends Component {
   static propTypes = {
@@ -38,7 +31,7 @@ class FileDialog extends Component {
       files.push(file.name)
 
     if (this.state.files.length < 1)
-      return <FileButton onSelect={ this.handleSelect }>Upload</FileButton>
+      return <UploadButton onSelect={ this.handleSelect }>Upload</UploadButton>
     else
       return <Dialog open>
         <DialogContent>
