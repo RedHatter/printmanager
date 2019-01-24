@@ -75,6 +75,31 @@ export async function deleteJob (id) {
   return fetchJobs()
 }
 
+export async function deleteUser (body) {
+  let action = await createApiAction ('DELETE_USER', '/api/user/' + body.id, 'Unable to create user.', { method: 'DELETE' })
+  if (action.error) return action
+
+  return fetchUsers()
+}
+
+export async function createUser (body) {
+  let action = await createApiAction ('CREATE_USER', '/api/user/', 'Unable to create user.', { method: 'POST', body })
+  if (action.error) return action
+
+  return fetchUsers()
+}
+
+export async function editUser (body) {
+  let action = await createApiAction ('EDIT_USER', '/api/user/' + body.id, 'Unable to create user.', { method: 'POST', body })
+  if (action.error) return action
+
+  return fetchUsers()
+}
+
+export async function resetUserPassword (body) {
+  return createApiAction ('RESET_USER_PASSWORD', `/api/user/${body.id}/reset`, 'Unable to reset user password.', { method: 'GET' })
+}
+
 export async function send (body) {
   try {
     if (body.attachments) {
@@ -167,7 +192,7 @@ export function fetchSalesmen () {
             case 'email':
               salesman.email = attr.Value
               break
-            case 'given_name':
+            case 'name':
               salesman.name = attr.Value
               break
             case 'phone_number':
@@ -185,6 +210,72 @@ export function fetchSalesmen () {
     payload: new Error('Unable to retrieve salesmen. ' + (err.message || err)),
     error: true
   }))
+}
+
+export async function fetchUsers () {
+  try {
+    const users = await new Promise((resolve, reject) =>
+      cognito.listUsers({
+        UserPoolId: 'us-west-2_***REMOVED***'
+      }, (err, res) => {
+        if (err) reject(err)
+        else resolve(res.Users)
+      })
+    )
+
+    const salesmen = (await new Promise((resolve, reject) =>
+      cognito.listUsersInGroup({
+        GroupName: 'Salesmen',
+        UserPoolId: 'us-west-2_***REMOVED***'
+      }, (err, res) => {
+        if (err) reject(err)
+        else resolve(res.Users)
+        // else resolve(res.Users.map(user => user.Attributes.find(attr => attr.name == )))
+      })
+    )).map(o => o.Username)
+
+    const admins = (await new Promise((resolve, reject) =>
+      cognito.listUsersInGroup({
+        GroupName: 'Admin',
+        UserPoolId: 'us-west-2_***REMOVED***'
+      }, (err, res) => {
+        if (err) reject(err)
+        else resolve(res.Users)
+      })
+    )).map(o => o.Username)
+
+    let payload = {}
+    for (let user of users) {
+      let obj = {}
+
+      for (let attr of user.Attributes) {
+        switch (attr.Name) {
+          case 'email':
+            obj.email = attr.Value
+            break
+          case 'name':
+            obj.name = attr.Value
+            break
+          case 'phone_number':
+            obj.phoneNumber = attr.Value
+        }
+      }
+
+      obj.salesmen = salesmen.includes(user.Username)
+      obj.admin = admins.includes(user.Username)
+      obj.id = user.Username
+
+      payload[user.Username] = obj
+    }
+
+    return { type: 'FETCH_USERS', payload }
+  } catch (err) {
+    return {
+      type: 'FETCH_USERS',
+      payload: new Error('Unable to retrieve salesmen. ' + (err.message || err)),
+      error: true
+    }
+  }
 }
 
 export function updateFilter (payload) {

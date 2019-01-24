@@ -12,7 +12,7 @@ import { Auth } from 'aws-amplify'
 import { ClientType } from './types.js'
 import { SlideRight } from './transitions.jsx'
 import {
-  fetchJobs, fetchFiles, fetchClients, fetchSalesmen,
+  fetchJobs, fetchFiles, fetchClients, fetchUsers,
   fetchEblasts, clearError, createEblast
 } from './actions.js'
 import UploadButton from './UploadButton.jsx'
@@ -23,6 +23,7 @@ import JobTable from './print/JobTable.jsx'
 import CreateDialog from './print/CreateDialog.jsx'
 import Filters from './print/Filters.jsx'
 import Calendar from './print/Calendar.jsx'
+import Users from './users/Users.jsx'
 
 class App extends Component {
   static propTypes = {
@@ -38,7 +39,7 @@ class App extends Component {
       selectedClient: undefined
     }
 
-    this.props.fetchSalesmen()
+    this.props.fetchUsers()
       .then(this.props.fetchJobs)
     this.props.fetchFiles()
     this.props.fetchClients()
@@ -48,6 +49,8 @@ class App extends Component {
   render () {
     const { authData, clients, error, clearError, createEblast } = this.props
     const { selectedTab, selectedClient } = this.state
+    const isAdmin = 'cognito:groups' in authData.signInUserSession.idToken.payload
+      && authData.signInUserSession.idToken.payload['cognito:groups'].includes('Admin')
 
     return (
       <Fragment>
@@ -82,6 +85,7 @@ class App extends Component {
               <Tab label="All Jobs" />
               <Tab label="Calendar" />
               <Tab label="E-blasts" />
+              { isAdmin && <Tab label="Users" /> }
             </Tabs>
             <Typography variant="headline">Clients</Typography>
             <Tabs value={ selectedClient } onChange={ this.handleClientChange }>
@@ -95,6 +99,7 @@ class App extends Component {
             <SlideRight in={ selectedTab == 0 }><JobTable /></SlideRight>
             <SlideRight in={ selectedTab == 1 }><Calendar /></SlideRight>
             <SlideRight in={ selectedTab == 2 }><Eblast /></SlideRight>
+            <SlideRight in={ selectedTab == 3 }><Users /></SlideRight>
             <SlideRight in={ selectedClient != undefined }><Client model={ clients[selectedClient] } /></SlideRight>
           </div>
         </div>
@@ -133,7 +138,7 @@ class App extends Component {
 export default connect(
   state => ({ clients: state.clients, error: state.errors[0] }),
   {
-    fetchJobs, fetchFiles, fetchClients, fetchSalesmen,
+    fetchJobs, fetchFiles, fetchClients, fetchUsers,
     fetchEblasts, clearError, createEblast
   }
 )(App)

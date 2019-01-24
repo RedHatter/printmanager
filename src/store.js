@@ -8,6 +8,7 @@ const initialState = {
   jobs: [],
   clients: [],
   salesmen: {},
+  users: {},
   files: {},
   filter: { created: [ ] },
   eblasts: [],
@@ -37,6 +38,14 @@ const reduce = produce((draft, action) => {
       draft.salesmen = action.payload
       break
 
+    case 'FETCH_USERS':
+      draft.users = action.payload
+      draft.salesmen = Object.entries(action.payload).reduce((arr, [key, value]) => {
+        if (value.salesmen) arr[key] = value
+        return arr
+      }, {})
+      break
+
     case 'FETCH_FILES':
       draft.files = action.payload
       break
@@ -61,7 +70,10 @@ const reduce = produce((draft, action) => {
       break
   }
 
-  if (action.type == 'FETCH_JOBS' || action.type == 'FETCH_SALESMEN') {
+  if (action.type == 'FETCH_JOBS'
+    || action.type == 'FETCH_SALESMEN'
+    || action.type == 'FETCH_USERS'
+  ) {
     for (let job of draft.jobs) {
       if (job.salesman in draft.salesmen) {
         let salesman = draft.salesmen[job.salesman]

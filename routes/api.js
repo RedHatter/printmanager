@@ -13,11 +13,12 @@ const AWS = require('aws-sdk')
 const { Job, Client, Pixel, Eblast } = require('../schema')
 const { mapObjectValues } = require('../utils.js')
 
-const cognito = new Cognito({
+const cognitoExpress = new Cognito({
     region: 'us-west-2',
     cognitoUserPoolId: 'us-west-2_dQ6iTiYI4',
     tokenUse: 'id'
 })
+const validate = util.promisify(cognitoExpress.validate).bind(cognitoExpress)
 
 AWS.config.update({
   credentials: new AWS.Credentials ({
@@ -33,7 +34,12 @@ Amplify.configure({
   }
 })
 
-const validate = util.promisify(cognito.validate).bind(cognito)
+const cognito = new AWS.CognitoIdentityServiceProvider({ region: 'us-west-2' })
+const adminCreateUser = util.promisify(cognito.adminCreateUser).bind(cognito)
+const adminAddUserToGroup = util.promisify(cognito.adminAddUserToGroup).bind(cognito)
+const adminRemoveUserFromGroup = util.promisify(cognito.adminRemoveUserFromGroup).bind(cognito)
+const adminResetUserPassword = util.promisify(cognito.adminResetUserPassword).bind(cognito)
+const adminDeleteUser = util.promisify(cognito.adminDeleteUser).bind(cognito)
 
 const router = new Router()
 
@@ -251,6 +257,97 @@ let mail = nodemailer.createTransport({
   }
 }, {
   from: '"Erica Garcia" <ericag@dealerdigitalgroup.com>'
+})
+
+router.post('/user', async ctx => {
+  const config = ctx.request.body
+
+  const user = await adminCreateUser({
+    UserPoolId: 'us-west-2_***REMOVED***',
+    Username: config.email,
+    DesiredDeliveryMediums: [ 'EMAIL' ],
+    ForceAliasCreation: false,
+    UserAttributes: [
+      {
+        Name: 'email',
+        Value: config.email
+      },
+      {
+        Name: 'name',
+        Value: config.name
+      },
+      {
+        Name: 'email_verified',
+        Value: 'true'
+      }
+    ]
+  })
+
+  if (config.admin) {
+    adminAddUserToGroup({
+      GroupName: 'Admin',
+      UserPoolId: 'us-west-2_***REMOVED***',
+      Username: user.User.Username
+    })
+  }
+
+  if (config.salesmen) {
+    adminAddUserToGroup({
+      GroupName: 'Salesmen',
+      UserPoolId: 'us-west-2_***REMOVED***',
+      Username: user.User.Username
+    })
+  }
+
+  ctx.body = user.User
+})
+
+router.post('/user/:id', async ctx => {
+  const config = ctx.request.body
+
+  if (config.admin) {
+    adminAddUserToGroup({
+      GroupName: 'Admin',
+      UserPoolId: 'us-west-2_***REMOVED***',
+      Username: config.id
+    })
+  } else {
+    adminRemoveUserFromGroup({
+      GroupName: 'Admin',
+      UserPoolId: 'us-west-2_***REMOVED***',
+      Username: config.id
+    })
+  }
+
+  if (config.salesmen) {
+    adminAddUserToGroup({
+      GroupName: 'Salesmen',
+      UserPoolId: 'us-west-2_***REMOVED***',
+      Username: config.id
+    })
+  } else {
+    adminRemoveUserFromGroup({
+      GroupName: 'Salesmen',
+      UserPoolId: 'us-west-2_***REMOVED***',
+      Username: config.id
+    })
+  }
+})
+
+router.delete('/user/:id', async ctx => {
+  adminDeleteUser({
+    UserPoolId: 'us-west-2_***REMOVED***',
+    Username: ctx.params.id
+  })
+  ctx.status = 200
+})
+
+router.get('/user/:id/reset', async ctx => {
+  ctx.body = await adminResetUserPassword({
+    UserPoolId: 'us-west-2_***REMOVED***',
+    Username: ctx.params.id
+  })
+  console.log('test', ctx.body)
 })
 
 router.post('/send', async ctx => {
