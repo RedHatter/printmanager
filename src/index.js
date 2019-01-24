@@ -16,14 +16,13 @@ import App from './App.jsx'
 Amplify.configure({
   Storage: {
     region: 'us-west-1',
-    bucket: 'dealerdigitalgroup.printmanager',
-    identityPoolId: '44b4cdbf-dac2-40a5-b0ef-a8adc1f30785'
+    bucket: 'dealerdigitalgroup.printmanager'
   },
   Auth: {
     region: 'us-west-2',
-    identityPoolId: 'us-west-2:44b4cdbf-dac2-40a5-b0ef-a8adc1f30785',
-    userPoolId: 'us-west-2_dQ6iTiYI4',
-    userPoolWebClientId: 'tvlsfbfcqdipq9j651vhuc387'
+    identityPoolId: 'us-west-2:ebaf2604-1d7e-4e64-8d72-bb1b9d4f7f01',
+    userPoolId: 'us-west-2_***REMOVED***',
+    userPoolWebClientId: '6101dpcsvmnjukllkelsr6ke0q'
   }
 })
 

@@ -15,15 +15,15 @@ const { mapObjectValues } = require('../utils.js')
 
 const cognitoExpress = new Cognito({
     region: 'us-west-2',
-    cognitoUserPoolId: 'us-west-2_dQ6iTiYI4',
+    cognitoUserPoolId: 'us-west-2_***REMOVED***',
     tokenUse: 'id'
 })
 const validate = util.promisify(cognitoExpress.validate).bind(cognitoExpress)
 
 AWS.config.update({
   credentials: new AWS.Credentials ({
-    accessKeyId: 'AKIAIRGJBHTLFGNYSQVA',
-    secretAccessKey: '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'
+    accessKeyId: '***REMOVED***',
+    secretAccessKey: '***REMOVED***'
   })
 })
 

@@ -6,8 +6,8 @@ import { parseJSON } from '../utils.js'
 
 const cognito = new CognitoIdentityServiceProvider({
   region: 'us-west-2',
-  accessKeyId: 'AKIAIRGJBHTLFGNYSQVA',
-  secretAccessKey: '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'
+  accessKeyId: '***REMOVED***',
+  secretAccessKey: '***REMOVED***'
 })
 
 async function createApiAction (type, url, error, { body, method }) {
@@ -175,7 +175,7 @@ export function fetchSalesmen () {
   return (new Promise((resolve, reject) =>
     cognito.listUsersInGroup({
       GroupName: 'Salesmen',
-      UserPoolId: 'us-west-2_dQ6iTiYI4'
+      UserPoolId: 'us-west-2_***REMOVED***'
     }, (err, res) => {
       if (err) return reject({
         type: 'FETCH_SALESMEN',

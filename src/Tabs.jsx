@@ -2,7 +2,7 @@ import React from 'react'
 
 function Tabs ({ value, onChange, children, ...props }) {
   return <div className="vertical-tabs" { ...props } >
-    { React.Children.map(children, (child, i) => React.cloneElement(child, { key: i, onChange, value: i, selected: i == value })) }
+    { React.Children.map(children, (child, i) => child ? React.cloneElement(child, { key: i, onChange, value: i, selected: i == value }) : null) }
     { value >= 0 && <span className="vertical-tabs-highlight" style={ { top: (48 * value) + 'px' } }></span> }
   </div>
 }
