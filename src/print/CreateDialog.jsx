@@ -74,9 +74,9 @@ class CreateModal extends Component {
     } = this.state.model
 
     return (
-      <Dialog open className="create-modal">
-        <Form onSubmit={ this.handleSubmit } onValid={ this.handleValid } onInvalid={ this.handleInvalid }>
-          <DialogContent>
+      <Form onSubmit={ this.handleSubmit } onValid={ this.handleValid } onInvalid={ this.handleInvalid }>
+        <Dialog open className="create-modal">
+          <DialogContent className="content">
             <Grid container spacing={ 16 }>
               <Grid item sm={ 12 }><Typography variant="headline" align="left">General</Typography></Grid>
 
@@ -221,8 +221,8 @@ class CreateModal extends Component {
             <Button onClick={ onClose }>Cancel</Button>
             <Button type="submit" disabled={ submitDisabled }>{ editMode ? 'Save' : 'Create' }</Button>
           </DialogActions>
-        </Form>
-      </Dialog>
+        </Dialog>
+      </Form>
     )
   }
 
@@ -299,6 +299,11 @@ export default connect(
 <style>
   .create-modal {
     text-align: left;
+    overflow: hidden;
+  }
+
+  .create-modal .version-comment {
+    margin: 8px !important;
   }
 
   li.red {
