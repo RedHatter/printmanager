@@ -68,7 +68,7 @@ class App extends Component {
         </AppBar>
         <div className="app">
           <div className="sidebar">
-            <Button onClick={ this.openCreateDialog }>Create Job</Button>
+            { isAdmin && <Button onClick={ this.openCreateDialog }>Create Job</Button> }
             <br />
             <UploadButton
               onSelect={ e => {
@@ -87,16 +87,18 @@ class App extends Component {
               <Tab label="E-blasts" />
               { isAdmin && <Tab label="Users" /> }
             </Tabs>
-            <Typography variant="headline">Clients</Typography>
-            <Tabs value={ selectedClient } onChange={ this.handleClientChange }>
-              { clients.map(client => <Tab key={ client._id } label={ client.name } />) }
-              <Tab icon={ <Icon>add</Icon> } />
-            </Tabs>
+            { isAdmin && <Fragment>
+              <Typography variant="headline">Clients</Typography>
+              <Tabs value={ selectedClient } onChange={ this.handleClientChange }>
+                { clients.map(client => <Tab key={ client._id } label={ client.name } />) }
+                <Tab icon={ <Icon>add</Icon> } />
+              </Tabs>
+            </Fragment> }
             <Typography variant="headline">Search</Typography>
             <Filters />
           </div>
           <div className="content-container">
-            <SlideRight in={ selectedTab == 0 }><JobTable /></SlideRight>
+            <SlideRight in={ selectedTab == 0 }><JobTable isAdmin={isAdmin} /></SlideRight>
             <SlideRight in={ selectedTab == 1 }><Calendar /></SlideRight>
             <SlideRight in={ selectedTab == 2 }><Eblast /></SlideRight>
             <SlideRight in={ selectedTab == 3 }><Users /></SlideRight>

@@ -23,12 +23,12 @@ class JobTable extends Component {
 
   render () {
     let { expanded } = this.state
-    let { model, files } = this.props
+    let { model, files, isAdmin } = this.props
 
     return (
       <div>
         <JobHeader />
-        { model.map(o => (<Job key={ o._id } model={ o } files={ files[o._id] }
+        { model.map(o => (<Job key={ o._id } model={ o } files={ files[o._id] } isAdmin={isAdmin}
           expanded={expanded == o._id } onChange={ this.handleChange.bind(this, o._id) } />)) }
         { model.length == 0 && <Paper className="empty">No results.</Paper> }
       </div>

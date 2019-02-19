@@ -17,7 +17,7 @@ Job.propTypes = {
 }
 
 function Job (props) {
-  let { model, files, ...rest } = props
+  let { model, files, isAdmin, ...rest } = props
   let {
     name, jobType, size, type, quantity, dropDate, printDate, artStatus, dropStatus,
     listType, created, salesman, client, addons, envelope, vendor, trackingNumber,
@@ -172,7 +172,7 @@ function Job (props) {
           </tr> ) }
         </table> }
       </ExpansionPanelDetails>
-      <JobActions model={ model } files={ files } />
+      { isAdmin && <JobActions model={ model } files={ files } /> }
   </ExpansionPanel>
   )
 }

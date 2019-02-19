@@ -248,7 +248,7 @@ class CreateModal extends Component {
       this.setState(state => {
         let model = JSON.parse(JSON.stringify(state.model))
         console.log(prop, i, value, model)
-        model[prop][i] = value
+        model[prop][i] = value[0]
         return { model }
       })
   }

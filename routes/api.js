@@ -138,6 +138,9 @@ router.post('/job', async ctx => {
 
   model = mapObjectValues(model, val => val === '' ? undefined : val)
 
+  if (model.dropDate[1] == null)
+    model.dropDate.pop()
+
   let job = new Job(model)
   try {
     await job.save()
