@@ -70,7 +70,7 @@ class CreateModal extends Component {
     let {
       _id, created, name, client, jobType, envelope, size, addons, listType,
       salesman, postage, quantity, dropDate, printDate, expire, vendor,
-      trackingNumber, comments, artStatus, dropStatus, forceComplete
+      trackingNumber, comments, artStatus, dropStatus, forceComplete, versionComment
     } = this.state.model
 
     return (
@@ -214,6 +214,10 @@ class CreateModal extends Component {
             </Grid>
           </DialogContent>
           <DialogActions>
+            { editMode &&
+              <TextField className="version-comment" fullWidth label="Reason for edit" value={ versionComment }
+              onChange={ this.handleInputChange('versionComment') } />
+            }
             <Button onClick={ onClose }>Cancel</Button>
             <Button type="submit" disabled={ submitDisabled }>{ editMode ? 'Save' : 'Create' }</Button>
           </DialogActions>

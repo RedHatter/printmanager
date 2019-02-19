@@ -58,5 +58,6 @@ module.exports = new Schema({
   pixels: [ {
     type: ObjectId,
     ref: 'Pixel'
-  } ]
+  } ],
+  versionComment: String
 })
