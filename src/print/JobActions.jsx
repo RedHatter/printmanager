@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import React, { useState, Fragment } from 'react'
 import bound from 'bound-decorator'
 import { connect } from 'react-redux'
 import {
@@ -14,146 +14,74 @@ import CreateDialog from './CreateDialog.jsx'
 import FileDialog from './FileDialog.jsx'
 import SendDialog from './SendDialog.jsx'
 
-class DuplicateButton extends Component {
-  static propTypes = {
-    model: JobType.isRequired
-  }
+function DuplicateButton (props) {
+  const [ isOpen, setIsOpen ] = useState(false)
+  const [ model, setModel ] = useState(undefined)
 
-  constructor (props) {
-    super(props)
-
-    this.state = { isOpen: false }
-  }
-
-  render () {
-    return <Fragment>
-      <Button onClick={ this.handleOpen }>Duplicate</Button>
-      { this.state.isOpen && <CreateDialog open model={ this.state.model } onClose={ this.handleClose } /> }
-    </Fragment>
-  }
-
-  @bound
-  handleOpen () {
-    let model = clone(this.props.model)
-    delete model._id
-    delete model.__v
-    delete model.created
-    this.setState({ isOpen: true, model })
-  }
-
-  @bound
-  handleClose () {
-    this.setState({ isOpen: false, model: undefined })
-  }
+  return <Fragment>
+    <Button onClick={ () => {
+      const model = clone(props.model)
+      delete model._id
+      delete model.__v
+      delete model.created
+      delete model.name
+      setIsOpen(true)
+      setModel(model)
+    } }>Duplicate</Button>
+    { isOpen && <CreateDialog open model={ model } onClose={ () => {
+      setIsOpen(false)
+      setModel(undefined)
+    } } /> }
+  </Fragment>
 }
 
-class EditButton extends Component {
-  static propTypes = {
-    model: JobType.isRequired
-  }
-
-  constructor (props) {
-    super(props)
-
-    this.state = { isOpen: false }
-  }
-
-  render () {
-    return <Fragment>
-      <Button onClick={ this.handleOpen }>Edit</Button>
-      { this.state.isOpen && <CreateDialog open model={ this.props.model } onClose={ this.handleClose } /> }
-    </Fragment>
-  }
-
-  @bound
-  handleOpen () {
-    this.setState({ isOpen: true })
-  }
-
-  @bound
-  handleClose () {
-    this.setState({ isOpen: false })
-  }
+DuplicateButton.propTypes = {
+  model: JobType.isRequired
 }
 
-class DeleteButton extends Component {
-  static propTypes = {
-    model: JobType.isRequired
-  }
-
-  constructor (props) {
-    super(props)
-
-    this.state = { isOpen: false }
-  }
-
-  render () {
-    return <Fragment>
-      <Button onClick={ this.handleOpen }>Delete</Button>
-      { this.state.isOpen &&
-        <Dialog open>
-          <DialogContent>Are you sure you want to delete <i>{ this.props.model.name }</i>? This operation cannot be undone.</DialogContent>
-          <DialogActions>
-            <Button onClick={ this.handleClose }>Cancel</Button>
-            <Button onClick={ this.handleDelete }>Delete</Button>
-          </DialogActions>
-        </Dialog>
-      }
-    </Fragment>
-  }
-
-  @bound
-  handleOpen () {
-    this.setState({ isOpen: true })
-  }
-
-  @bound
-  handleClose () {
-    this.setState({ isOpen: false })
-  }
-
-  @bound
-  handleDelete () {
-    let { deleteJob, model } = this.props
-    deleteJob(model._id)
-  }
+function EditButton ({ model }) {
+  const [ isOpen, setIsOpen ] = useState(false)
+  return <Fragment>
+    <Button onClick={ () => setIsOpen(true) }>Edit</Button>
+    { isOpen && <CreateDialog open model={ model } onClose={ () => setIsOpen(false) } /> }
+  </Fragment>
 }
 
-DeleteButton = connect(null, { deleteJob })(DeleteButton)
-
-class SendButton extends Component {
-  static propTypes = {
-    model: JobType.isRequired,
-    files: PropTypes.object
-  }
-
-  constructor (props) {
-    super(props)
-
-    this.state = { isOpen: false }
-  }
-
-  render () {
-    let { model, files } = this.props
-
-    return <Fragment>
-      <Button onClick={ this.handleOpen }>Send</Button>
-      { this.state.isOpen && <SendDialog open model={ model } files={ files } onClose={ this.handleClose } /> }
-    </Fragment>
-  }
-
-  @bound
-  handleOpen () {
-    this.setState({ isOpen: true })
-  }
-
-  @bound
-  handleClose () {
-    this.setState({ isOpen: false })
-  }
+EditButton.propTypes = {
+  model: JobType.isRequired
 }
 
-JobActions.propTypes = {
+function DeleteButton ({ deleteJob, model }) {
+  const [ isOpen, setIsOpen ] = useState(false)
+
+  return <Fragment>
+    <Button onClick={ () => setIsOpen(true) }>Delete</Button>
+    { isOpen &&
+      <Dialog open>
+        <DialogContent>Are you sure you want to delete <i>{ model.name }</i>? This operation cannot be undone.</DialogContent>
+        <DialogActions>
+          <Button onClick={ () => setIsOpen(false) }>Cancel</Button>
+          <Button onClick={ () => deleteJob(model._id) }>Delete</Button>
+        </DialogActions>
+      </Dialog>
+    }
+  </Fragment>
+}
+
+const DeleteButton = connect(null, { deleteJob })(DeleteButton)
+DeleteButton.propTypes = {
+  model: JobType.isRequired
+}
+
+function SendButton ({ model, files }) {
+  const [ isOpen, setIsOpen ] = useState(false)
+  return <Fragment>
+    <Button onClick={ () => setIsOpen(true) }>Send</Button>
+    { isOpen && <SendDialog open model={ model } files={ files } onClose={ () => setIsOpen(false) } /> }
+  </Fragment>
+}
+
+SendButton.propTypes = {
   model: JobType.isRequired,
   files: PropTypes.object
 }
@@ -166,6 +94,11 @@ function JobActions ({ model, files }) {
     <FileDialog path={ model._id } />
     { files && <SendButton model={ model } files={ files } /> }
   </ExpansionPanelActions>
+}
+
+JobActions.propTypes = {
+  model: JobType.isRequired,
+  files: PropTypes.object
 }
 
 export default JobActions
