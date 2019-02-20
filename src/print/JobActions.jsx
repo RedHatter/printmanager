@@ -10,6 +10,7 @@ import PropTypes from 'prop-types'
 import { JobType } from '../types.js'
 import { deleteJob } from '../actions.js'
 import { clone } from '../../utils.js'
+import HistoryDialog from './HistoryDialog.jsx'
 import CreateDialog from './CreateDialog.jsx'
 import FileDialog from './FileDialog.jsx'
 import SendDialog from './SendDialog.jsx'
@@ -86,8 +87,22 @@ SendButton.propTypes = {
   files: PropTypes.object
 }
 
+function HistoryButton ({ model }) {
+  const [ isOpen, setIsOpen ] = useState(false)
+  return <Fragment>
+    <Button onClick={ () => setIsOpen(true) }>History</Button>
+    { isOpen && <HistoryDialog model={ model } onClose={ () => setIsOpen(false) } /> }
+  </Fragment>
+}
+
+HistoryButton.propTypes = {
+  model: JobType.isRequired,
+  files: PropTypes.object
+}
+
 function JobActions ({ model, files }) {
   return <ExpansionPanelActions>
+    <HistoryButton model={ model } />
     <EditButton model={ model } />
     <DuplicateButton model={ model } />
     <DeleteButton model={ model } />

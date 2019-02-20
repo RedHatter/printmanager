@@ -200,6 +200,18 @@ router.post('/job/:id', async ctx => {
   }
 })
 
+router.get('/job/:ref/patches', async ctx => {
+  ctx.response.type = 'json'
+  ctx.body = (await Job.Patches.find({ ref: ctx.params.ref })).reverse()
+})
+
+router.get('/job/:ref/patches/:id', async ctx => {
+  ctx.response.type = 'json'
+  let doc = await Job.findById(ctx.params.ref)
+  doc = await doc.rollback(ctx.params.id, {}, false)
+  ctx.body = await doc.populate('client').populate('pixels').execPopulate()
+})
+
 router.delete('/job/:id', async ctx => {
   ctx.response.type = 'json'
   ctx.body = await Job.findByIdAndDelete(ctx.params.id)

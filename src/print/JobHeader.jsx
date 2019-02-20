@@ -4,7 +4,7 @@ import { Paper } from '@material-ui/core'
 import Column from '../Column.jsx'
 
 function JobHeader (props) {
-  return <Paper className="header">
+  return <Paper className="header" { ...props }>
     <Column group="name">Job Name</Column>
     <Column group="quantity">Quanity</Column>
     <Column group="dropStatus">Drop Status</Column>

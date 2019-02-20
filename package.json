@@ -27,7 +27,7 @@
     "koa-session": "^5.4.0",
     "koa-static": "^5.0.0",
     "mongoose": "^5.1.7",
-    "mongoose-patch-history": "https://github.com/RedHatter/mongoose-patch-history.git#exclude",
+    "mongoose-patch-history": "https://github.com/RedHatter/mongoose-patch-history.git#all-changes",
     "nodemailer": "^4.6.8",
     "react-number-format": "^4.0.3",
     "react-transition-group": "^2.5.0",
