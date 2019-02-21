@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { TextField, MenuItem } from '@material-ui/core'
-import { DatePicker } from 'material-ui-pickers'
+import DatePicker from 'material-ui-pickers/DatePicker'
 
 import { updateFilter, fetchJobs } from '../actions.js'
 import { enums, colorize } from '../../utils.js'

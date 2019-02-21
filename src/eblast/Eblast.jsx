@@ -8,12 +8,12 @@ import { Auth } from 'aws-amplify'
 
 import { EblastType } from '../types.js'
 import { formatDate } from '../../utils.js'
-import { createEblast, updateEblast, deleteEblase } from '../actions.js'
+import { createEblast, updateEblast, deleteEblast } from '../actions.js'
 import { SlideDown, Fade } from '../transitions.jsx'
 import Edit from './Edit.jsx'
 import Confirm from '../Confirm.jsx'
 
-function Eblast ({ model, updateEblast, deleteEblase }) {
+function Eblast ({ model, updateEblast, deleteEblast }) {
   const [ isEditOpen, setIsEditOpen ] = useState(false)
   const [ selected, setSelected ] = useState(0)
   const [ isConfirmOpen, setIsConfirmOpen ] = useState(false)
@@ -22,7 +22,7 @@ function Eblast ({ model, updateEblast, deleteEblase }) {
     { isConfirmOpen &&
         <Confirm
           onClose={ e => setIsEditOpen(false) }
-          onConfirm={ deleteEblase(model._id) }
+          onConfirm={ deleteEblast(model._id) }
         >
           Are you sure you want to delete <i>{model.name}</i>? This action can not be reversed.
         </Confirm>
@@ -90,5 +90,5 @@ Eblast.propTypes = {
 
 export default connect(
   state => ({ model: state.eblasts }),
-  { updateEblast, deleteEblase }
+  { updateEblast, deleteEblast }
 )(Eblast)

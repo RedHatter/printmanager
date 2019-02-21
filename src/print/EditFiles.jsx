@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import { Typography } from '@material-ui/core'
-import { PropTypes } from 'prop-types'
+import PropTypes from 'prop-types'
 
 function EditFiles (props) {
   if (props.files.length < 1) return null

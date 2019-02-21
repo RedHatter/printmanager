@@ -6,8 +6,9 @@ import { Authenticator } from 'material-ui-utils'
 import { Provider as ReduxProvider } from 'react-redux'
 import DateFnsUtils from 'material-ui-pickers/utils/date-fns-utils'
 import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsProvider'
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import { blue } from '@material-ui/core/colors';
+import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider'
+import createMuiTheme from '@material-ui/core/styles/createMuiTheme'
+import blue from '@material-ui/core/colors/blue'
 
 import store from './store.js'
 

@@ -52,24 +52,25 @@ EditButton.propTypes = {
   model: JobType.isRequired
 }
 
-function DeleteButton ({ deleteJob, model }) {
-  const [ isOpen, setIsOpen ] = useState(false)
+const DeleteButton = connect(null, { deleteJob })(
+  function ({ deleteJob, model }) {
+    const [ isOpen, setIsOpen ] = useState(false)
 
-  return <Fragment>
-    <Button onClick={ () => setIsOpen(true) }>Delete</Button>
-    { isOpen &&
-      <Dialog open>
-        <DialogContent>Are you sure you want to delete <i>{ model.name }</i>? This operation cannot be undone.</DialogContent>
-        <DialogActions>
-          <Button onClick={ () => setIsOpen(false) }>Cancel</Button>
-          <Button onClick={ () => deleteJob(model._id) }>Delete</Button>
-        </DialogActions>
-      </Dialog>
-    }
-  </Fragment>
-}
+    return <Fragment>
+      <Button onClick={ () => setIsOpen(true) }>Delete</Button>
+      { isOpen &&
+        <Dialog open>
+          <DialogContent>Are you sure you want to delete <i>{ model.name }</i>? This operation cannot be undone.</DialogContent>
+          <DialogActions>
+            <Button onClick={ () => setIsOpen(false) }>Cancel</Button>
+            <Button onClick={ () => deleteJob(model._id) }>Delete</Button>
+          </DialogActions>
+        </Dialog>
+      }
+    </Fragment>
+  }
+)
 
-const DeleteButton = connect(null, { deleteJob })(DeleteButton)
 DeleteButton.propTypes = {
   model: JobType.isRequired
 }
