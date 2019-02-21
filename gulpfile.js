@@ -10,6 +10,7 @@ const gulp = require('gulp')
 const open = require("open")
 const del = require('del')
 const tap = require('gulp-tap')
+const util = require('gulp-util');
 
 const browserify = require('browserify')
 
@@ -32,7 +33,10 @@ function svg () {
 }
 
 function javascript () {
-  return browserify('./src/index.js', { debug: true })
+  const bundle = browserify('./src/index.js', {
+      debug: !util.env.production,
+      fullPaths: !util.env.production
+    })
     .plugin('collectify', {
       file: './public/styles.css',
       regex: /<style>([\s\S]+?)<\/style>/g,
@@ -50,14 +54,23 @@ function javascript () {
         "@babel/plugin-proposal-optional-chaining",
         "@babel/plugin-proposal-logical-assignment-operators"
       ],
-      sourceMaps: true
+      sourceMaps: !util.env.production
     })
-    .bundle().on('error', onError)
-    .pipe(source('app.js'))
-    .pipe(buffer())
-    .pipe(sourcemaps.init({ loadMaps: true }))
-    .pipe(sourcemaps.write())
-    .pipe(gulp.dest('./public'))
+
+  if (util.env.production)
+    return bundle
+      .bundle()
+      .on('error', onError)
+      .pipe(source('app.js'))
+      .pipe(gulp.dest('./public'))
+  else
+    return bundle
+      .bundle().on('error', onError)
+      .pipe(source('app.js'))
+      .pipe(buffer())
+      .pipe(sourcemaps.init({ loadMaps: true }))
+      .pipe(sourcemaps.write('.'))
+      .pipe(gulp.dest('./public'))
 }
 
 function styles () {
