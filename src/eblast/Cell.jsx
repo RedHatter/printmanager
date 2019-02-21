@@ -2,7 +2,8 @@ import React from 'react'
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
 import { IconButton } from '@material-ui/core'
-import { Delete as DeleteIcon } from '@material-ui/icons'
+
+import DeleteIcon from '../icons/Delete.js'
 
 function Cell ({ x, width, active, onClick, onRemove }) {
   return <div

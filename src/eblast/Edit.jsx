@@ -5,9 +5,9 @@ import PropTypes from 'prop-types'
 import {
   Paper, TextField, Grid, Card, CardHeader, CardContent, Button
 } from '@material-ui/core'
-import { Save as SaveIcon } from '@material-ui/icons'
 import produce from "immer"
 
+import SaveIcon from '../icons/Save.js'
 import { EblastType } from '../types.js'
 import Row from './Row.jsx'
 import Cell from './Cell.jsx'
