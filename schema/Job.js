@@ -21,11 +21,13 @@ module.exports = new Schema({
   },
   envelope: { type: String, required: true },
   size: { type: String, required: true },
-  addons: [ {
-    type: String,
-    enum: enums.addons,
-    default: []
-  } ],
+  addons: [
+    {
+      type: String,
+      enum: enums.addons,
+      default: []
+    }
+  ],
   listType: {
     type: String,
     required: true,
@@ -38,7 +40,7 @@ module.exports = new Schema({
     enum: enums.postage
   },
   quantity: { type: Number, required: true, min: 0 },
-  dropDate: [ { type: Date, required: true } ],
+  dropDate: [{ type: Date, required: true }],
   printDate: { type: Date, required: true },
   expire: { type: Date, required: true },
   vendor: { type: String, required: true },
@@ -55,9 +57,11 @@ module.exports = new Schema({
   },
   dropStatus: Date,
   forceComplete: Boolean,
-  pixels: [ {
-    type: ObjectId,
-    ref: 'Pixel'
-  } ],
+  pixels: [
+    {
+      type: ObjectId,
+      ref: 'Pixel'
+    }
+  ],
   versionComment: String
 })

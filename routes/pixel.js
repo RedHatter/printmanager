@@ -12,7 +12,9 @@ router.get('/:pixel.png', async ctx => {
   await pixel.save()
   console.log(ctx.params)
   ctx.type = 'png'
-  ctx.body = fs.createReadStream(path.join(__dirname, '../public/images/pxl.png'))
+  ctx.body = fs.createReadStream(
+    path.join(__dirname, '../public/images/pxl.png')
+  )
 })
 
 module.exports = router.routes()

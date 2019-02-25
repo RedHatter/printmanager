@@ -5,20 +5,23 @@ import { IconButton } from '@material-ui/core'
 
 import DeleteIcon from '../icons/Delete.js'
 
-function Cell ({ x, width, active, onClick, onRemove }) {
-  return <div
-    onClick={ onClick }
-    className={ classnames('cell', { active }) }
-    style={ {
-      left: x + '%',
-      width: width + '%'
-    } }>
-    { active &&
-      <IconButton onClick={ onRemove } className="remove">
-        <DeleteIcon />
-      </IconButton>
-    }
-  </div>
+function Cell({ x, width, active, onClick, onRemove }) {
+  return (
+    <div
+      onClick={onClick}
+      className={classnames('cell', { active })}
+      style={{
+        left: x + '%',
+        width: width + '%'
+      }}
+    >
+      {active && (
+        <IconButton onClick={onRemove} className="remove">
+          <DeleteIcon />
+        </IconButton>
+      )}
+    </div>
+  )
 }
 
 Cell.propTypes = {
@@ -32,24 +35,24 @@ Cell.propTypes = {
 export default Cell
 
 <style>
-  .e-blast .cell {
-    position: absolute;
-    box-sizing: border-box;
-    top: 0;
-    height: 100%;
-    cursor: pointer;
-  }
+.e-blast .cell {
+  position: absolute;
+  box-sizing: border-box;
+  top: 0;
+  height: 100%;
+  cursor: pointer;
+}
 
-  .e-blast .cell.active {
-    border: 1px solid blue;
-  }
+.e-blast .cell.active {
+  border: 1px solid blue;
+}
 
-  .e-blast .cell .remove {
-    position: absolute;
-    width: 50px;
-    height: 50px;
-    top: calc(50% - 25px);
-    left: calc(50% - 25px);
-    color: blue;
-  }
+.e-blast .cell .remove {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  top: calc(50% - 25px);
+  left: calc(50% - 25px);
+  color: blue;
+}
 </style>

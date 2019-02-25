@@ -3,8 +3,14 @@ import bound from 'bound-decorator'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import {
-  Dialog, DialogContent, DialogActions, Button,
-  TextField, Typography, FormControlLabel, Checkbox
+  Dialog,
+  DialogContent,
+  DialogActions,
+  Button,
+  TextField,
+  Typography,
+  FormControlLabel,
+  Checkbox
 } from '@material-ui/core'
 import ChipInput from 'material-ui-chip-input'
 
@@ -14,78 +20,111 @@ import { send } from '../actions.js'
 class SendDialog extends Component {
   static propTypes = {
     model: JobType.isRequired,
-    files: PropTypes.object.isRequired,
+    files: PropTypes.object.isRequired
   }
 
-  constructor (props) {
+  constructor(props) {
     super(props)
 
     this.state = {
-      message: 'Please review the attachment for your approval or send me any changes you may have.\n\nThank you',
+      message:
+        'Please review the attachment for your approval or send me any changes you may have.\n\nThank you',
       subject: props.model.name,
-      recipients: [ props.model.client.contact.email ],
+      recipients: [props.model.client.contact.email],
       attachments: [],
       chipError: undefined
     }
   }
 
-  render () {
+  render() {
     let { recipients, chipError, attachments, subject, message } = this.state
     let { onClose, files } = this.props
 
-    return <Dialog open>
-      <DialogContent className="send-dialog-content">
-        <ChipInput onAdd={ this.handleAddChip } onDelete={ this.handleDeleteChip }
-          newChipKeyCodes={ [ 9, 13, 32 ] } value={ recipients } label="Recipients"
-          fullWidth helperText={ chipError } error={ chipError != undefined } />
-        <TextField fullWidth label="Subject" value={ subject } onChange={ this.handleSubjectChange } />
-        <TextField fullWidth multiline label="Message" rows={ 4 } value={ message } onChange={ this.handleMessageChange } />
-        { Object.entries(files).map(([ key, value ]) => (
-          <Fragment key={ key }>
-            <Typography variant="headline" align="left">{ key }</Typography>
-            { value.map(file => (
-              <FormControlLabel key={ file.name } label={ file.name } control={
-                <Checkbox
-                  checked={ attachments.includes(file.key) }
-                  onChange={ this.handleSelectFile(file.key) }
-                  value={ file.key }
+    return (
+      <Dialog open>
+        <DialogContent className="send-dialog-content">
+          <ChipInput
+            onAdd={this.handleAddChip}
+            onDelete={this.handleDeleteChip}
+            newChipKeyCodes={[9, 13, 32]}
+            value={recipients}
+            label="Recipients"
+            fullWidth
+            helperText={chipError}
+            error={chipError != undefined}
+          />
+          <TextField
+            fullWidth
+            label="Subject"
+            value={subject}
+            onChange={this.handleSubjectChange}
+          />
+          <TextField
+            fullWidth
+            multiline
+            label="Message"
+            rows={4}
+            value={message}
+            onChange={this.handleMessageChange}
+          />
+          {Object.entries(files).map(([key, value]) => (
+            <Fragment key={key}>
+              <Typography variant="headline" align="left">
+                {key}
+              </Typography>
+              {value.map(file => (
+                <FormControlLabel
+                  key={file.name}
+                  label={file.name}
+                  control={
+                    <Checkbox
+                      checked={attachments.includes(file.key)}
+                      onChange={this.handleSelectFile(file.key)}
+                      value={file.key}
+                    />
+                  }
                 />
-              } />
-            )) }
-          </Fragment>
-        )) }
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={ onClose }>Close</Button>
-        <Button onClick={ this.handleSend }>Send</Button>
-      </DialogActions>
-    </Dialog>
+              ))}
+            </Fragment>
+          ))}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={onClose}>Close</Button>
+          <Button onClick={this.handleSend}>Send</Button>
+        </DialogActions>
+      </Dialog>
+    )
   }
 
   @bound
-  handleMessageChange (e) {
+  handleMessageChange(e) {
     this.setState({ message: e.target.value })
   }
 
   @bound
-  handleSubjectChange (e) {
+  handleSubjectChange(e) {
     this.setState({ subject: e.target.value })
   }
 
   @bound
-  handleAddChip (chip) {
+  handleAddChip(chip) {
     if (/^.+@.+\..+$/.test(chip))
-      this.setState(state => ({ recipients: state.recipients.concat([ chip ]), chipError: undefined }))
+      this.setState(state => ({
+        recipients: state.recipients.concat([chip]),
+        chipError: undefined
+      }))
     else
       this.setState({ chipError: 'Recipient must be a valid e-mail address.' })
   }
 
   @bound
-  handleDeleteChip (chip, index) {
-    this.setState(state => ({ recipients: state.recipients.filter(o => o != chip) }))
+  handleDeleteChip(chip, index) {
+    this.setState(state => ({
+      recipients: state.recipients.filter(o => o != chip)
+    }))
   }
 
-  handleSelectFile (name) {
+  handleSelectFile(name) {
     return e => {
       let { checked, value } = e.target
       this.setState(state => ({
@@ -97,20 +136,26 @@ class SendDialog extends Component {
   }
 
   @bound
-  handleSend () {
+  handleSend() {
     let { onClose, model } = this.props
     let { recipients, subject, message, attachments } = this.state
     send({
-      recipients, subject, message, attachments,
+      recipients,
+      subject,
+      message,
+      attachments,
       jobId: model._id
     }).then(onClose)
   }
 }
 
-export default connect(null, { send })(SendDialog)
+export default connect(
+  null,
+  { send }
+)(SendDialog)
 
 <style>
-  .send-dialog-content > div {
-    margin: 20px 0;
-  }
+.send-dialog-content > div {
+  margin: 20px 0;
+}
 </style>

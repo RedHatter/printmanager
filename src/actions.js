@@ -10,7 +10,7 @@ const cognito = new CognitoIdentityServiceProvider({
   secretAccessKey: '***REMOVED***'
 })
 
-async function createApiAction (type, url, error, { body, method }) {
+async function createApiAction(type, url, error, { body, method }) {
   try {
     let res = await fetch(url, {
       method: method || 'POST',
@@ -33,99 +33,175 @@ async function createApiAction (type, url, error, { body, method }) {
   }
 }
 
-export async function createEblast (file) {
+export async function createEblast(file) {
   let path = encodeURIComponent(file.name.replace(/ /g, '_'))
-  Storage.put(path, file, { contentType: file.type, bucket: 'dealerdigitalgroup.media' })
-    .catch(err => ({
-      type: 'CREATE_EBLAST',
-      payload: new Error('Unable to upload e-blast. ' + (err.message || err)),
-      error: true
-    }))
+  Storage.put(path, file, {
+    contentType: file.type,
+    bucket: 'dealerdigitalgroup.media'
+  }).catch(err => ({
+    type: 'CREATE_EBLAST',
+    payload: new Error('Unable to upload e-blast. ' + (err.message || err)),
+    error: true
+  }))
 
-  return createApiAction ('CREATE_EBLAST', '/api/eblast', 'Unable to create e-blast.', { body: {
-    name: file.name.substring(0, file.name.lastIndexOf('.')),
-    image: 'https://s3-us-west-1.amazonaws.com/dealerdigitalgroup.media/public/' + path
-  } })
+  return createApiAction(
+    'CREATE_EBLAST',
+    '/api/eblast',
+    'Unable to create e-blast.',
+    {
+      body: {
+        name: file.name.substring(0, file.name.lastIndexOf('.')),
+        image:
+          'https://s3-us-west-1.amazonaws.com/dealerdigitalgroup.media/public/' +
+          path
+      }
+    }
+  )
 }
 
-export async function updateEblast (body) {
-  return createApiAction ('UPDATE_EBLAST', '/api/eblast/' + body._id, 'Unable to update e-blasts.', { body })
+export async function updateEblast(body) {
+  return createApiAction(
+    'UPDATE_EBLAST',
+    '/api/eblast/' + body._id,
+    'Unable to update e-blasts.',
+    { body }
+  )
 }
 
-export async function deleteEblast (id) {
-  return createApiAction ('DELETE_EBLAST', '/api/eblast/' + id, 'Unable to delete e-blast.', { method: 'DELETE' })
+export async function deleteEblast(id) {
+  return createApiAction(
+    'DELETE_EBLAST',
+    '/api/eblast/' + id,
+    'Unable to delete e-blast.',
+    { method: 'DELETE' }
+  )
 }
 
-export async function fetchEblasts () {
-  return createApiAction ('FETCH_EBLASTS', '/api/eblast', 'Unable to retrieve e-blasts.', { method: 'GET' })
+export async function fetchEblasts() {
+  return createApiAction(
+    'FETCH_EBLASTS',
+    '/api/eblast',
+    'Unable to retrieve e-blasts.',
+    { method: 'GET' }
+  )
 }
 
-export async function fetchJobs () {
-  return createApiAction ('FETCH_JOBS', '/api/job/search', 'Unable to retrieve jobs.', { body: store.getState().filter })
+export async function fetchJobs() {
+  return createApiAction(
+    'FETCH_JOBS',
+    '/api/job/search',
+    'Unable to retrieve jobs.',
+    { body: store.getState().filter }
+  )
 }
 
-export async function updateJob (body) {
-  return createApiAction ('UPDATE_JOB', '/api/job/' + (body._id || ''), 'Unable to update job.', { body })
+export async function updateJob(body) {
+  return createApiAction(
+    'UPDATE_JOB',
+    '/api/job/' + (body._id || ''),
+    'Unable to update job.',
+    { body }
+  )
 }
 
-export async function deleteJob (id) {
-  let action = await createApiAction ('DELETE_JOB', '/api/job/' + id, 'Unable to delete job.', { method: 'DELETE' })
+export async function deleteJob(id) {
+  let action = await createApiAction(
+    'DELETE_JOB',
+    '/api/job/' + id,
+    'Unable to delete job.',
+    { method: 'DELETE' }
+  )
   if (action.error) return action
 
   return fetchJobs()
 }
 
-export async function deleteUser (body) {
-  let action = await createApiAction ('DELETE_USER', '/api/user/' + body.id, 'Unable to create user.', { method: 'DELETE' })
+export async function deleteUser(body) {
+  let action = await createApiAction(
+    'DELETE_USER',
+    '/api/user/' + body.id,
+    'Unable to create user.',
+    { method: 'DELETE' }
+  )
   if (action.error) return action
 
   return fetchUsers()
 }
 
-export async function createUser (body) {
-  let action = await createApiAction ('CREATE_USER', '/api/user/', 'Unable to create user.', { method: 'POST', body })
+export async function createUser(body) {
+  let action = await createApiAction(
+    'CREATE_USER',
+    '/api/user/',
+    'Unable to create user.',
+    { method: 'POST', body }
+  )
   if (action.error) return action
 
   return fetchUsers()
 }
 
-export async function editUser (body) {
-  let action = await createApiAction ('EDIT_USER', '/api/user/' + body.id, 'Unable to create user.', { method: 'POST', body })
+export async function editUser(body) {
+  let action = await createApiAction(
+    'EDIT_USER',
+    '/api/user/' + body.id,
+    'Unable to create user.',
+    { method: 'POST', body }
+  )
   if (action.error) return action
 
   return fetchUsers()
 }
 
-export async function resetUserPassword (body) {
-  return createApiAction ('RESET_USER_PASSWORD', `/api/user/${body.id}/reset`, 'Unable to reset user password.', { method: 'GET' })
+export async function resetUserPassword(body) {
+  return createApiAction(
+    'RESET_USER_PASSWORD',
+    `/api/user/${body.id}/reset`,
+    'Unable to reset user password.',
+    { method: 'GET' }
+  )
 }
 
-export async function send (body) {
+export async function send(body) {
   try {
     if (body.attachments) {
       body.attachments = await Promise.all(
-        body.attachments.map(key => Storage.get(key)))
+        body.attachments.map(key => Storage.get(key))
+      )
     }
 
-    return createApiAction ('SEND', '/api/send', 'Unable to send email.', { body })
+    return createApiAction('SEND', '/api/send', 'Unable to send email.', {
+      body
+    })
   } catch (err) {
     return {
       type: 'SEND',
-      payload: new Error('Unable to resolve attachment URLs. ' + (err.message || err)),
+      payload: new Error(
+        'Unable to resolve attachment URLs. ' + (err.message || err)
+      ),
       error: true
     }
   }
 }
 
-export async function fetchClients () {
-  return createApiAction('FETCH_CLIENTS', '/api/client', 'Unable to retrieve clients.', { method: 'GET' })
+export async function fetchClients() {
+  return createApiAction(
+    'FETCH_CLIENTS',
+    '/api/client',
+    'Unable to retrieve clients.',
+    { method: 'GET' }
+  )
 }
 
-export async function updateClient (body) {
-  return createApiAction('UPDATE_CLIENT', '/api/client/' + (body._id || ''), 'Unable to update client.', { body })
+export async function updateClient(body) {
+  return createApiAction(
+    'UPDATE_CLIENT',
+    '/api/client/' + (body._id || ''),
+    'Unable to update client.',
+    { body }
+  )
 }
 
-export async function fetchFiles () {
+export async function fetchFiles() {
   try {
     let res = await Storage.list('')
     let payload = res.reduce((files, file) => {
@@ -149,10 +225,14 @@ export async function fetchFiles () {
   }
 }
 
-export function uploadFiles (files, path) {
-  return Promise.all(Array.from(files).map(file =>
-      Storage.put(`${path}/${encodeURIComponent(file.name)}`, file, { contentType: file.type })
-    ))
+export function uploadFiles(files, path) {
+  return Promise.all(
+    Array.from(files).map(file =>
+      Storage.put(`${path}/${encodeURIComponent(file.name)}`, file, {
+        contentType: file.type
+      })
+    )
+  )
     .then(fetchFiles)
     .catch(err => ({
       type: 'UPLOAD_FILES',
@@ -161,7 +241,7 @@ export function uploadFiles (files, path) {
     }))
 }
 
-export function deleteFiles (files) {
+export function deleteFiles(files) {
   return Promise.all(files.map(key => Storage.remove(key)))
     .then(fetchFiles)
     .catch(err => ({
@@ -171,77 +251,90 @@ export function deleteFiles (files) {
     }))
 }
 
-export function fetchSalesmen () {
-  return (new Promise((resolve, reject) =>
-    cognito.listUsersInGroup({
-      GroupName: 'Salesmen',
-      UserPoolId: 'us-west-2_***REMOVED***'
-    }, (err, res) => {
-      if (err) return reject({
-        type: 'FETCH_SALESMEN',
-        payload: err,
-        error: true
-      })
+export function fetchSalesmen() {
+  return new Promise((resolve, reject) =>
+    cognito.listUsersInGroup(
+      {
+        GroupName: 'Salesmen',
+        UserPoolId: 'us-west-2_***REMOVED***'
+      },
+      (err, res) => {
+        if (err)
+          return reject({
+            type: 'FETCH_SALESMEN',
+            payload: err,
+            error: true
+          })
 
-      let payload = {}
-      for (let user of res.Users) {
-        let salesman = {}
+        let payload = {}
+        for (let user of res.Users) {
+          let salesman = {}
 
-        for (let attr of user.Attributes) {
-          switch (attr.Name) {
-            case 'email':
-              salesman.email = attr.Value
-              break
-            case 'name':
-              salesman.name = attr.Value
-              break
-            case 'phone_number':
-              salesman.phoneNumber = attr.Value
+          for (let attr of user.Attributes) {
+            switch (attr.Name) {
+              case 'email':
+                salesman.email = attr.Value
+                break
+              case 'name':
+                salesman.name = attr.Value
+                break
+              case 'phone_number':
+                salesman.phoneNumber = attr.Value
+            }
           }
+
+          payload[user.Username] = salesman
         }
 
-        payload[user.Username] = salesman
+        resolve({ type: 'FETCH_SALESMEN', payload })
       }
-
-      resolve({ type: 'FETCH_SALESMEN', payload })
-    })
-  )).catch(err => ({
+    )
+  ).catch(err => ({
     type: 'FETCH_SALESMEN',
     payload: new Error('Unable to retrieve salesmen. ' + (err.message || err)),
     error: true
   }))
 }
 
-export async function fetchUsers () {
+export async function fetchUsers() {
   try {
     const users = await new Promise((resolve, reject) =>
-      cognito.listUsers({
-        UserPoolId: 'us-west-2_***REMOVED***'
-      }, (err, res) => {
-        if (err) reject(err)
-        else resolve(res.Users)
-      })
+      cognito.listUsers(
+        {
+          UserPoolId: 'us-west-2_***REMOVED***'
+        },
+        (err, res) => {
+          if (err) reject(err)
+          else resolve(res.Users)
+        }
+      )
     )
 
     const salesmen = (await new Promise((resolve, reject) =>
-      cognito.listUsersInGroup({
-        GroupName: 'Salesmen',
-        UserPoolId: 'us-west-2_***REMOVED***'
-      }, (err, res) => {
-        if (err) reject(err)
-        else resolve(res.Users)
-        // else resolve(res.Users.map(user => user.Attributes.find(attr => attr.name == )))
-      })
+      cognito.listUsersInGroup(
+        {
+          GroupName: 'Salesmen',
+          UserPoolId: 'us-west-2_***REMOVED***'
+        },
+        (err, res) => {
+          if (err) reject(err)
+          else resolve(res.Users)
+          // else resolve(res.Users.map(user => user.Attributes.find(attr => attr.name == )))
+        }
+      )
     )).map(o => o.Username)
 
     const admins = (await new Promise((resolve, reject) =>
-      cognito.listUsersInGroup({
-        GroupName: 'Admin',
-        UserPoolId: 'us-west-2_***REMOVED***'
-      }, (err, res) => {
-        if (err) reject(err)
-        else resolve(res.Users)
-      })
+      cognito.listUsersInGroup(
+        {
+          GroupName: 'Admin',
+          UserPoolId: 'us-west-2_***REMOVED***'
+        },
+        (err, res) => {
+          if (err) reject(err)
+          else resolve(res.Users)
+        }
+      )
     )).map(o => o.Username)
 
     let payload = {}
@@ -272,16 +365,18 @@ export async function fetchUsers () {
   } catch (err) {
     return {
       type: 'FETCH_USERS',
-      payload: new Error('Unable to retrieve salesmen. ' + (err.message || err)),
+      payload: new Error(
+        'Unable to retrieve salesmen. ' + (err.message || err)
+      ),
       error: true
     }
   }
 }
 
-export function updateFilter (payload) {
+export function updateFilter(payload) {
   return { type: 'UPDATE_FILTER', payload }
 }
 
-export function clearError () {
+export function clearError() {
   return { type: 'CLEAR_ERROR' }
 }

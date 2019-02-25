@@ -4,23 +4,25 @@ import PropTypes from 'prop-types'
 class RunningMaxValue {
   #items = {}
 
-  createValue (callback) {
-    let key = Math.random().toString(36).substr(2, 9)
+  createValue(callback) {
+    let key = Math.random()
+      .toString(36)
+      .substr(2, 9)
     this.#items[key] = { callback }
     return key
   }
 
-  updateValue (key, value) {
+  updateValue(key, value) {
     this.#items[key].value = value
     this._propagate()
   }
 
-  removeValue (key) {
+  removeValue(key) {
     delete this.#items[key]
     this._propagate()
   }
 
-  _propagate () {
+  _propagate() {
     let values = Object.values(this.#items)
     let max = values.reduce((res, o) => Math.max(res, o.value), 0)
     values.forEach(item => item.callback(max))
@@ -34,7 +36,7 @@ class Column extends Component {
 
   static cache = {}
 
-  constructor (props) {
+  constructor(props) {
     super(props)
 
     let value = (Column.cache[props.group] ||= new RunningMaxValue())
@@ -43,24 +45,26 @@ class Column extends Component {
         this.ref.current.style.width = width + 'px'
     })
 
-    this.ref = React.createRef();
+    this.ref = React.createRef()
     this.componentDidMount = this.componentDidUpdate
   }
 
-  render () {
+  render() {
     let { children } = this.props
 
-    return <div ref={ this.ref } className="column">
-      { children }
-    </div>
+    return (
+      <div ref={this.ref} className="column">
+        {children}
+      </div>
+    )
   }
 
-  componentDidUpdate () {
+  componentDidUpdate() {
     this.width = this.ref.current.clientWidth
     Column.cache[this.props.group]?.updateValue(this.valueKey, this.width)
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     Column.cache[this.props.group]?.removeValue(this.valueKey)
   }
 }
@@ -68,7 +72,7 @@ class Column extends Component {
 export default Column
 
 <style>
-  .column {
-    display: inline-block;
-  }
+.column {
+  display: inline-block;
+}
 </style>

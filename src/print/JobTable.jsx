@@ -13,7 +13,7 @@ class JobTable extends Component {
     files: PropTypes.object.isRequired
   }
 
-  constructor (props) {
+  constructor(props) {
     super(props)
 
     this.state = {
@@ -21,32 +21,42 @@ class JobTable extends Component {
     }
   }
 
-  render () {
+  render() {
     let { expanded } = this.state
     let { model, files, isAdmin } = this.props
 
     return (
       <div>
         <JobHeader />
-        { model.map(o => (<Job key={ o._id } model={ o } files={ files[o._id] } isAdmin={isAdmin}
-          expanded={expanded == o._id } onChange={ this.handleChange.bind(this, o._id) } />)) }
-        { model.length == 0 && <Paper className="empty">No results.</Paper> }
+        {model.map(o => (
+          <Job
+            key={o._id}
+            model={o}
+            files={files[o._id]}
+            isAdmin={isAdmin}
+            expanded={expanded == o._id}
+            onChange={this.handleChange.bind(this, o._id)}
+          />
+        ))}
+        {model.length == 0 && <Paper className="empty">No results.</Paper>}
       </div>
     )
   }
 
-  handleChange (id, e, expanded) {
+  handleChange(id, e, expanded) {
     this.setState({ expanded: expanded ? id : false })
   }
 }
 
-export default connect(state => ({ model: state.jobs, files: state.files }))(JobTable)
+export default connect(state => ({ model: state.jobs, files: state.files }))(
+  JobTable
+)
 
 <style>
-  .empty {
-    color: gray;
-    font-style: italic;
-    text-align: left;
-    padding: 10px 30px;
-  }
+.empty {
+  color: gray;
+  font-style: italic;
+  text-align: left;
+  padding: 10px 30px;
+}
 </style>

@@ -60,6 +60,7 @@
     "material-ui-pickers": "../material-ui-pickers/lib/build",
     "material-ui-utils": "../material-ui-utils/",
     "open": "0.0.5",
+    "prettier": "^1.16.4",
     "prop-types": "^15.6.2",
     "prop-types-from-mongoose": "^1.1.1",
     "react": "^16.7.0-alpha.2",

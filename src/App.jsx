@@ -2,18 +2,32 @@ import React, { Component, Fragment } from 'react'
 import bound from 'bound-decorator'
 import { connect } from 'react-redux'
 import {
-  Paper, Button, AppBar, Toolbar, Tab, IconButton,
-  Icon, Typography, Fade, Slide, Snackbar
+  Paper,
+  Button,
+  AppBar,
+  Toolbar,
+  Tab,
+  IconButton,
+  Icon,
+  Typography,
+  Fade,
+  Slide,
+  Snackbar
 } from '@material-ui/core'
-import CloseIcon from '@material-ui/icons/Close'
+import CloseIcon from './icons/Close'
 import PropTypes from 'prop-types'
 import { Auth } from 'aws-amplify'
 
 import { ClientType } from './types.js'
 import { SlideRight } from './transitions.jsx'
 import {
-  fetchJobs, fetchFiles, fetchClients, fetchUsers,
-  fetchEblasts, clearError, createEblast
+  fetchJobs,
+  fetchFiles,
+  fetchClients,
+  fetchUsers,
+  fetchEblasts,
+  clearError,
+  createEblast
 } from './actions.js'
 import UploadButton from './UploadButton.jsx'
 import Tabs from './Tabs.jsx'
@@ -27,10 +41,10 @@ import Users from './users/Users.jsx'
 
 class App extends Component {
   static propTypes = {
-    clients: PropTypes.arrayOf(ClientType).isRequired,
+    clients: PropTypes.arrayOf(ClientType).isRequired
   }
 
-  constructor (props) {
+  constructor(props) {
     super(props)
 
     this.state = {
@@ -39,70 +53,98 @@ class App extends Component {
       selectedClient: undefined
     }
 
-    this.props.fetchUsers()
-      .then(this.props.fetchJobs)
+    this.props.fetchUsers().then(this.props.fetchJobs)
     this.props.fetchFiles()
     this.props.fetchClients()
     this.props.fetchEblasts()
   }
 
-  render () {
+  render() {
     const { authData, clients, error, clearError, createEblast } = this.props
     const { selectedTab, selectedClient } = this.state
-    const isAdmin = 'cognito:groups' in authData.signInUserSession.idToken.payload
-      && authData.signInUserSession.idToken.payload['cognito:groups'].includes('Admin')
+    const isAdmin =
+      'cognito:groups' in authData.signInUserSession.idToken.payload &&
+      authData.signInUserSession.idToken.payload['cognito:groups'].includes(
+        'Admin'
+      )
 
     return (
       <Fragment>
-        <Snackbar open={ error != undefined } message={ error } key={ error }
-          anchorOrigin={ { vertical: 'bottom', horizontal: 'right' } }
-          action={ <IconButton color="inherit" onClick={ clearError }><CloseIcon /></IconButton> } />
+        <Snackbar
+          open={error != undefined}
+          message={error}
+          key={error}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          action={
+            <IconButton color="inherit" onClick={clearError}>
+              <CloseIcon />
+            </IconButton>
+          }
+        />
         <AppBar position="static" color="default">
           <Toolbar>
             <img src="/images/logo.png" />
             <div className="header-button-container">
-              { authData?.email }
-              <Button onClick={ this.handleSignOut }>Sign Out</Button>
+              {authData?.email}
+              <Button onClick={this.handleSignOut}>Sign Out</Button>
             </div>
           </Toolbar>
         </AppBar>
         <div className="app">
           <div className="sidebar">
-            { isAdmin && <Button onClick={ this.openCreateDialog }>Create Job</Button> }
+            {isAdmin && (
+              <Button onClick={this.openCreateDialog}>Create Job</Button>
+            )}
             <br />
             <UploadButton
-              onSelect={ e => {
+              onSelect={e => {
                 createEblast(e.target.files[0])
                 this.handleTabChange(null, 2)
-              } }
+              }}
               accept="image/*"
             >
               Create e-blast
             </UploadButton>
-            { this.state.isCreateDialogOpen && <CreateDialog onClose={ this.closeCreateDialog } /> }
+            {this.state.isCreateDialogOpen && (
+              <CreateDialog onClose={this.closeCreateDialog} />
+            )}
             <Typography variant="headline">Views</Typography>
-            <Tabs value={ selectedTab } onChange={ this.handleTabChange }>
+            <Tabs value={selectedTab} onChange={this.handleTabChange}>
               <Tab label="All Jobs" />
               <Tab label="Calendar" />
               <Tab label="E-blasts" />
-              { isAdmin && <Tab label="Users" /> }
+              {isAdmin && <Tab label="Users" />}
             </Tabs>
-            { isAdmin && <Fragment>
-              <Typography variant="headline">Clients</Typography>
-              <Tabs value={ selectedClient } onChange={ this.handleClientChange }>
-                { clients.map(client => <Tab key={ client._id } label={ client.name } />) }
-                <Tab icon={ <Icon>add</Icon> } />
-              </Tabs>
-            </Fragment> }
+            {isAdmin && (
+              <Fragment>
+                <Typography variant="headline">Clients</Typography>
+                <Tabs value={selectedClient} onChange={this.handleClientChange}>
+                  {clients.map(client => (
+                    <Tab key={client._id} label={client.name} />
+                  ))}
+                  <Tab icon={<Icon>add</Icon>} />
+                </Tabs>
+              </Fragment>
+            )}
             <Typography variant="headline">Search</Typography>
             <Filters />
           </div>
           <div className="content-container">
-            <SlideRight in={ selectedTab == 0 }><JobTable isAdmin={isAdmin} /></SlideRight>
-            <SlideRight in={ selectedTab == 1 }><Calendar /></SlideRight>
-            <SlideRight in={ selectedTab == 2 }><Eblast /></SlideRight>
-            <SlideRight in={ selectedTab == 3 }><Users /></SlideRight>
-            <SlideRight in={ selectedClient != undefined }><Client model={ clients[selectedClient] } /></SlideRight>
+            <SlideRight in={selectedTab == 0}>
+              <JobTable isAdmin={isAdmin} />
+            </SlideRight>
+            <SlideRight in={selectedTab == 1}>
+              <Calendar />
+            </SlideRight>
+            <SlideRight in={selectedTab == 2}>
+              <Eblast />
+            </SlideRight>
+            <SlideRight in={selectedTab == 3}>
+              <Users />
+            </SlideRight>
+            <SlideRight in={selectedClient != undefined}>
+              <Client model={clients[selectedClient]} />
+            </SlideRight>
           </div>
         </div>
       </Fragment>
@@ -110,29 +152,29 @@ class App extends Component {
   }
 
   @bound
-  handleTabChange (e, value) {
+  handleTabChange(e, value) {
     this.setState({ selectedTab: value, selectedClient: undefined })
   }
 
   @bound
-  handleClientChange (e, value) {
+  handleClientChange(e, value) {
     this.setState({ selectedTab: undefined, selectedClient: value })
   }
 
   @bound
-  handleSignOut () {
+  handleSignOut() {
     Auth.signOut()
       .then(() => this.props.onStateChange('signIn'))
       .catch(console.error)
   }
 
   @bound
-  closeCreateDialog () {
+  closeCreateDialog() {
     this.setState({ isCreateDialogOpen: false })
   }
 
   @bound
-  openCreateDialog () {
+  openCreateDialog() {
     this.setState({ isCreateDialogOpen: true })
   }
 }
@@ -140,33 +182,38 @@ class App extends Component {
 export default connect(
   state => ({ clients: state.clients, error: state.errors[0] }),
   {
-    fetchJobs, fetchFiles, fetchClients, fetchUsers,
-    fetchEblasts, clearError, createEblast
+    fetchJobs,
+    fetchFiles,
+    fetchClients,
+    fetchUsers,
+    fetchEblasts,
+    clearError,
+    createEblast
   }
 )(App)
 
 <style>
-  body {
-    font-family: 'Roboto', sans-serif;
-    background-color: #F2F3F4;
-    text-align: center;
-  }
+body {
+  font-family: "Roboto", sans-serif;
+  background-color: #f2f3f4;
+  text-align: center;
+}
 
-  .app {
-    display: flex;
-    margin: 24px 0;
-  }
+.app {
+  display: flex;
+  margin: 24px 0;
+}
 
-  h2 {
-    margin-bottom: 20px !important;
-  }
+h2 {
+  margin-bottom: 20px !important;
+}
 
-  .content-container {
-    position: relative;
-    margin: 24px 16px;
-  }
+.content-container {
+  position: relative;
+  margin: 24px 16px;
+}
 
-  .app .sidebar h1 {
-    margin-top: 50px;
-  }
+.app .sidebar h1 {
+  margin-top: 50px;
+}
 </style>

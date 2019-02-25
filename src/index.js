@@ -30,17 +30,18 @@ Amplify.configure({
 const theme = createMuiTheme({
   palette: {
     primary: { main: blue[500] }
-  },
+  }
 })
 
-ReactDOM.render((
+ReactDOM.render(
   <MuiThemeProvider theme={theme}>
-    <ReduxProvider store={ store }>
-      <MuiPickersUtilsProvider utils={ DateFnsUtils }>
-        <Authenticator logo={ <img src="/images/logo.png" /> }>
+    <ReduxProvider store={store}>
+      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+        <Authenticator logo={<img src="/images/logo.png" />}>
           <App />
         </Authenticator>
       </MuiPickersUtilsProvider>
     </ReduxProvider>
-  </MuiThemeProvider>
-), document.getElementById('root'))
+  </MuiThemeProvider>,
+  document.getElementById('root')
+)

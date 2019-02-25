@@ -1,5 +1,5 @@
 import { createStore, applyMiddleware } from 'redux'
-import produce, { original } from "immer"
+import produce, { original } from 'immer'
 import io from 'socket.io-client'
 
 import { fetchJobs, fetchClients, fetchEblasts } from './actions.js'
@@ -10,7 +10,7 @@ const initialState = {
   salesmen: {},
   users: {},
   files: {},
-  filter: { created: [ ] },
+  filter: { created: [] },
   eblasts: [],
   errors: []
 }
@@ -40,10 +40,13 @@ const reduce = produce((draft, action) => {
 
     case 'FETCH_USERS':
       draft.users = action.payload
-      draft.salesmen = Object.entries(action.payload).reduce((arr, [key, value]) => {
-        if (value.salesmen) arr[key] = value
-        return arr
-      }, {})
+      draft.salesmen = Object.entries(action.payload).reduce(
+        (arr, [key, value]) => {
+          if (value.salesmen) arr[key] = value
+          return arr
+        },
+        {}
+      )
       break
 
     case 'FETCH_FILES':
@@ -70,9 +73,10 @@ const reduce = produce((draft, action) => {
       break
   }
 
-  if (action.type == 'FETCH_JOBS'
-    || action.type == 'FETCH_SALESMEN'
-    || action.type == 'FETCH_USERS'
+  if (
+    action.type == 'FETCH_JOBS' ||
+    action.type == 'FETCH_SALESMEN' ||
+    action.type == 'FETCH_USERS'
   ) {
     for (let job of draft.jobs) {
       if (job.salesman in draft.salesmen) {
@@ -84,7 +88,7 @@ const reduce = produce((draft, action) => {
   }
 }, initialState)
 
-function resolve ({ dispatch }) {
+function resolve({ dispatch }) {
   return next => action =>
     action && typeof action.then === 'function'
       ? action.then(dispatch, dispatch)

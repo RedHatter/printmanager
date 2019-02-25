@@ -1,11 +1,17 @@
 import React from 'react'
 import { CSSTransition } from 'react-transition-group'
 
-function transition (className) {
-  return props => <CSSTransition in={ props.in } timeout={ 200 }
-    classNames={ className } unmountOnExit>
-    { props.children }
-  </CSSTransition>
+function transition(className) {
+  return props => (
+    <CSSTransition
+      in={props.in}
+      timeout={200}
+      classNames={className}
+      unmountOnExit
+    >
+      {props.children}
+    </CSSTransition>
+  )
 }
 
 export let SlideRight = transition('slide-right'),

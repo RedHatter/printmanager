@@ -2,8 +2,14 @@ import React, { Component } from 'react'
 import bound from 'bound-decorator'
 import { connect } from 'react-redux'
 import {
-  Dialog, DialogContent, DialogActions, Button, LinearProgress,
-  RadioGroup, FormControlLabel, Radio
+  Dialog,
+  DialogContent,
+  DialogActions,
+  Button,
+  LinearProgress,
+  RadioGroup,
+  FormControlLabel,
+  Radio
 } from '@material-ui/core'
 import PropTypes from 'prop-types'
 
@@ -15,7 +21,7 @@ class FileDialog extends Component {
     path: PropTypes.string.isRequired
   }
 
-  constructor (props) {
+  constructor(props) {
     super(props)
 
     this.state = {
@@ -25,52 +31,90 @@ class FileDialog extends Component {
     }
   }
 
-  render () {
+  render() {
     let files = []
-    for (let file of this.state.files)
-      files.push(file.name)
+    for (let file of this.state.files) files.push(file.name)
 
     if (this.state.files.length < 1)
-      return <UploadButton onSelect={ this.handleSelect }>Upload</UploadButton>
+      return <UploadButton onSelect={this.handleSelect}>Upload</UploadButton>
     else
-      return <Dialog open>
-        <DialogContent>
-          { files.join('<br>') }
-          <RadioGroup name="type" value={ this.state.type } onChange={ this.handleTypeChange }>
-            <FormControlLabel value="Proof" control={ <Radio /> } label="Proof" />
-            <FormControlLabel value="Data List" control={ <Radio /> } label="Data List" />
-            <FormControlLabel value="Dealer invoice" control={ <Radio /> } label="Dealer invoice" />
-            <FormControlLabel value="Printer invoice" control={ <Radio /> } label="Printer invoice" />
-            <FormControlLabel value="Postal" control={ <Radio /> } label="Postal" />
-            <FormControlLabel value="Prize board" control={ <Radio /> } label="Prize board" />
-            <FormControlLabel value="Other" control={ <Radio /> } label="Other" />
-          </RadioGroup>
-          { this.state.uploading && <LinearProgress /> }
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={ this.handleClose }>Close</Button>
-          <Button onClick={ this.handleUpload } disabled={ this.state.type == '' }>Upload</Button>
-        </DialogActions>
-      </Dialog>
+      return (
+        <Dialog open>
+          <DialogContent>
+            {files.join('<br>')}
+            <RadioGroup
+              name="type"
+              value={this.state.type}
+              onChange={this.handleTypeChange}
+            >
+              <FormControlLabel
+                value="Proof"
+                control={<Radio />}
+                label="Proof"
+              />
+              <FormControlLabel
+                value="Data List"
+                control={<Radio />}
+                label="Data List"
+              />
+              <FormControlLabel
+                value="Dealer invoice"
+                control={<Radio />}
+                label="Dealer invoice"
+              />
+              <FormControlLabel
+                value="Printer invoice"
+                control={<Radio />}
+                label="Printer invoice"
+              />
+              <FormControlLabel
+                value="Postal"
+                control={<Radio />}
+                label="Postal"
+              />
+              <FormControlLabel
+                value="Prize board"
+                control={<Radio />}
+                label="Prize board"
+              />
+              <FormControlLabel
+                value="Other"
+                control={<Radio />}
+                label="Other"
+              />
+            </RadioGroup>
+            {this.state.uploading && <LinearProgress />}
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.handleClose}>Close</Button>
+            <Button
+              onClick={this.handleUpload}
+              disabled={this.state.type == ''}
+            >
+              Upload
+            </Button>
+          </DialogActions>
+        </Dialog>
+      )
   }
 
   @bound
-  handleTypeChange (e, type) {
+  handleTypeChange(e, type) {
     this.setState({ type })
   }
 
   @bound
-  handleSelect (e) {
+  handleSelect(e) {
     this.setState({ files: e.target.files, type: '' })
   }
 
   @bound
-  handleClose () {
+  handleClose() {
     this.setState({ files: [], type: '' })
   }
 
   @bound
-  handleUpload () {
+  handleUpload() {
     let { path, uploadFiles } = this.props
     let { type, files } = this.state
 
@@ -81,4 +125,7 @@ class FileDialog extends Component {
   }
 }
 
-export default connect(null, { uploadFiles })(FileDialog)
+export default connect(
+  null,
+  { uploadFiles }
+)(FileDialog)

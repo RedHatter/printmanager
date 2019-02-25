@@ -14,14 +14,14 @@ const { Job, Client, Pixel, Eblast } = require('../schema')
 const { mapObjectValues } = require('../utils.js')
 
 const cognitoExpress = new Cognito({
-    region: 'us-west-2',
-    cognitoUserPoolId: 'us-west-2_***REMOVED***',
-    tokenUse: 'id'
+  region: 'us-west-2',
+  cognitoUserPoolId: 'us-west-2_***REMOVED***',
+  tokenUse: 'id'
 })
 const validate = util.promisify(cognitoExpress.validate).bind(cognitoExpress)
 
 AWS.config.update({
-  credentials: new AWS.Credentials ({
+  credentials: new AWS.Credentials({
     accessKeyId: '***REMOVED***',
     secretAccessKey: '***REMOVED***'
   })
@@ -36,9 +36,15 @@ Amplify.configure({
 
 const cognito = new AWS.CognitoIdentityServiceProvider({ region: 'us-west-2' })
 const adminCreateUser = util.promisify(cognito.adminCreateUser).bind(cognito)
-const adminAddUserToGroup = util.promisify(cognito.adminAddUserToGroup).bind(cognito)
-const adminRemoveUserFromGroup = util.promisify(cognito.adminRemoveUserFromGroup).bind(cognito)
-const adminResetUserPassword = util.promisify(cognito.adminResetUserPassword).bind(cognito)
+const adminAddUserToGroup = util
+  .promisify(cognito.adminAddUserToGroup)
+  .bind(cognito)
+const adminRemoveUserFromGroup = util
+  .promisify(cognito.adminRemoveUserFromGroup)
+  .bind(cognito)
+const adminResetUserPassword = util
+  .promisify(cognito.adminResetUserPassword)
+  .bind(cognito)
 const adminDeleteUser = util.promisify(cognito.adminDeleteUser).bind(cognito)
 
 const router = new Router()
@@ -56,7 +62,7 @@ router.use(async (ctx, next) => {
 router.post('/job', async ctx => {
   let model = ctx.request.body
 
-  let today = new Date ()
+  let today = new Date()
   if (!model.name) {
     let n = await Job.count({
       client: model.client,
@@ -72,74 +78,74 @@ router.post('/job', async ctx => {
     switch (model.jobType) {
       case 'Postcard':
         type = 'PCARD'
-        break;
+        break
       case 'Tri-fold service':
         type = 'TFLD_SV'
-        break;
+        break
       case 'Tri-fold offer sales':
         type = 'TFLD_OFR'
-        break;
+        break
       case 'Invoice w/ voucher buy back':
         type = 'INV_VOU_BB'
-        break;
+        break
       case 'Invoice w/ck':
         type = 'INV_CK'
-        break;
+        break
       case 'Invoice bilingual w/voucher':
         type = 'INV_VOU_BI'
-        break;
+        break
       case 'Email buy back':
         type = 'EML_BB'
-        break;
+        break
       case 'Letter orignal':
         type = 'LTR_OG'
-        break;
+        break
       case 'Letter w/voucher w/offers':
         type = 'LTR_VOU_OFR'
-        break;
+        break
       case 'Letter certificate':
         type = 'LTR_CERT'
-        break;
+        break
       case 'Letter tax double window bilingual':
         type = 'LTR_TX_DW_DI'
-        break;
+        break
       case 'Letter w/offers buy back':
         type = 'LTR_OFR_BB'
-        break;
+        break
       case 'Check stub w/voucher':
         type = 'CSTB_VOU'
-        break;
+        break
       case 'Carbon':
         type = 'CARB'
-        break;
+        break
       case 'Tax snap buy back':
         type = 'TSNAP_BB'
-        break;
+        break
     }
 
     let list = ''
     switch (model.listType) {
       case 'Database':
         list = '_DB'
-        break;
+        break
       case 'Saturation':
         list = '_SAT'
-        break;
+        break
       case 'Bankruptcy':
         list = '_BK'
-        break;
+        break
       case 'Prequalified':
         list = '_PRQ'
-        break;
+        break
     }
 
-    model.name = `${client.acronym} ${format(today, 'MMYY')}-${n + 1} ${type}${list}`
+    model.name = `${client.acronym} ${format(today, 'MMYY')}-${n +
+      1} ${type}${list}`
   }
 
-  model = mapObjectValues(model, val => val === '' ? undefined : val)
+  model = mapObjectValues(model, val => (val === '' ? undefined : val))
 
-  if (model.dropDate[1] == null)
-    model.dropDate.pop()
+  if (model.dropDate[1] == null) model.dropDate.pop()
 
   let job = new Job(model)
   try {
@@ -159,7 +165,7 @@ router.post('/job', async ctx => {
 })
 
 function escapeRegExp(str) {
-  return str ? str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&") : str
+  return str ? str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&') : str
 }
 
 router.post('/job/search', async ctx => {
@@ -168,24 +174,41 @@ router.post('/job/search', async ctx => {
 
   ctx.response.type = 'json'
   ctx.body = await Job.find({
-    ...search && { $or: [ { name: regex }, { comments: regex }, { vendor: regex } ] },
-    ...artStatus && { artStatus },
-    ...salesman && { salesman },
-    ...client && { client },
-    ...created && created.length > 0 && { created: {
-      $gte: created[0],
-      $lt: created[1]
-    } }
-  }).populate('client').populate('pixels').exec()
+    ...(search && {
+      $or: [{ name: regex }, { comments: regex }, { vendor: regex }]
+    }),
+    ...(artStatus && { artStatus }),
+    ...(salesman && { salesman }),
+    ...(client && { client }),
+    ...(created &&
+      created.length > 0 && {
+        created: {
+          $gte: created[0],
+          $lt: created[1]
+        }
+      })
+  })
+    .populate('client')
+    .populate('pixels')
+    .exec()
 })
 
 router.post('/job/:id', async ctx => {
-  ctx.assert(ctx.request.body._id == ctx.params.id, 422, 'Model id must match update id.')
+  ctx.assert(
+    ctx.request.body._id == ctx.params.id,
+    422,
+    'Model id must match update id.'
+  )
 
   try {
-    let model = mapObjectValues(ctx.request.body, val => val === '' ? undefined : val)
+    let model = mapObjectValues(ctx.request.body, val =>
+      val === '' ? undefined : val
+    )
     delete model._id
-    let job = await Job.findByIdAndUpdate(ctx.params.id, model, { runValidators: true, new: true })
+    let job = await Job.findByIdAndUpdate(ctx.params.id, model, {
+      runValidators: true,
+      new: true
+    })
     ctx.response.type = 'json'
     ctx.body = job
     ctx.socketIo.emit('invalidateJobs')
@@ -209,7 +232,10 @@ router.get('/job/:ref/patches/:id', async ctx => {
   ctx.response.type = 'json'
   let doc = await Job.findById(ctx.params.ref)
   doc = await doc.rollback(ctx.params.id, {}, false)
-  ctx.body = await doc.populate('client').populate('pixels').execPopulate()
+  ctx.body = await doc
+    .populate('client')
+    .populate('pixels')
+    .execPopulate()
 })
 
 router.delete('/job/:id', async ctx => {
@@ -220,7 +246,9 @@ router.delete('/job/:id', async ctx => {
 
 router.post('/client', async ctx => {
   try {
-    let model = mapObjectValues(ctx.request.body, val => val === '' ? undefined : val)
+    let model = mapObjectValues(ctx.request.body, val =>
+      val === '' ? undefined : val
+    )
     let client = new Client(model)
     await client.save()
     ctx.response.type = 'json'
@@ -238,12 +266,21 @@ router.post('/client', async ctx => {
 })
 
 router.post('/client/:id', async ctx => {
-  ctx.assert(ctx.request.body._id == ctx.params.id, 422, 'Model id must match update id.')
+  ctx.assert(
+    ctx.request.body._id == ctx.params.id,
+    422,
+    'Model id must match update id.'
+  )
 
   try {
-    let model = mapObjectValues(ctx.request.body, val => val === '' ? undefined : val)
+    let model = mapObjectValues(ctx.request.body, val =>
+      val === '' ? undefined : val
+    )
     delete model._id
-    let client = await Client.findByIdAndUpdate(ctx.params.id, model, { runValidators: true, new: true })
+    let client = await Client.findByIdAndUpdate(ctx.params.id, model, {
+      runValidators: true,
+      new: true
+    })
     ctx.response.type = 'json'
     ctx.body = client
     ctx.socketIo.emit('invalidateClients')
@@ -263,16 +300,19 @@ router.get('/client', async ctx => {
   ctx.body = await Client.find()
 })
 
-let mail = nodemailer.createTransport({
-  host: 'mail.dealerdigitalgroup.com',
-  port: 465,
-  auth: {
-    user: 'ericag@dealerdigitalgroup.com',
-    pass: '?Sf=hzfhCu)(5#pCyH'
+let mail = nodemailer.createTransport(
+  {
+    host: 'mail.dealerdigitalgroup.com',
+    port: 465,
+    auth: {
+      user: 'ericag@dealerdigitalgroup.com',
+      pass: '?Sf=hzfhCu)(5#pCyH'
+    }
+  },
+  {
+    from: '"Erica Garcia" <ericag@dealerdigitalgroup.com>'
   }
-}, {
-  from: '"Erica Garcia" <ericag@dealerdigitalgroup.com>'
-})
+)
 
 router.post('/user', async ctx => {
   const config = ctx.request.body
@@ -280,7 +320,7 @@ router.post('/user', async ctx => {
   const user = await adminCreateUser({
     UserPoolId: 'us-west-2_***REMOVED***',
     Username: config.email,
-    DesiredDeliveryMediums: [ 'EMAIL' ],
+    DesiredDeliveryMediums: ['EMAIL'],
     ForceAliasCreation: false,
     UserAttributes: [
       {
@@ -379,33 +419,50 @@ router.post('/send', async ctx => {
   await job.save()
 
   ctx.body = await new Promise((resolve, reject) =>
-    mail.sendMail({
-        to: recipients, subject,
-        html: `${message.replace(/\n/g, '<br>')}<img src="https://printmanager.dealerdigitalgroup.com/pixel/${pixel._id}.png">`,
+    mail.sendMail(
+      {
+        to: recipients,
+        subject,
+        html: `${message.replace(
+          /\n/g,
+          '<br>'
+        )}<img src="https://printmanager.dealerdigitalgroup.com/pixel/${
+          pixel._id
+        }.png">`,
         attachments: attachments.map(path => ({
-          path, filename: path.substring(path.lastIndexOf('/') + 1, path.lastIndexOf('?'))
+          path,
+          filename: path.substring(
+            path.lastIndexOf('/') + 1,
+            path.lastIndexOf('?')
+          )
         }))
-    }, (err, info) => {
-      if (err) reject(err)
-      else resolve(info)
-    })
+      },
+      (err, info) => {
+        if (err) reject(err)
+        else resolve(info)
+      }
+    )
   )
 })
 
 router.post('/eblast', async ctx => {
   let model = ctx.request.body
   if (!model.rows) {
-    model.rows = [{
-      y: 0,
-      height: 100,
-      cells: [{
-        x: 0,
-        width: 100,
-        url: '',
-        utmContent: '',
-        alt: ''
-      }]
-    }]
+    model.rows = [
+      {
+        y: 0,
+        height: 100,
+        cells: [
+          {
+            x: 0,
+            width: 100,
+            url: '',
+            utmContent: '',
+            alt: ''
+          }
+        ]
+      }
+    ]
   }
 
   let eblast = new Eblast(model)
@@ -444,7 +501,10 @@ router.post('/eblast/:id', async ctx => {
 
   try {
     delete model._id
-    let eblast = await Eblast.findByIdAndUpdate(id, model, { runValidators: true, new: true })
+    let eblast = await Eblast.findByIdAndUpdate(id, model, {
+      runValidators: true,
+      new: true
+    })
     ctx.response.type = 'json'
     ctx.body = eblast
     ctx.socketIo.emit('invalidateEblasts')
@@ -463,30 +523,34 @@ router.get('/eblast/:id/download', async ctx => {
   const model = await Eblast.findById(ctx.params.id)
   const image = await Jimp.read(model.image)
   const { width, height } = image.bitmap
-  let html = `<!doctype html><html lang="en"><head><title>${model.name}</title><style>img { vertical-align: top; }</style></head><body><table cellspacing="0" cellpadding="0">`
+  let html = `<!doctype html><html lang="en"><head><title>${
+    model.name
+  }</title><style>img { vertical-align: top; }</style></head><body><table cellspacing="0" cellpadding="0">`
   let i = 1
   for (const row of model.rows) {
     html += '<tr><td style="font-size: 0px;">'
     for (const cell of row.cells) {
       const section = await image.clone()
       await section.crop(
-        cell.x * width / 100,
-        row.y * height / 100,
-        cell.width * width / 100,
-        row.height * height / 100
+        (cell.x * width) / 100,
+        (row.y * height) / 100,
+        (cell.width * width) / 100,
+        (row.height * height) / 100
       )
       const buffer = await section.getBufferAsync('image/png')
 
-      const path = model.image.substring(
-        'https://s3-us-west-1.amazonaws.com/dealerdigitalgroup.media/public/'.length,
-        model.image.lastIndexOf('.')
-      ) + `_${i++}.png`
+      const path =
+        model.image.substring(
+          'https://s3-us-west-1.amazonaws.com/dealerdigitalgroup.media/public/'
+            .length,
+          model.image.lastIndexOf('.')
+        ) + `_${i++}.png`
       await Storage.put(path, buffer, { contentType: 'image/png' })
 
       const utm = {
         utm_source: model.utmSource,
         utm_medium: 'email',
-        utm_campaign: model.name,
+        utm_campaign: model.name
       }
 
       let alt = ''
@@ -510,6 +574,5 @@ router.get('/eblast/:id/download', async ctx => {
   ctx.attachment('eblast.html')
   ctx.body = html
 })
-
 
 module.exports = router.routes()

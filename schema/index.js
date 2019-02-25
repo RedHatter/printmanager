@@ -7,13 +7,15 @@ const EblastSchema = require('./Eblast.js')
 
 mongoose.Promise = Promise
 mongoose.connect('mongodb://localhost/printmanager', { useNewUrlParser: true })
-mongoose.connection
-  .on('error', console.error.bind(console, 'connection error:'))
+mongoose.connection.on(
+  'error',
+  console.error.bind(console, 'connection error:')
+)
 
 JobSchema.plugin(patchHistory, {
   mongoose,
   name: 'jobs_h',
-  exclude: [ '/versionComment' ],
+  exclude: ['/versionComment'],
   includes: {
     versionComment: String
   }
