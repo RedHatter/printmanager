@@ -15,11 +15,14 @@ export const JobType = fromSchema(
             match: /^.+@.+\..+$/
           },
           name: { type: String, required: true },
-          phoneNumber: {
+        },
+        assignee: {
+          email: {
             type: String,
             required: true,
-            match: /^\+\d{11}$/
-          }
+            match: /^.+@.+\..+$/
+          },
+          name: { type: String, required: true },
         }
       })
     },

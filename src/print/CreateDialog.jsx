@@ -27,6 +27,7 @@ import { deleteFiles, updateJob } from '../actions.js'
 function CreateModal({
   clients,
   salesmen,
+  users,
   files,
   onClose,
   deleteFiles,
@@ -49,7 +50,8 @@ function CreateModal({
     listType: '',
     postage: '',
     comments: '',
-    artStatus: enums.artStatus[0]
+    artStatus: enums.artStatus[0],
+    assignee: ''
   }
   let editMode = false
 
@@ -57,6 +59,7 @@ function CreateModal({
     initalModel = JSON.parse(JSON.stringify(props.model))
     initalModel.client = initalModel.client._id
     initalModel.salesman = initalModel.salesman._id
+    initalModel.assignee = initalModel.assignee._id
     editMode = !!initalModel._id
   }
 
@@ -86,7 +89,8 @@ function CreateModal({
     artStatus,
     dropStatus,
     forceComplete,
-    versionComment
+    versionComment,
+    assignee
   } = model
 
   function setModel(values) {
@@ -156,7 +160,7 @@ function CreateModal({
             </Fragment>
           )}
 
-          <Grid item sm={6}>
+          <Grid item sm={4}>
             <TextField
               required
               value={client}
@@ -172,7 +176,23 @@ function CreateModal({
               ))}
             </TextField>
           </Grid>
-          <Grid item sm={6}>
+          <Grid item sm={4}>
+            <TextField
+              required
+              value={assignee}
+              onChange={e => setModel({ assignee: e.target.value })}
+              label="Assignee"
+              select
+              fullWidth
+            >
+              {Object.entries(users).map(([id, attributes]) => (
+                <MenuItem value={id} key={id}>
+                  {attributes.name}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Grid>
+          <Grid item sm={4}>
             <TextField
               required
               value={salesman}
@@ -526,6 +546,7 @@ CreateModal.propTypes = {
 export default connect(
   state => ({
     salesmen: state.salesmen,
+    users: state.users,
     clients: state.clients,
     files: state.files
   }),

@@ -35,6 +35,7 @@ function Job(props) {
     listType,
     created,
     salesman,
+    assignee,
     client,
     addons,
     envelope,
@@ -99,14 +100,7 @@ function Job(props) {
           </span>
         </Column>
         <Column group="printDate">{formatDate(printDate)}</Column>
-        <Column group="listStatus">
-          <span className={classnames('statusBlock', colorize(listStatus))}>
-            {listStatus}
-          </span>
-        </Column>
-        <Column group="listType">{listType}</Column>
-        <Column group="created">{formatDate(created)}</Column>
-        <Column group="salesman">{salesman.name}</Column>
+        <Column group="assignee">{assignee.name}</Column>
       </ExpansionPanelSummary>
       <ExpansionPanelDetails className="job-details">
         <table>
@@ -118,14 +112,14 @@ function Job(props) {
                 <br />
                 {client.address}
               </td>
+              <th>Salesman</th>
+              <td>{salesman.name}</td>
+            </tr>
+            <tr>
               <th>Mailer Type</th>
               <td>
                 {jobType} &mdash; {size}
               </td>
-            </tr>
-            <tr>
-              <th>Addons</th>
-              <td>{addons.join(', ')}</td>
             </tr>
             <tr>
               <th rowSpan="2">Contact</th>
@@ -140,12 +134,16 @@ function Job(props) {
               <td>{envelope}</td>
             </tr>
             <tr>
-              <th>Vendor</th>
-              <td>{vendor}</td>
+              <th>Addons</th>
+              <td>{addons.join(', ')}</td>
             </tr>
             <tr>
-              <th>Tracking Number</th>
-              <td>{formatPhone(trackingNumber)}</td>
+              {trackingNumber && (
+                <Fragment>
+                  <th>Tracking Number</th>
+                  <td>{formatPhone(trackingNumber)}</td>
+                </Fragment>
+              )}
               <th>Expiration</th>
               <td>{formatDate(expire)}</td>
             </tr>
@@ -154,6 +152,16 @@ function Job(props) {
               <td colSpan="3">
                 <pre>{comments}</pre>
               </td>
+              <th>Vendor</th>
+              <td>{vendor}</td>
+              <th>Order Date</th>
+              <td>{formatDate(created)}</td>
+            </tr>
+            <tr>
+              <th>List Type</th>
+              <td>{listType}</td>
+              <th>List Status</th>
+              <td>{listStatus}</td>
             </tr>
           </tbody>
         </table>

@@ -33,7 +33,16 @@ module.exports = new Schema({
     required: true,
     enum: enums.listType
   },
-  salesman: { type: String, required: true },
+  salesman: {
+    type: String,
+    required: true,
+    match: /\w{8}-\w{4}-\w{4}-\w{4}-\w{12}/
+  },
+  assignee: {
+    type: String,
+    required: true,
+    match: /\w{8}-\w{4}-\w{4}-\w{4}-\w{12}/
+  },
   postage: {
     type: String,
     required: true,

@@ -12,10 +12,7 @@ function JobHeader(props) {
       <Column group="dropDate">Drop Date</Column>
       <Column group="artStatus">Job Status</Column>
       <Column group="printDate">Print Date</Column>
-      <Column group="listStatus">List Status</Column>
-      <Column group="listType">List Type</Column>
-      <Column group="created">Order Date</Column>
-      <Column group="salesman">Salesman</Column>
+      <Column group="assignee">Assignee</Column>
     </Paper>
   )
 }

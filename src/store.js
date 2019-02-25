@@ -84,6 +84,12 @@ const reduce = produce((draft, action) => {
         salesman._id = job.salesman
         job.salesman = salesman
       }
+
+      if (job.assignee in draft.users) {
+        let assignee = draft.users[job.assignee]
+        assignee._id = job.assignee
+        job.assignee = assignee
+      }
     }
   }
 }, initialState)
