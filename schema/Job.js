@@ -49,6 +49,7 @@ module.exports = new Schema({
     enum: enums.postage
   },
   quantity: { type: Number, required: true, min: 0 },
+  dueDate: { type: Date, required: true },
   dropDate: [{ type: Date, required: true }],
   printDate: { type: Date, required: true },
   expire: { type: Date, required: true },

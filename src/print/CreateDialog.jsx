@@ -37,6 +37,7 @@ function CreateModal({
   let initalModel = {
     client: '',
     salesman: '',
+    dueDate: null,
     dropDate: [null, null],
     printDate: null,
     expire: null,
@@ -80,6 +81,7 @@ function CreateModal({
     salesman,
     postage,
     quantity,
+    dueDate,
     dropDate,
     printDate,
     expire,
@@ -213,6 +215,46 @@ function CreateModal({
               Dates
             </Typography>
           </Grid>
+          <Grid item sm={4}>
+            <TextField
+              fullWidth
+              autoOk
+              clearable
+              label="Due Date"
+              component={DatePicker}
+              value={dueDate}
+              onChange={value => setModel({ dueDate: value[0] })}
+            />
+          </Grid>
+          <Grid item sm={4}>
+            <TextField
+              required
+              fullWidth
+              autoOk
+              clearable
+              label="Drop date"
+              component={DatePicker}
+              value={dropDate[0]}
+              onChange={value => {
+                model.dropDate[0] = value[0]
+                _setModel(model)
+              }}
+            />
+          </Grid>
+          <Grid item sm={4}>
+            <TextField
+              fullWidth
+              autoOk
+              clearable
+              label="Second drop date"
+              component={DatePicker}
+              value={dropDate[1]}
+              onChange={value => {
+                model.dropDate[1] = value[0]
+                _setModel(model)
+              }}
+            />
+          </Grid>
           {editMode ? (
             <Fragment>
               <Grid item sm={4}>
@@ -223,36 +265,7 @@ function CreateModal({
                   label="Droped On"
                   component={DatePicker}
                   value={dropStatus || null}
-                  onChange={value => setModel({ dropStatus: value })}
-                />
-              </Grid>
-              <Grid item sm={4}>
-                <TextField
-                  required
-                  fullWidth
-                  autoOk
-                  clearable
-                  label="Drop date"
-                  component={DatePicker}
-                  value={dropDate[0]}
-                  onChange={value => {
-                    model.dropDate[0] = value[0]
-                    _setModel(model)
-                  }}
-                />
-              </Grid>
-              <Grid item sm={4}>
-                <TextField
-                  fullWidth
-                  autoOk
-                  clearable
-                  label="Second drop date"
-                  component={DatePicker}
-                  value={dropDate[1]}
-                  onChange={value => {
-                    model.dropDate[1] = value[0]
-                    _setModel(model)
-                  }}
+                  onChange={value => setModel({ dropStatus: value[0] })}
                 />
               </Grid>
               <Grid item sm={4}>
@@ -264,7 +277,7 @@ function CreateModal({
                   label="Send to print"
                   component={DatePicker}
                   value={printDate}
-                  onChange={value => setModel({ printDate: value })}
+                  onChange={value => setModel({ printDate: value[0] })}
                 />
               </Grid>
               <Grid item sm={4}>
@@ -276,7 +289,7 @@ function CreateModal({
                   label="Expire"
                   component={DatePicker}
                   value={expire}
-                  onChange={value => setModel({ expire: value })}
+                  onChange={value => setModel({ expire: value[0] })}
                 />
               </Grid>
             </Fragment>
@@ -288,39 +301,10 @@ function CreateModal({
                   fullWidth
                   autoOk
                   clearable
-                  label="Drop date"
-                  component={DatePicker}
-                  value={dropDate[0]}
-                  onChange={value => {
-                    model.dropDate[0] = value[0]
-                    _setModel(model)
-                  }}
-                />
-              </Grid>
-              <Grid item sm={6}>
-                <TextField
-                  fullWidth
-                  autoOk
-                  clearable
-                  label="Second drop date"
-                  component={DatePicker}
-                  value={dropDate[1]}
-                  onChange={value => {
-                    model.dropDate[1] = value[0]
-                    _setModel(model)
-                  }}
-                />
-              </Grid>
-              <Grid item sm={6}>
-                <TextField
-                  required
-                  fullWidth
-                  autoOk
-                  clearable
                   label="Send to print"
                   component={DatePicker}
                   value={printDate}
-                  onChange={value => setModel({ printDate: value })}
+                  onChange={value => setModel({ printDate: value[0] })}
                 />
               </Grid>
               <Grid item sm={6}>
@@ -332,7 +316,7 @@ function CreateModal({
                   label="Expire"
                   component={DatePicker}
                   value={expire}
-                  onChange={value => setModel({ expire: value })}
+                  onChange={value => setModel({ expire: value[0] })}
                 />
               </Grid>
             </Fragment>

@@ -28,6 +28,7 @@ function Job(props) {
     size,
     type,
     quantity,
+    dueDate,
     dropDate,
     printDate,
     artStatus,
@@ -100,6 +101,7 @@ function Job(props) {
           </span>
         </Column>
         <Column group="printDate">{formatDate(printDate)}</Column>
+        <Column group="dueDate">{formatDate(dueDate)}</Column>
         <Column group="assignee">{assignee.name}</Column>
       </ExpansionPanelSummary>
       <ExpansionPanelDetails className="job-details">
