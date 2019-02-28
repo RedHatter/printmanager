@@ -175,7 +175,7 @@ router.post('/job/search', async ctx => {
   ctx.response.type = 'json'
   ctx.body = await Job.find({
     ...(search && {
-      $or: [{ name: regex }, { comments: regex }, { vendor: regex }]
+      $or: [{ name: regex }, { details: regex }, { vendor: regex }]
     }),
     ...(artStatus && { artStatus }),
     ...(salesman && { salesman }),
@@ -349,6 +349,9 @@ let mail = nodemailer.createTransport(
     auth: {
       user: 'ericag@dealerdigitalgroup.com',
       pass: '?Sf=hzfhCu)(5#pCyH'
+    },
+    tls: {
+      rejectUnauthorized: false
     }
   },
   {

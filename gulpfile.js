@@ -58,8 +58,7 @@ function format() {
                 (css
                   ? `
 <style>
-${prettier.format(css, { parser: 'css' })}
-</style>`
+${prettier.format(css, { parser: 'css' })}</style>`
                   : '')
             )
           ))

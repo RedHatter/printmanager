@@ -14,7 +14,7 @@ export const JobType = fromSchema(
             required: true,
             match: /^.+@.+\..+$/
           },
-          name: { type: String, required: true },
+          name: { type: String, required: true }
         },
         assignee: {
           email: {
@@ -22,7 +22,7 @@ export const JobType = fromSchema(
             required: true,
             match: /^.+@.+\..+$/
           },
-          name: { type: String, required: true },
+          name: { type: String, required: true }
         }
       })
     },

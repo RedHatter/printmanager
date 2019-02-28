@@ -74,5 +74,6 @@ export default Column
 <style>
 .column {
   display: inline-block;
+  padding: 0 !important;
 }
 </style>

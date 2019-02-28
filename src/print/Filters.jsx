@@ -65,7 +65,6 @@ function Filters({ filter, updateFilter, fetchJobs, salesmen, clients }) {
         value={filter.created}
         onChange={created => handleChange({ created })}
         range
-        initialFocusedDate={false}
         formatSeperator=" - "
         disableFuture={true}
         clearable={true}

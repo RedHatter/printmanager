@@ -59,7 +59,7 @@ class Calendar extends Component {
         <SlideDown in={isDetailsOpen}>
           <div>
             <JobHeader />
-            <Job model={selectedEvent} expanded={true} />
+            {selectedEvent && <Job model={selectedEvent} expanded={true} />}
             <Button
               onClick={this.handleCloseEvent}
               className="back-to-calendar"
