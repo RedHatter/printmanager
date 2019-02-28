@@ -1,4 +1,4 @@
-const { format } = require('date-fns')
+const { format, formatRelative } = require('date-fns')
 
 const enums = {
   jobType: [
@@ -90,6 +90,10 @@ function formatDate(date) {
   return format(date, 'MM/DD/YYYY')
 }
 
+function formatDateTime(date) {
+  return formatRelative(date, new Date())
+}
+
 const dateRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?Z$/
 
 function parseJSON(json) {
@@ -130,6 +134,7 @@ module.exports = {
   formatNumber,
   formatPhone,
   formatDate,
+  formatDateTime,
   parseJSON,
   clone,
   mapObjectValues,

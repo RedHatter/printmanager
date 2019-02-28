@@ -50,7 +50,7 @@ function CreateModal({
     size: '',
     listType: '',
     postage: '',
-    comments: '',
+    details: '',
     artStatus: enums.artStatus[0],
     assignee: ''
   }
@@ -87,7 +87,7 @@ function CreateModal({
     expire,
     vendor,
     trackingNumber,
-    comments,
+    details,
     artStatus,
     dropStatus,
     forceComplete,
@@ -467,9 +467,9 @@ function CreateModal({
               fullWidth
               multiline
               rows={3}
-              label="Comments"
-              value={comments}
-              onChange={e => setModel({ comments: e.target.value })}
+              label="Additional Details"
+              value={details}
+              onChange={e => setModel({ details: e.target.value })}
             />
           </Grid>
           {editMode && (

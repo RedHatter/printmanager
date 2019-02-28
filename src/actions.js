@@ -104,6 +104,15 @@ export async function updateJob(body) {
   )
 }
 
+export async function addComment(body, id) {
+  return createApiAction(
+    'ADD_COMMENT',
+    `/api/job/${id}/comments`,
+    'Unable to comment on job.',
+    { body }
+  )
+}
+
 export async function deleteJob(id) {
   let action = await createApiAction(
     'DELETE_JOB',

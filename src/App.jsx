@@ -33,6 +33,8 @@ import UploadButton from './UploadButton.jsx'
 import Tabs from './Tabs.jsx'
 import Client from './Client.jsx'
 import Eblast from './eblast/Eblast.jsx'
+import JobHeader from './print/JobHeader.jsx'
+import Job from './print/Job.jsx'
 import JobTable from './print/JobTable.jsx'
 import CreateDialog from './print/CreateDialog.jsx'
 import Filters from './print/Filters.jsx'
@@ -57,11 +59,25 @@ class App extends Component {
     this.props.fetchFiles()
     this.props.fetchClients()
     this.props.fetchEblasts()
+
+    const query = document.location.search.substring(1)
+    if (query.length == 24) this.viewJob(query)
+  }
+
+  @bound
+  async viewJob(id) {
+    const res = await fetch('/api/job/' + id, {
+      headers: {
+        Authorization: (await Auth.currentSession()).idToken.jwtToken
+      }
+    })
+    const selectedJob = await res.json()
+    if (selectedJob._id == id) this.setState({ selectedJob, selectedTab: -1 })
   }
 
   render() {
     const { authData, clients, error, clearError, createEblast } = this.props
-    const { selectedTab, selectedClient } = this.state
+    const { selectedTab, selectedClient, selectedJob } = this.state
     const isAdmin =
       'cognito:groups' in authData.signInUserSession.idToken.payload &&
       authData.signInUserSession.idToken.payload['cognito:groups'].includes(
@@ -130,6 +146,12 @@ class App extends Component {
             <Filters />
           </div>
           <div className="content-container">
+            {selectedJob && (
+              <Fragment>
+                <JobHeader />
+                <Job model={selectedJob} expanded />
+              </Fragment>
+            )}
             <SlideRight in={selectedTab == 0}>
               <JobTable isAdmin={isAdmin} />
             </SlideRight>
@@ -153,7 +175,11 @@ class App extends Component {
 
   @bound
   handleTabChange(e, value) {
-    this.setState({ selectedTab: value, selectedClient: undefined })
+    this.setState({
+      selectedTab: value,
+      selectedClient: undefined,
+      selectedJob: undefined
+    })
   }
 
   @bound
@@ -196,7 +222,6 @@ export default connect(
 body {
   font-family: "Roboto", sans-serif;
   background-color: #f2f3f4;
-  text-align: center;
 }
 
 .app {
@@ -211,6 +236,10 @@ h2 {
 .content-container {
   position: relative;
   margin: 24px 16px;
+}
+
+.app .sidebar {
+  text-align: center;
 }
 
 .app .sidebar h1 {

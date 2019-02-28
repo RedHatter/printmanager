@@ -1,6 +1,26 @@
 const { Schema } = require('mongoose')
 const ObjectId = Schema.Types.ObjectId
 const { enums } = require('../utils.js')
+const xss = require('xss')
+const whiteList = { ...xss.whiteList, span: ['style'] }
+
+const CommentSchema = new Schema(
+  {
+    user: { type: String, match: /\w{8}-\w{4}-\w{4}-\w{4}-\w{12}/ },
+    html: {
+      type: String,
+      set: v => xss(v, { whiteList })
+    }
+  },
+  {
+    toObject: { virtuals: true },
+    toJSON: { virtuals: true }
+  }
+)
+
+CommentSchema.virtual('created').get(function() {
+  return this._id.getTimestamp()
+})
 
 module.exports = new Schema({
   created: { type: Date, default: Date.now },
@@ -60,7 +80,7 @@ module.exports = new Schema({
     // required: true,
     match: /^[0-9]{10}$/
   },
-  comments: { type: String },
+  details: { type: String },
   artStatus: {
     type: String,
     required: true,
@@ -75,5 +95,6 @@ module.exports = new Schema({
       autopopulate: true
     }
   ],
-  versionComment: String
+  versionComment: String,
+  comments: [CommentSchema]
 })

@@ -13,6 +13,7 @@ import ExpandMoreIcon from '../icons/ExpandMore.js'
 import { JobType } from '../types.js'
 import JobActions from './JobActions.jsx'
 import Column from '../Column.jsx'
+import Comments from './Comments.jsx'
 import { colorize, formatNumber, formatPhone, formatDate } from '../../utils.js'
 
 Job.propTypes = {
@@ -43,7 +44,7 @@ function Job(props) {
     vendor,
     trackingNumber,
     expire,
-    comments,
+    details,
     forceComplete,
     pixels
   } = model
@@ -150,10 +151,6 @@ function Job(props) {
               <td>{formatDate(expire)}</td>
             </tr>
             <tr>
-              <th>Comments</th>
-              <td colSpan="3">
-                <pre>{comments}</pre>
-              </td>
               <th>Vendor</th>
               <td>{vendor}</td>
               <th>Order Date</th>
@@ -165,6 +162,14 @@ function Job(props) {
               <th>List Status</th>
               <td>{listStatus}</td>
             </tr>
+            {details && (
+              <tr>
+                <th>Additional Details</th>
+                <td colSpan="3">
+                  <pre>{details}</pre>
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
         {files && (
@@ -277,6 +282,7 @@ function Job(props) {
             ))}
           </table>
         )}
+        <Comments model={model} />
       </ExpansionPanelDetails>
       {isAdmin && <JobActions model={model} files={files} />}
     </ExpansionPanel>

@@ -225,6 +225,50 @@ router.post('/job/:id', async ctx => {
   }
 })
 
+router.post('/job/:id/comments', async ctx => {
+  console.log(ctx.request.body)
+  try {
+    const comment = ctx.request.body
+    const to = comment.notify
+    delete comment.notify
+    const job = await Job.findById(ctx.params.id)
+    if (!job.comments) job.comments = []
+
+    job.comments.push(comment)
+    await job.save()
+
+    ctx.response.type = 'json'
+    ctx.body = job
+    ctx.socketIo.emit('invalidateJobs')
+
+    await new Promise((resolve, reject) =>
+      mail.sendMail(
+        {
+          to,
+          subject: job.name,
+          html: `A new comment has been posted to <i>${job.name}</i>
+<blockquote>${comment.html}</blockquote>
+<a href="http://printmanager.dealerdigitalgroup.com/?${
+            job._id
+          }">View in PrintManager</a>`
+        },
+        (err, info) => {
+          if (err) reject(err)
+          else resolve(info)
+        }
+      )
+    )
+  } catch (err) {
+    if (err.name == 'ValidationError') {
+      console.error(err.message)
+      ctx.status = 422
+      return
+    }
+
+    throw err
+  }
+})
+
 router.get('/job/:ref/patches', async ctx => {
   ctx.response.type = 'json'
   ctx.body = (await Job.Patches.find({ ref: ctx.params.ref })).reverse()

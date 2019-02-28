@@ -12,8 +12,8 @@ import {
 } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import { Auth } from 'aws-amplify'
-import { format } from 'date-fns'
 
+import { formatDateTime } from '../../utils.js'
 import JobHeader from './JobHeader.jsx'
 import Job from './Job.jsx'
 
@@ -58,7 +58,7 @@ export default function HistoryDialog({ model, onClose }) {
                   hover={i != 0}
                   onClick={i != 0 ? () => select(o) : undefined}
                 >
-                  <TableCell>{format(o.date, 'MM/DD/YYYY h:mm aa')}</TableCell>
+                  <TableCell>{formatDateTime(o.date)}</TableCell>
                   <TableCell>{o.ops.length}</TableCell>
                   <TableCell>{o.versionComment}</TableCell>
                 </TableRow>
