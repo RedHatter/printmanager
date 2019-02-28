@@ -400,6 +400,7 @@ router.post('/user', async ctx => {
   }
 
   ctx.body = user.User
+  ctx.socketIo.emit('invalidateUsers')
 })
 
 router.post('/user/:id', async ctx => {
@@ -432,6 +433,7 @@ router.post('/user/:id', async ctx => {
       Username: config.id
     })
   }
+  ctx.socketIo.emit('invalidateUsers')
 })
 
 router.delete('/user/:id', async ctx => {
@@ -440,6 +442,7 @@ router.delete('/user/:id', async ctx => {
     Username: ctx.params.id
   })
   ctx.status = 200
+  ctx.socketIo.emit('invalidateUsers')
 })
 
 router.get('/user/:id/reset', async ctx => {

@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import bound from 'bound-decorator'
-import { connect } from 'react-redux'
 import {
   Dialog,
   DialogContent,
@@ -16,7 +15,7 @@ import PropTypes from 'prop-types'
 import { uploadFiles } from '../actions.js'
 import UploadButton from '../UploadButton.jsx'
 
-class FileDialog extends Component {
+export default class FileDialog extends Component {
   static propTypes = {
     path: PropTypes.string.isRequired
   }
@@ -115,7 +114,7 @@ class FileDialog extends Component {
 
   @bound
   handleUpload() {
-    let { path, uploadFiles } = this.props
+    let { path } = this.props
     let { type, files } = this.state
 
     this.setState({ uploading: true })
@@ -124,8 +123,3 @@ class FileDialog extends Component {
       .finally(() => this.setState({ uploading: false }))
   }
 }
-
-export default connect(
-  null,
-  { uploadFiles }
-)(FileDialog)

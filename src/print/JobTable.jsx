@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
 import { Paper } from '@material-ui/core'
 
+import connect from '../connect.js'
 import { JobType } from '../types.js'
 import JobHeader from './JobHeader.jsx'
 import Job from './Job.jsx'

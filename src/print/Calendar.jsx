@@ -1,6 +1,5 @@
 import React, { Component, Fragment } from 'react'
 import bound from 'bound-decorator'
-import { connect } from 'react-redux'
 import {
   Paper,
   Dialog,
@@ -21,6 +20,7 @@ import {
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
 
+import connect from '../connect.js'
 import { range } from '../../utils.js'
 import { JobType } from '../types.js'
 import { SlideDown, Fade } from '../transitions.jsx'

@@ -1,7 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import bound from 'bound-decorator'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
 import {
   Dialog,
   DialogContent,
@@ -17,7 +16,7 @@ import ChipInput from 'material-ui-chip-input'
 import { JobType } from '../types.js'
 import { send } from '../actions.js'
 
-class SendDialog extends Component {
+export default class SendDialog extends Component {
   static propTypes = {
     model: JobType.isRequired,
     files: PropTypes.object.isRequired
@@ -148,11 +147,6 @@ class SendDialog extends Component {
     }).then(onClose)
   }
 }
-
-export default connect(
-  null,
-  { send }
-)(SendDialog)
 
 <style>
 .send-dialog-content > div {

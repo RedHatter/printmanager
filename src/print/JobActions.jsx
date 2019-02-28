@@ -1,6 +1,5 @@
 import React, { useState, Fragment } from 'react'
 import bound from 'bound-decorator'
-import { connect } from 'react-redux'
 import {
   withStyles,
   Button,
@@ -72,10 +71,7 @@ EditButton.propTypes = {
   model: JobType.isRequired
 }
 
-const DeleteButton = connect(
-  null,
-  { deleteJob }
-)(function({ deleteJob, model }) {
+function DeleteButton({ model }) {
   const [isOpen, setIsOpen] = useState(false)
 
   return (
@@ -95,7 +91,7 @@ const DeleteButton = connect(
       )}
     </Fragment>
   )
-})
+}
 
 DeleteButton.propTypes = {
   model: JobType.isRequired

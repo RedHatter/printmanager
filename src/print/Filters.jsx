@@ -1,12 +1,13 @@
 import React from 'react'
-import { connect } from 'react-redux'
 import { TextField, MenuItem } from '@material-ui/core'
 import DatePicker from 'material-ui-pickers/DatePicker'
 
 import { updateFilter, fetchJobs } from '../actions.js'
+import { useStore } from '../store.js'
 import { enums, colorize } from '../../utils.js'
 
-function Filters({ filter, updateFilter, fetchJobs, salesmen, clients }) {
+export default function Filters(props) {
+  const { filter, salesmen, clients } = useStore()
   const handleChange = o => updateFilter(o).then(fetchJobs)
 
   return (
@@ -72,15 +73,6 @@ function Filters({ filter, updateFilter, fetchJobs, salesmen, clients }) {
     </div>
   )
 }
-
-export default connect(
-  state => ({
-    filter: state.filter,
-    salesmen: state.salesmen,
-    clients: state.clients
-  }),
-  { updateFilter, fetchJobs }
-)(Filters)
 
 <style>
 .filters {

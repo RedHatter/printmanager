@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { connect } from 'react-redux'
 import {
   Paper,
   Table,
@@ -9,18 +8,22 @@ import {
   TableBody,
   Button
 } from '@material-ui/core'
-import CreateUser from './CreateUser.jsx'
-import EditUser from './EditUser.jsx'
+
 import {
   createUser,
   deleteUser,
   editUser,
   resetUserPassword
 } from '../actions.js'
+import { useStore } from '../store.js'
+import CreateUser from './CreateUser.jsx'
+import EditUser from './EditUser.jsx'
 
-function Users({ users, createUser, deleteUser, editUser, resetUserPassword }) {
+export default function Users(props) {
   const [isCreateOpen, setIsCreateOpen] = useState(false)
   const [editing, setEditing] = useState(null)
+  let { users } = useStore()
+  users = Object.values(users)
 
   return (
     <Paper>
@@ -67,8 +70,3 @@ function Users({ users, createUser, deleteUser, editUser, resetUserPassword }) {
     </Paper>
   )
 }
-
-export default connect(
-  state => ({ users: Object.values(state.users) }),
-  { createUser, deleteUser, editUser, resetUserPassword }
-)(Users)

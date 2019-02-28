@@ -1,5 +1,4 @@
 import React, { useState, Fragment } from 'react'
-import { connect } from 'react-redux'
 import {
   Dialog,
   DialogContent,
@@ -19,21 +18,13 @@ import { Form, TextField } from 'material-ui-utils'
 import NumberFormat from 'react-number-format'
 import PropTypes from 'prop-types'
 
-import { ClientType, JobType } from '../types.js'
-import EditFiles from './EditFiles.jsx'
 import { enums, colorize } from '../../utils.js'
 import { deleteFiles, updateJob } from '../actions.js'
+import { useStore } from '../store.js'
+import { ClientType, JobType } from '../types.js'
+import EditFiles from './EditFiles.jsx'
 
-function CreateModal({
-  clients,
-  salesmen,
-  users,
-  files,
-  onClose,
-  deleteFiles,
-  updateJob,
-  ...props
-}) {
+export default function CreateDialog(props) {
   let initalModel = {
     client: '',
     salesman: '',
@@ -68,6 +59,7 @@ function CreateModal({
   const [model, _setModel] = useState(initalModel)
   const [submitDisabled, setSubmitDisabled] = useState(false)
   const [selectedFiles, setSelectedFiles] = useState([])
+  const { clients, salesmen, users, files } = useStore()
 
   const {
     _id,
@@ -116,7 +108,7 @@ function CreateModal({
         component: Form,
         onSubmit: () =>
           Promise.all([deleteFiles(selectedFiles), updateJob(model)]).then(
-            onClose
+            props.onClose
           ),
         onValid: () => setSubmitDisabled(false),
         onInvalid: () => setSubmitDisabled(true)
@@ -520,7 +512,7 @@ function CreateModal({
             onChange={e => setModel({ versionComment: e.target.value })}
           />
         )}
-        <Button onClick={onClose}>Cancel</Button>
+        <Button onClick={props.onClose}>Cancel</Button>
         <Button type="submit" disabled={submitDisabled}>
           {editMode ? 'Save' : 'Create'}
         </Button>
@@ -529,23 +521,10 @@ function CreateModal({
   )
 }
 
-CreateModal.propTypes = {
+CreateDialog.propTypes = {
   model: JobType,
-  clients: PropTypes.arrayOf(ClientType).isRequired,
-  salesmen: PropTypes.object.isRequired,
-  files: PropTypes.object.isRequired,
   onClose: PropTypes.func.isRequired
 }
-
-export default connect(
-  state => ({
-    salesmen: state.salesmen,
-    users: state.users,
-    clients: state.clients,
-    files: state.files
-  }),
-  { deleteFiles, updateJob }
-)(CreateModal)
 
 <style>
 .create-modal {

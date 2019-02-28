@@ -1,7 +1,7 @@
 import { CognitoIdentityServiceProvider } from 'aws-sdk'
 import { Auth, Storage } from 'aws-amplify'
 
-import store from './store.js'
+import { update, getStore } from './store.js'
 import { parseJSON } from '../utils.js'
 
 const cognito = new CognitoIdentityServiceProvider({
@@ -10,7 +10,7 @@ const cognito = new CognitoIdentityServiceProvider({
   secretAccessKey: '***REMOVED***'
 })
 
-async function createApiAction(type, url, error, { body, method }) {
+async function api(url, error, { body, method }) {
   try {
     let res = await fetch(url, {
       method: method || 'POST',
@@ -23,14 +23,45 @@ async function createApiAction(type, url, error, { body, method }) {
 
     if (!res.ok) throw new Error(`Error code ${res.status}.`)
 
-    return { type, payload: parseJSON(await res.text()) }
+    return parseJSON(await res.text())
   } catch (err) {
-    return {
-      type,
-      payload: new Error(`${error} ${err.message || err}`),
-      error: true
+    return showError(error, err)
+  }
+}
+
+function resolveCognito(state) {
+  for (let job of state.jobs) {
+    if (job.salesman in state.salesmen) {
+      let salesman = state.salesmen[job.salesman]
+      salesman._id = job.salesman
+      job.salesman = salesman
+    }
+
+    if (job.assignee in state.users) {
+      let assignee = state.users[job.assignee]
+      assignee._id = job.assignee
+      job.assignee = assignee
     }
   }
+}
+
+export function updateFilter(payload) {
+  return update(state => {
+    Object.assign(state.filter, payload)
+  })
+}
+
+export function clearError() {
+  return update(state => {
+    state.errors.shift()
+  })
+}
+
+async function showError(message, err) {
+  update(state => {
+    state.errors.push(new Error(`${message} ${err.message || err}`))
+  })
+  return false
 }
 
 export async function createEblast(file) {
@@ -38,136 +69,84 @@ export async function createEblast(file) {
   Storage.put(path, file, {
     contentType: file.type,
     bucket: 'dealerdigitalgroup.media'
-  }).catch(err => ({
-    type: 'CREATE_EBLAST',
-    payload: new Error('Unable to upload e-blast. ' + (err.message || err)),
-    error: true
-  }))
+  }).catch(err => showError('Unable to upload e-blast.', err))
 
-  return createApiAction(
-    'CREATE_EBLAST',
-    '/api/eblast',
-    'Unable to create e-blast.',
-    {
-      body: {
-        name: file.name.substring(0, file.name.lastIndexOf('.')),
-        image:
-          'https://s3-us-west-1.amazonaws.com/dealerdigitalgroup.media/public/' +
-          path
-      }
+  return api('/api/eblast', 'Unable to create e-blast.', {
+    body: {
+      name: file.name.substring(0, file.name.lastIndexOf('.')),
+      image:
+        'https://s3-us-west-1.amazonaws.com/dealerdigitalgroup.media/public/' +
+        path
     }
-  )
+  })
 }
 
-export async function updateEblast(body) {
-  return createApiAction(
-    'UPDATE_EBLAST',
-    '/api/eblast/' + body._id,
-    'Unable to update e-blasts.',
-    { body }
-  )
+export function updateEblast(body) {
+  return api('/api/eblast/' + body._id, 'Unable to update e-blasts.', { body })
 }
 
-export async function deleteEblast(id) {
-  return createApiAction(
-    'DELETE_EBLAST',
-    '/api/eblast/' + id,
-    'Unable to delete e-blast.',
-    { method: 'DELETE' }
-  )
+export function deleteEblast(id) {
+  return api('/api/eblast/' + id, 'Unable to delete e-blast.', {
+    method: 'DELETE'
+  })
 }
 
 export async function fetchEblasts() {
-  return createApiAction(
-    'FETCH_EBLASTS',
-    '/api/eblast',
-    'Unable to retrieve e-blasts.',
-    { method: 'GET' }
-  )
+  const eblasts = await api('/api/eblast', 'Unable to retrieve e-blasts.', {
+    method: 'GET'
+  })
+  if (eblasts === false) return false
+
+  return update(state => {
+    state.eblasts = eblasts
+  })
 }
 
 export async function fetchJobs() {
-  return createApiAction(
-    'FETCH_JOBS',
-    '/api/job/search',
-    'Unable to retrieve jobs.',
-    { body: store.getState().filter }
-  )
+  const jobs = await api('/api/job/search', 'Unable to retrieve jobs.', {
+    body: getStore().filter
+  })
+  if (jobs === false) return false
+
+  return update(state => {
+    state.jobs = jobs
+    resolveCognito(state)
+  })
 }
 
-export async function updateJob(body) {
-  return createApiAction(
-    'UPDATE_JOB',
-    '/api/job/' + (body._id || ''),
-    'Unable to update job.',
-    { body }
-  )
+export function updateJob(body) {
+  return api('/api/job/' + (body._id || ''), 'Unable to update job.', { body })
 }
 
-export async function addComment(body, id) {
-  return createApiAction(
-    'ADD_COMMENT',
-    `/api/job/${id}/comments`,
-    'Unable to comment on job.',
-    { body }
-  )
+export function addComment(body, id) {
+  return api(`/api/job/${id}/comments`, 'Unable to comment on job.', { body })
 }
 
-export async function deleteJob(id) {
-  let action = await createApiAction(
-    'DELETE_JOB',
-    '/api/job/' + id,
-    'Unable to delete job.',
-    { method: 'DELETE' }
-  )
-  if (action.error) return action
-
-  return fetchJobs()
+export function deleteJob(id) {
+  return api('/api/job/' + id, 'Unable to delete job.', { method: 'DELETE' })
 }
 
-export async function deleteUser(body) {
-  let action = await createApiAction(
-    'DELETE_USER',
-    '/api/user/' + body.id,
-    'Unable to create user.',
-    { method: 'DELETE' }
-  )
-  if (action.error) return action
-
-  return fetchUsers()
+export function deleteUser(body) {
+  return api('/api/user/' + body.id, 'Unable to create user.', {
+    method: 'DELETE'
+  })
 }
 
-export async function createUser(body) {
-  let action = await createApiAction(
-    'CREATE_USER',
-    '/api/user/',
-    'Unable to create user.',
-    { method: 'POST', body }
-  )
-  if (action.error) return action
-
-  return fetchUsers()
+export function createUser(body) {
+  return api('/api/user/', 'Unable to create user.', { method: 'POST', body })
 }
 
-export async function editUser(body) {
-  let action = await createApiAction(
-    'EDIT_USER',
-    '/api/user/' + body.id,
-    'Unable to create user.',
-    { method: 'POST', body }
-  )
-  if (action.error) return action
-
-  return fetchUsers()
+export function editUser(body) {
+  return api('/api/user/' + body.id, 'Unable to create user.', {
+    method: 'POST',
+    body
+  })
 }
 
-export async function resetUserPassword(body) {
-  return createApiAction(
-    'RESET_USER_PASSWORD',
-    `/api/user/${body.id}/reset`,
-    'Unable to reset user password.',
-    { method: 'GET' }
-  )
+export function resetUserPassword(body) {
+  return api(`/api/user/${body.id}/reset`, 'Unable to reset user password.', {
+    method: 'GET'
+  })
 }
 
 export async function send(body) {
@@ -178,131 +157,72 @@ export async function send(body) {
       )
     }
 
-    return createApiAction('SEND', '/api/send', 'Unable to send email.', {
-      body
-    })
+    return api('/api/send', 'Unable to send email.', { body })
   } catch (err) {
-    return {
-      type: 'SEND',
-      payload: new Error(
-        'Unable to resolve attachment URLs. ' + (err.message || err)
-      ),
-      error: true
-    }
+    return showError('Unable to resolve attachment URLs.', err)
   }
 }
 
 export async function fetchClients() {
-  return createApiAction(
-    'FETCH_CLIENTS',
-    '/api/client',
-    'Unable to retrieve clients.',
-    { method: 'GET' }
-  )
+  const clients = await api('/api/client', 'Unable to retrieve clients.', {
+    method: 'GET'
+  })
+  if (clients === false) return false
+
+  return update(state => {
+    state.clients = clients
+  })
 }
 
-export async function updateClient(body) {
-  return createApiAction(
-    'UPDATE_CLIENT',
-    '/api/client/' + (body._id || ''),
-    'Unable to update client.',
-    { body }
-  )
+export function updateClient(body) {
+  return api('/api/client/' + (body._id || ''), 'Unable to update client.', {
+    body
+  })
 }
 
 export async function fetchFiles() {
   try {
-    let res = await Storage.list('')
-    let payload = res.reduce((files, file) => {
-      let parts = file.key.split('/')
-      files[parts[0]] ||= {}
-      files[parts[0]][parts[1]] ||= []
-      files[parts[0]][parts[1]].push({
-        key: file.key,
-        name: decodeURIComponent(parts[2])
-      })
+    const res = await Storage.list('')
+    return update(state => {
+      state.files = res.reduce((files, file) => {
+        let parts = file.key.split('/')
+        files[parts[0]] ||= {}
+        files[parts[0]][parts[1]] ||= []
+        files[parts[0]][parts[1]].push({
+          key: file.key,
+          name: decodeURIComponent(parts[2])
+        })
 
-      return files
-    }, {})
-    return { type: 'FETCH_FILES', payload }
+        return files
+      }, {})
+    })
   } catch (err) {
-    return {
-      type: 'FETCH_FILES',
-      payload: new Error('Unable to fetch files. ' + (err.message || err)),
-      error: true
-    }
+    return showError('Unable to fetch files.', err.message)
   }
 }
 
-export function uploadFiles(files, path) {
-  return Promise.all(
-    Array.from(files).map(file =>
-      Storage.put(`${path}/${encodeURIComponent(file.name)}`, file, {
-        contentType: file.type
-      })
+export async function uploadFiles(files, path) {
+  try {
+    await Promise.all(
+      Array.from(files).map(file =>
+        Storage.put(`${path}/${encodeURIComponent(file.name)}`, file, {
+          contentType: file.type
+        })
+      )
     )
-  )
-    .then(fetchFiles)
-    .catch(err => ({
-      type: 'UPLOAD_FILES',
-      payload: new Error('Unable to upload file. ' + (err.message || err)),
-      error: true
-    }))
+    return fetchFiles()
+  } catch (err) {
+    return showError('Unable to upload file.', err)
+  }
 }
 
-export function deleteFiles(files) {
-  return Promise.all(files.map(key => Storage.remove(key)))
-    .then(fetchFiles)
-    .catch(err => ({
-      type: 'DELETE_FILES',
-      payload: new Error('Unable to delete file. ' + (err.message || err)),
-      error: true
-    }))
-}
-
-export function fetchSalesmen() {
-  return new Promise((resolve, reject) =>
-    cognito.listUsersInGroup(
-      {
-        GroupName: 'Salesmen',
-        UserPoolId: 'us-west-2_***REMOVED***'
-      },
-      (err, res) => {
-        if (err)
-          return reject({
-            type: 'FETCH_SALESMEN',
-            payload: err,
-            error: true
-          })
-
-        let payload = {}
-        for (let user of res.Users) {
-          let salesman = {}
-
-          for (let attr of user.Attributes) {
-            switch (attr.Name) {
-              case 'email':
-                salesman.email = attr.Value
-                break
-              case 'name':
-                salesman.name = attr.Value
-                break
-              case 'phone_number':
-                salesman.phoneNumber = attr.Value
-            }
-          }
-
-          payload[user.Username] = salesman
-        }
-
-        resolve({ type: 'FETCH_SALESMEN', payload })
-      }
-    )
-  ).catch(err => ({
-    type: 'FETCH_SALESMEN',
-    payload: new Error('Unable to retrieve salesmen. ' + (err.message || err)),
-    error: true
-  }))
+export async function deleteFiles(files) {
+  try {
+    await Promise.all(files.map(key => Storage.remove(key)))
+    return fetchFiles()
+  } catch (err) {
+    return showError('Unable to delete file.', err)
+  }
 }
 
 export async function fetchUsers() {
@@ -370,22 +290,15 @@ export async function fetchUsers() {
       payload[user.Username] = obj
     }
 
-    return { type: 'FETCH_USERS', payload }
+    return update(state => {
+      state.users = payload
+      state.salesmen = Object.entries(payload).reduce((arr, [key, value]) => {
+        if (value.salesmen) arr[key] = value
+        return arr
+      }, {})
+      resolveCognito(state)
+    })
   } catch (err) {
-    return {
-      type: 'FETCH_USERS',
-      payload: new Error(
-        'Unable to retrieve salesmen. ' + (err.message || err)
-      ),
-      error: true
-    }
+    return showError('Unable to retrieve salesmen.', err)
   }
-}
-
-export function updateFilter(payload) {
-  return { type: 'UPDATE_FILTER', payload }
-}
-
-export function clearError() {
-  return { type: 'CLEAR_ERROR' }
 }

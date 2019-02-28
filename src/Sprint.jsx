@@ -1,23 +1,22 @@
 import React, { Fragment, useState } from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
 import { Paper, Button } from '@material-ui/core'
 import classnames from 'classnames'
 
-import { JobType } from './types.js'
 import { formatDate, enums } from '../utils.js'
 import { updateJob } from './actions.js'
+import { useStore } from './store.js'
 import { SlideDown, Fade } from './transitions.jsx'
 import Job from './print/Job.jsx'
 import JobHeader from './print/JobHeader.jsx'
 
-function Sprint({ model, updateJob }) {
+export default function Sprint(props) {
   const [isOpen, setIsOpen] = useState(false)
   const [selected, setSelected] = useState(undefined)
+  const { jobs } = useStore()
 
   const columns = {}
   enums.artStatus.forEach(o => (columns[o] = []))
-  model.forEach(o => columns[o.artStatus].push(o))
+  jobs.forEach(o => columns[o.artStatus].push(o))
   return (
     <Fragment>
       <SlideDown in={isOpen}>
@@ -41,7 +40,7 @@ function Sprint({ model, updateJob }) {
               onDrop={e => {
                 e.preventDefault()
                 const id = e.dataTransfer.getData('jobId')
-                const job = model.find(o => id == o._id)
+                const job = jobs.find(o => id == o._id)
                 if (job.artStatus == name) return
 
                 job.artStatus = name
@@ -80,15 +79,6 @@ function Sprint({ model, updateJob }) {
     </Fragment>
   )
 }
-
-Sprint.propTypes = {
-  model: PropTypes.arrayOf(JobType).isRequired
-}
-
-export default connect(
-  state => ({ model: state.jobs }),
-  { updateJob }
-)(Sprint)
 
 <style>
 .sprint {

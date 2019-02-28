@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import bound from 'bound-decorator'
-import { connect } from 'react-redux'
 import { Button, Grid, Typography, Paper } from '@material-ui/core'
 import { Form, TextField } from 'material-ui-utils'
 import NumberFormat from 'react-number-format'
@@ -8,7 +7,7 @@ import NumberFormat from 'react-number-format'
 import { ClientType } from './types.js'
 import { updateClient } from './actions.js'
 
-class Client extends Component {
+export default class Client extends Component {
   static propTypes = {
     model: ClientType
   }
@@ -263,18 +262,13 @@ class Client extends Component {
 
   @bound
   handleSave() {
-    this.props.updateClient(this.state.model).then(() =>
+    updateClient(this.state.model).then(() =>
       this.setState({
         model: JSON.parse(JSON.stringify(this.initalState.model))
       })
     )
   }
 }
-
-export default connect(
-  null,
-  { updateClient }
-)(Client)
 
 <style>
 .client-save-button {

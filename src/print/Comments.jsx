@@ -1,11 +1,11 @@
 import React, { Fragment, useState, useRef } from 'react'
-import { connect } from 'react-redux'
 import { Editor, EditorState, RichUtils, Modifier } from 'draft-js'
 import { Button, Popover, Chip } from '@material-ui/core'
 import { stateToHTML } from 'draft-js-export-html'
 import { Auth } from 'aws-amplify'
 
 import { addComment } from '../actions.js'
+import { useStore } from '../store.js'
 import { formatDateTime } from '../../utils.js'
 
 function ChipSelection({ label, options, value, onChange }) {
@@ -121,11 +121,13 @@ function ColorSelection({ label, value, onChange }) {
   )
 }
 
-function Comments({ model, users, addComment }) {
+export default function Comments({ model }) {
   const editor = useRef()
   const [editorState, setEditorState] = useState(EditorState.createEmpty())
   const [notify, setNotify] = useState([])
   const [limit, setLimit] = useState(5)
+  const { users } = useStore()
+
   const styles = editorState.getCurrentInlineStyle()
   function toggleInlineStyle(type, e) {
     e.preventDefault()
@@ -224,11 +226,6 @@ function Comments({ model, users, addComment }) {
     </Fragment>
   )
 }
-
-export default connect(
-  state => ({ users: state.users }),
-  { addComment }
-)(Comments)
 
 <style>
 .load-comments-button {

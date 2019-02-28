@@ -1,6 +1,5 @@
 import React, { Component, Fragment } from 'react'
 import bound from 'bound-decorator'
-import { connect } from 'react-redux'
 import {
   Paper,
   Button,
@@ -18,6 +17,7 @@ import CloseIcon from './icons/Close'
 import PropTypes from 'prop-types'
 import { Auth } from 'aws-amplify'
 
+import connect from './connect.js'
 import { ClientType } from './types.js'
 import { SlideRight } from './transitions.jsx'
 import {
@@ -56,10 +56,10 @@ class App extends Component {
       selectedClient: undefined
     }
 
-    this.props.fetchUsers().then(this.props.fetchJobs)
-    this.props.fetchFiles()
-    this.props.fetchClients()
-    this.props.fetchEblasts()
+    fetchUsers().then(fetchJobs)
+    fetchFiles()
+    fetchClients()
+    fetchEblasts()
 
     const query = document.location.search.substring(1)
     if (query.length == 24) this.viewJob(query)
@@ -77,7 +77,7 @@ class App extends Component {
   }
 
   render() {
-    const { authData, clients, error, clearError, createEblast } = this.props
+    const { authData, clients, error } = this.props
     const { selectedTab, selectedClient, selectedJob } = this.state
     const isAdmin =
       'cognito:groups' in authData.signInUserSession.idToken.payload &&
@@ -210,18 +210,10 @@ class App extends Component {
   }
 }
 
-export default connect(
-  state => ({ clients: state.clients, error: state.errors[0] }),
-  {
-    fetchJobs,
-    fetchFiles,
-    fetchClients,
-    fetchUsers,
-    fetchEblasts,
-    clearError,
-    createEblast
-  }
-)(App)
+export default connect(state => ({
+  clients: state.clients,
+  error: state.errors > 0 ? state.errors[0].message : undefined
+}))(App)
 
 <style>
 body {

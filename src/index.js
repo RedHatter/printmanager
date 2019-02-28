@@ -3,14 +3,11 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import Amplify from 'aws-amplify'
 import { Authenticator } from 'material-ui-utils'
-import { Provider as ReduxProvider } from 'react-redux'
 import DateFnsUtils from 'material-ui-pickers/utils/date-fns-utils'
 import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsProvider'
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider'
 import createMuiTheme from '@material-ui/core/styles/createMuiTheme'
 import blue from '@material-ui/core/colors/blue'
-
-import store from './store.js'
 
 import App from './App.jsx'
 
@@ -35,13 +32,11 @@ const theme = createMuiTheme({
 
 ReactDOM.render(
   <MuiThemeProvider theme={theme}>
-    <ReduxProvider store={store}>
-      <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        <Authenticator logo={<img src="/images/logo.png" />}>
-          <App />
-        </Authenticator>
-      </MuiPickersUtilsProvider>
-    </ReduxProvider>
+    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+      <Authenticator logo={<img src="/images/logo.png" />}>
+        <App />
+      </Authenticator>
+    </MuiPickersUtilsProvider>
   </MuiThemeProvider>,
   document.getElementById('root')
 )
