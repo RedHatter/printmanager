@@ -1,4 +1,5 @@
 const patchHistory = require('mongoose-patch-history').default
+const autopopulate = require('mongoose-autopopulate')
 const mongoose = require('mongoose')
 const ClientSchema = require('./Client.js')
 const JobSchema = require('./Job.js')
@@ -12,6 +13,7 @@ mongoose.connection.on(
   console.error.bind(console, 'connection error:')
 )
 
+JobSchema.plugin(autopopulate)
 JobSchema.plugin(patchHistory, {
   mongoose,
   name: 'jobs_h',

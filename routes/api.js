@@ -188,9 +188,11 @@ router.post('/job/search', async ctx => {
         }
       })
   })
-    .populate('client')
-    .populate('pixels')
-    .exec()
+})
+
+router.get('/job/:id', async ctx => {
+  ctx.response.type = 'json'
+  ctx.body = await Job.findById(ctx.params.id)
 })
 
 router.post('/job/:id', async ctx => {
@@ -231,11 +233,7 @@ router.get('/job/:ref/patches', async ctx => {
 router.get('/job/:ref/patches/:id', async ctx => {
   ctx.response.type = 'json'
   let doc = await Job.findById(ctx.params.ref)
-  doc = await doc.rollback(ctx.params.id, {}, false)
-  ctx.body = await doc
-    .populate('client')
-    .populate('pixels')
-    .execPopulate()
+  ctx.body = await doc.rollback(ctx.params.id, {}, false)
 })
 
 router.delete('/job/:id', async ctx => {

@@ -12,6 +12,7 @@ module.exports = new Schema({
   client: {
     type: ObjectId,
     ref: 'Client',
+    autopopulate: true,
     required: true
   },
   jobType: {
@@ -70,7 +71,8 @@ module.exports = new Schema({
   pixels: [
     {
       type: ObjectId,
-      ref: 'Pixel'
+      ref: 'Pixel',
+      autopopulate: true
     }
   ],
   versionComment: String
