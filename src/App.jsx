@@ -39,6 +39,7 @@ import JobTable from './print/JobTable.jsx'
 import CreateDialog from './print/CreateDialog.jsx'
 import Filters from './print/Filters.jsx'
 import Calendar from './print/Calendar.jsx'
+import Sprint from './Sprint.jsx'
 import Users from './users/Users.jsx'
 
 class App extends Component {
@@ -128,6 +129,7 @@ class App extends Component {
             <Tabs value={selectedTab} onChange={this.handleTabChange}>
               <Tab label="All Jobs" />
               <Tab label="Calendar" />
+              <Tab label="Sprint" />
               <Tab label="E-blasts" />
               {isAdmin && <Tab label="Users" />}
             </Tabs>
@@ -159,9 +161,12 @@ class App extends Component {
               <Calendar />
             </SlideRight>
             <SlideRight in={selectedTab == 2}>
-              <Eblast />
+              <Sprint />
             </SlideRight>
             <SlideRight in={selectedTab == 3}>
+              <Eblast />
+            </SlideRight>
+            <SlideRight in={selectedTab == 4}>
               <Users />
             </SlideRight>
             <SlideRight in={selectedClient != undefined}>

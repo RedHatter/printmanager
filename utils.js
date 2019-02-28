@@ -52,21 +52,32 @@ const enums = {
     '6 x 9 Double-Windowed'
   ],
   size: ['8.5 x 11', '8.5 x 14', '9 x 7', '11 x 15', '11 x 17'],
-  artStatus: ['In Progress', 'Needs Revisions', 'Sent to Client', 'Approved'],
+  artStatus: [
+    'New Project',
+    'Info Needed',
+    'In Progress',
+    'Art Review',
+    'Needs Changes',
+    'Art Approved',
+    'Client Review',
+    'Client Approved',
+    'Compliance Review',
+    'Compliance Approved',
+    'Approved to Post',
+    'Printer Proof',
+    'Complete'
+  ],
   eventTypes: ['created', 'changed']
 }
 
 function colorize(status) {
   switch (status) {
-    case 'Approved':
     case 'List Uploaded':
     case 'List Pending':
     default:
       return 'green'
-    case 'Sent to Client':
     case 'Count Pending':
       return 'yellow'
-    case 'Needs Revisions':
     case 'Incomplete':
       return 'red'
     case 'In Progress':

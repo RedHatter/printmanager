@@ -96,11 +96,7 @@ function Job(props) {
             </Fragment>
           ))}
         </Column>
-        <Column group="artStatus">
-          <span className={classnames('statusBlock', colorize(artStatus))}>
-            {artStatus}
-          </span>
-        </Column>
+        <Column group="artStatus">{artStatus}</Column>
         <Column group="printDate">{formatDate(printDate)}</Column>
         <Column group="dueDate">{formatDate(dueDate)}</Column>
         <Column group="assignee">{assignee.name}</Column>
