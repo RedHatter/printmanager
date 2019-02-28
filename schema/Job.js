@@ -96,5 +96,11 @@ module.exports = new Schema({
     }
   ],
   versionComment: String,
+  priority: {
+    type: Number,
+    min: 1,
+    max: 3,
+    default: 1
+  },
   comments: [CommentSchema]
 })

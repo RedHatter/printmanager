@@ -52,6 +52,7 @@ function CreateModal({
     postage: '',
     details: '',
     artStatus: enums.artStatus[0],
+    priority: 1,
     assignee: ''
   }
   let editMode = false
@@ -92,6 +93,7 @@ function CreateModal({
     dropStatus,
     forceComplete,
     versionComment,
+    priority,
     assignee
   } = model
 
@@ -122,10 +124,18 @@ function CreateModal({
     >
       <DialogContent className="content">
         <Grid container spacing={16}>
-          <Grid item sm={12}>
+          <Grid item sm={2}>
             <Typography variant="headline" align="left">
               General
             </Typography>
+          </Grid>
+          <Grid item sm={10}>
+            <div
+              className={'priority-button priority-' + priority}
+              onClick={() =>
+                setModel({ priority: priority < 3 ? priority + 1 : 1 })
+              }
+            />
           </Grid>
 
           {editMode && (
@@ -559,4 +569,23 @@ li.green {
   color: #4caf50;
 }
 
+.priority-button {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.priority-button.priority-1 {
+  background-color: #4caf50;
+}
+
+.priority-button.priority-2 {
+  background-color: #ffb300;
+}
+
+.priority-button.priority-3 {
+  background-color: #ef5350;
+}
 </style>
