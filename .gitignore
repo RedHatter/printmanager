@@ -1,6 +1,8 @@
 public/app.js
+public/app.js.map
 public/styles.css
 public/images/**
+yarn.lock
 
 # Logs
 logs
