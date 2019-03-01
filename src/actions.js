@@ -29,22 +29,6 @@ async function api(url, error, { body, method }) {
   }
 }
 
-function resolveCognito(state) {
-  for (let job of state.jobs) {
-    if (job.salesman in state.salesmen) {
-      let salesman = state.salesmen[job.salesman]
-      salesman._id = job.salesman
-      job.salesman = salesman
-    }
-
-    if (job.assignee in state.users) {
-      let assignee = state.users[job.assignee]
-      assignee._id = job.assignee
-      job.assignee = assignee
-    }
-  }
-}
-
 export function updateFilter(payload) {
   return update(state => {
     Object.assign(state.filter, payload)
@@ -110,7 +94,6 @@ export async function fetchJobs() {
 
   return update(state => {
     state.jobs = jobs
-    resolveCognito(state)
   })
 }
 
@@ -129,6 +112,17 @@ export function deleteJob(id) {
 export function deleteUser(body) {
   return api('/api/user/' + body.id, 'Unable to create user.', {
     method: 'DELETE'
+  })
+}
+
+export async function fetchUsers() {
+  const users = await api('/api/user', 'Unable to fetch users', {
+    method: 'GET'
+  })
+  if (users === false) return false
+
+  return update(state => {
+    state.users = users
   })
 }
 
@@ -222,83 +216,5 @@ export async function deleteFiles(files) {
     return fetchFiles()
   } catch (err) {
     return showError('Unable to delete file.', err)
-  }
-}
-
-export async function fetchUsers() {
-  try {
-    const users = await new Promise((resolve, reject) =>
-      cognito.listUsers(
-        {
-          UserPoolId: 'us-west-2_***REMOVED***'
-        },
-        (err, res) => {
-          if (err) reject(err)
-          else resolve(res.Users)
-        }
-      )
-    )
-
-    const salesmen = (await new Promise((resolve, reject) =>
-      cognito.listUsersInGroup(
-        {
-          GroupName: 'Salesmen',
-          UserPoolId: 'us-west-2_***REMOVED***'
-        },
-        (err, res) => {
-          if (err) reject(err)
-          else resolve(res.Users)
-          // else resolve(res.Users.map(user => user.Attributes.find(attr => attr.name == )))
-        }
-      )
-    )).map(o => o.Username)
-
-    const admins = (await new Promise((resolve, reject) =>
-      cognito.listUsersInGroup(
-        {
-          GroupName: 'Admin',
-          UserPoolId: 'us-west-2_***REMOVED***'
-        },
-        (err, res) => {
-          if (err) reject(err)
-          else resolve(res.Users)
-        }
-      )
-    )).map(o => o.Username)
-
-    let payload = {}
-    for (let user of users) {
-      let obj = {}
-
-      for (let attr of user.Attributes) {
-        switch (attr.Name) {
-          case 'email':
-            obj.email = attr.Value
-            break
-          case 'name':
-            obj.name = attr.Value
-            break
-          case 'phone_number':
-            obj.phoneNumber = attr.Value
-        }
-      }
-
-      obj.salesmen = salesmen.includes(user.Username)
-      obj.admin = admins.includes(user.Username)
-      obj.id = user.Username
-
-      payload[user.Username] = obj
-    }
-
-    return update(state => {
-      state.users = payload
-      state.salesmen = Object.entries(payload).reduce((arr, [key, value]) => {
-        if (value.salesmen) arr[key] = value
-        return arr
-      }, {})
-      resolveCognito(state)
-    })
-  } catch (err) {
-    return showError('Unable to retrieve salesmen.', err)
   }
 }

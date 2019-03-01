@@ -59,7 +59,8 @@ export default function CreateDialog(props) {
   const [model, _setModel] = useState(initalModel)
   const [submitDisabled, setSubmitDisabled] = useState(false)
   const [selectedFiles, setSelectedFiles] = useState([])
-  const { clients, salesmen, users, files } = useStore()
+  const { clients, users, files } = useStore()
+  const salesmen = users.filter(o => o.salesman)
 
   const {
     _id,
@@ -189,9 +190,9 @@ export default function CreateDialog(props) {
               select
               fullWidth
             >
-              {Object.entries(users).map(([id, attributes]) => (
-                <MenuItem value={id} key={id}>
-                  {attributes.name}
+              {users.map(value => (
+                <MenuItem value={value.id} key={value.id}>
+                  {value.name}
                 </MenuItem>
               ))}
             </TextField>
@@ -205,9 +206,9 @@ export default function CreateDialog(props) {
               select
               fullWidth
             >
-              {Object.entries(salesmen).map(([id, attributes]) => (
-                <MenuItem value={id} key={id}>
-                  {attributes.name}
+              {salesmen.map(value => (
+                <MenuItem value={value.id} key={value.id}>
+                  {value.name}
                 </MenuItem>
               ))}
             </TextField>

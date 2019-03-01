@@ -150,9 +150,7 @@ export default function Comments({ model }) {
 
       {comments.map(o => (
         <div key={o._id} className="comment">
-          <span className="user">
-            {o.user in users ? users[o.user].name : 'Unknown'}
-          </span>
+          <span className="user">{o.user.name}</span>
           <span className="created">{formatDateTime(o.created)}</span>
           <div
             className="content"
@@ -194,7 +192,7 @@ export default function Comments({ model }) {
           }}
         />
         <ChipSelection
-          options={Object.values(users)}
+          options={users}
           value={notify}
           onChange={setNotify}
           label="Notify"

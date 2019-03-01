@@ -23,7 +23,20 @@ export const JobType = fromSchema(
             match: /^.+@.+\..+$/
           },
           name: { type: String, required: true }
-        }
+        },
+        comments: [
+          {
+            user: {
+              email: {
+                type: String,
+                required: true,
+                match: /^.+@.+\..+$/
+              },
+              name: { type: String, required: true }
+            },
+            html: String
+          }
+        ]
       })
     },
     {

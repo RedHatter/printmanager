@@ -7,8 +7,7 @@ import { fetchJobs, fetchClients, fetchEblasts, fetchUsers } from './actions.js'
 export const store = Atom.of({
   jobs: [],
   clients: [],
-  salesmen: {},
-  users: {},
+  users: [],
   files: {},
   filter: { created: [] },
   eblasts: [],

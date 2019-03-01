@@ -7,7 +7,8 @@ import { useStore } from '../store.js'
 import { enums, colorize } from '../../utils.js'
 
 export default function Filters(props) {
-  const { filter, salesmen, clients } = useStore()
+  const { filter, users, clients } = useStore()
+  const salesmen = users.filter(o => o.salesman)
   const handleChange = o => updateFilter(o).then(fetchJobs)
 
   return (
@@ -54,8 +55,8 @@ export default function Filters(props) {
         onChange={e => handleChange({ salesman: e.target.value })}
       >
         <MenuItem value="">Any</MenuItem>
-        {Object.entries(salesmen).map(([key, value]) => (
-          <MenuItem key={key} value={key}>
+        {salesmen.map(value => (
+          <MenuItem key={value.id} value={value.id}>
             {value.name}
           </MenuItem>
         ))}

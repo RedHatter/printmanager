@@ -22,8 +22,7 @@ import EditUser from './EditUser.jsx'
 export default function Users(props) {
   const [isCreateOpen, setIsCreateOpen] = useState(false)
   const [editing, setEditing] = useState(null)
-  let { users } = useStore()
-  users = Object.values(users)
+  const { users } = useStore()
 
   return (
     <Paper>

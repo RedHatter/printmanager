@@ -2,6 +2,8 @@ const Router = require('koa-router')
 const AWS = require('aws-sdk')
 const { promisify } = require('util')
 
+const users = require('../../schema/users.js')
+
 const cognito = new AWS.CognitoIdentityServiceProvider({ region: 'us-west-2' })
 const adminCreateUser = promisify(cognito.adminCreateUser).bind(cognito)
 const adminAddUserToGroup = promisify(cognito.adminAddUserToGroup).bind(cognito)
@@ -15,7 +17,9 @@ const adminDeleteUser = promisify(cognito.adminDeleteUser).bind(cognito)
 
 const router = new Router()
 
-router.get('/', async ctx => {
+router.get('/', ctx => (ctx.body = users.value))
+
+router.post('/', async ctx => {
   const config = ctx.request.body
 
   const user = await adminCreateUser({
@@ -56,6 +60,7 @@ router.get('/', async ctx => {
   }
 
   ctx.body = user.User
+  await users.invalidateUsers()
   ctx.socketIo.emit('invalidateUsers')
 })
 
@@ -90,6 +95,7 @@ router.post('/:id', async ctx => {
     })
   }
   ctx.status = 200
+  await users.invalidateUsers()
   ctx.socketIo.emit('invalidateUsers')
 })
 
@@ -99,6 +105,7 @@ router.delete('/user/:id', async ctx => {
     Username: ctx.params.id
   })
   ctx.status = 200
+  await users.invalidateUsers()
   ctx.socketIo.emit('invalidateUsers')
 })
 
