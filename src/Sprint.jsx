@@ -1,6 +1,7 @@
 import React, { Fragment, useState } from 'react'
 import { Paper, Button } from '@material-ui/core'
 import classnames from 'classnames'
+import { differenceInCalendarDays } from 'date-fns'
 
 import { formatDate, enums } from '../utils.js'
 import { updateJob } from './actions.js'
@@ -14,9 +15,14 @@ export default function Sprint(props) {
   const [selected, setSelected] = useState(undefined)
   const { jobs } = useStore()
 
+  const today = new Date()
   const columns = {}
   enums.artStatus.forEach(o => (columns[o] = []))
-  jobs.forEach(o => columns[o.artStatus].push(o))
+  jobs.forEach(o => {
+    if (o.completed && differenceInCalendarDays(today, o.completed) > 2) return
+
+    columns[o.artStatus].push(o)
+  })
   return (
     <Fragment>
       <SlideDown in={isOpen}>
@@ -30,7 +36,7 @@ export default function Sprint(props) {
       </SlideDown>
       <Fade in={!isOpen}>
         <Paper className="sprint">
-          {Object.entries(columns).map(([name, jobs]) => (
+          {Object.entries(columns).map(([name, value]) => (
             <div
               key={name}
               className="column"
@@ -48,7 +54,7 @@ export default function Sprint(props) {
               }}
             >
               <div>{name}</div>
-              {jobs.map(job => (
+              {value.map(job => (
                 <div
                   key={job._id}
                   className={'priority-' + job.priority}

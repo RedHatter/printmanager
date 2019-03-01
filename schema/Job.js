@@ -88,9 +88,9 @@ module.exports = new Schema(
     artStatus: {
       type: String,
       required: true,
-      enum: enums.artStatus,
+      enum: enums.artStatus
     },
-    completedOn: String,
+    completed: Date,
     dropStatus: Date,
     forceComplete: Boolean,
     pixels: [

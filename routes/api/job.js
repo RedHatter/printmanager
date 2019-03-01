@@ -153,6 +153,8 @@ router.post('/:id', async ctx => {
       val === '' ? undefined : val
     )
     delete model._id
+    if (!model.completed && model.artStatus == 'Complete')
+      model.completed = new Date()
     let job = await Job.findByIdAndUpdate(ctx.params.id, model, {
       runValidators: true,
       new: true
