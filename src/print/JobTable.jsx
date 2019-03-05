@@ -30,12 +30,12 @@ class JobTable extends Component {
         <JobHeader />
         {model.map(o => (
           <Job
-            key={o._id}
+            key={o.id}
             model={o}
-            files={files[o._id]}
+            files={files[o.id]}
             isAdmin={isAdmin}
-            expanded={expanded == o._id}
-            onChange={this.handleChange.bind(this, o._id)}
+            expanded={expanded == o.id}
+            onChange={this.handleChange.bind(this, o.id)}
           />
         ))}
         {model.length == 0 && <Paper className="empty">No results.</Paper>}

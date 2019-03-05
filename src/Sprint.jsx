@@ -46,7 +46,7 @@ export default function Sprint(props) {
               onDrop={e => {
                 e.preventDefault()
                 const id = e.dataTransfer.getData('jobId')
-                const job = jobs.find(o => id == o._id)
+                const job = jobs.find(o => id == o.id)
                 if (job.artStatus == name) return
 
                 job.artStatus = name
@@ -56,11 +56,11 @@ export default function Sprint(props) {
               <div>{name}</div>
               {value.map(job => (
                 <div
-                  key={job._id}
+                  key={job.id}
                   className={'priority-' + job.priority}
                   draggable
                   onDragStart={e => {
-                    e.dataTransfer.setData('jobId', job._id)
+                    e.dataTransfer.setData('jobId', job.id)
                     e.target.style.visibility = 'hidden'
                   }}
                   onDragEnd={e =>

@@ -51,10 +51,10 @@ export default function CreateDialog(props) {
 
   if (props.model) {
     initalModel = JSON.parse(JSON.stringify(props.model))
-    initalModel.client = initalModel.client._id
-    initalModel.salesman = initalModel.salesman._id
-    initalModel.assignee = initalModel.assignee._id
-    editMode = !!initalModel._id
+    initalModel.client = initalModel.client.id
+    initalModel.salesman = initalModel.salesman.id
+    initalModel.assignee = initalModel.assignee.id
+    editMode = !!initalModel.id
   }
 
   const [model, _setModel] = useState(initalModel)
@@ -64,8 +64,8 @@ export default function CreateDialog(props) {
   const salesmen = users.filter(o => o.salesman)
 
   const {
-    _id,
     created,
+    id,
     name,
     client,
     jobType,
@@ -94,7 +94,7 @@ export default function CreateDialog(props) {
 
   function setModel(values) {
     if ((values.client || values.listType) && client && listType) {
-      model.trackingNumber = clients.find(c => c._id == client).trackingNumbers[
+      model.trackingNumber = clients.find(c => c.id == client).trackingNumbers[
         listType.toLowerCase()
       ]
     }
@@ -177,7 +177,7 @@ export default function CreateDialog(props) {
               fullWidth
             >
               {clients.map(c => (
-                <MenuItem value={c._id} key={c._id}>
+                <MenuItem value={c.id} key={c.id}>
                   {c.name}
                 </MenuItem>
               ))}
@@ -476,10 +476,10 @@ export default function CreateDialog(props) {
           </Grid>
           {editMode && (
             <Fragment>
-              {_id in files && (
+              {id in files && (
                 <Grid item sm={12}>
                   <EditFiles
-                    files={files[_id]}
+                    files={files[id]}
                     selected={selectedFiles}
                     onChange={setSelectedFiles}
                   />

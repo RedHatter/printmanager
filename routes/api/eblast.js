@@ -58,10 +58,11 @@ router.delete('/:id', async ctx => {
 router.post('/:id', async ctx => {
   const { id } = ctx.params
   const model = ctx.request.body
-  ctx.assert(model._id == id, 422, 'Model id must match update id.')
+  ctx.assert(model.id == id, 422, 'Model id must match update id.')
 
   try {
     delete model._id
+    delete model.id
     let eblast = await Eblast.findByIdAndUpdate(id, model, {
       runValidators: true,
       new: true

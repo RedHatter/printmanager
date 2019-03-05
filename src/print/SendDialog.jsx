@@ -143,7 +143,7 @@ export default class SendDialog extends Component {
       subject,
       message,
       attachments,
-      jobId: model._id
+      jobId: model.id
     }).then(onClose)
   }
 }

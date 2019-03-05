@@ -67,7 +67,7 @@ router.post('/send', async ctx => {
           /\n/g,
           '<br>'
         )}<img src="https://printmanager.dealerdigitalgroup.com/pixel/${
-          pixel._id
+          pixel.id
         }.png">`,
         attachments: attachments.map(path => ({
           path,

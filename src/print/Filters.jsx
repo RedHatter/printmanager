@@ -45,8 +45,8 @@ export default function Filters(props) {
         onChange={e => handleChange({ client: e.target.value })}
       >
         <MenuItem value="">Any</MenuItem>
-        {clients.map(({ name, _id }) => (
-          <MenuItem key={_id} value={_id}>
+        {clients.map(({ name, id }) => (
+          <MenuItem key={id} value={id}>
             {name}
           </MenuItem>
         ))}

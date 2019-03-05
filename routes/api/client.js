@@ -27,7 +27,7 @@ router.post('/', async ctx => {
 
 router.post('/:id', async ctx => {
   ctx.assert(
-    ctx.request.body._id == ctx.params.id,
+    ctx.request.body.id == ctx.params.id,
     422,
     'Model id must match update id.'
   )
@@ -36,6 +36,7 @@ router.post('/:id', async ctx => {
     let model = mapObjectValues(ctx.request.body, val =>
       val === '' ? undefined : val
     )
+    delete model.id
     delete model._id
     let client = await Client.findByIdAndUpdate(ctx.params.id, model, {
       runValidators: true,

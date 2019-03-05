@@ -41,7 +41,7 @@ export default class Client extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (
-      this.props.model?._id == nextProps.model?._id ||
+      this.props.model?.id == nextProps.model?.id ||
       (!this.props.model && !nextProps.model)
     )
       return

@@ -27,7 +27,7 @@ function DuplicateButton(props) {
       <Button
         onClick={() => {
           const model = clone(props.model)
-          delete model._id
+          delete model.id
           delete model.__v
           delete model.created
           delete model.name
@@ -85,7 +85,7 @@ function DeleteButton({ model }) {
           </DialogContent>
           <DialogActions>
             <Button onClick={() => setIsOpen(false)}>Cancel</Button>
-            <Button onClick={() => deleteJob(model._id)}>Delete</Button>
+            <Button onClick={() => deleteJob(model.id)}>Delete</Button>
           </DialogActions>
         </Dialog>
       )}
@@ -143,7 +143,7 @@ function JobActions({ model, files }) {
       <EditButton model={model} />
       <DuplicateButton model={model} />
       <DeleteButton model={model} />
-      <FileDialog path={model._id} />
+      <FileDialog path={model.id} />
       {files && <SendButton model={model} files={files} />}
     </ExpansionPanelActions>
   )

@@ -104,7 +104,7 @@ class Calendar extends Component {
                         </div>
                         {model[day]?.map((job, i) => (
                           <div
-                            key={job._id}
+                            key={job.id}
                             onClick={this.handleSelectEvent.bind(this, job)}
                             className={classnames({
                               print: isSameDay(day, job.printDate),

@@ -73,7 +73,7 @@ class App extends Component {
       }
     })
     const selectedJob = await res.json()
-    if (selectedJob._id == id) this.setState({ selectedJob, selectedTab: -1 })
+    if (selectedJob.id == id) this.setState({ selectedJob, selectedTab: -1 })
   }
 
   render() {
@@ -138,7 +138,7 @@ class App extends Component {
                 <Typography variant="headline">Clients</Typography>
                 <Tabs value={selectedClient} onChange={this.handleClientChange}>
                   {clients.map(client => (
-                    <Tab key={client._id} label={client.name} />
+                    <Tab key={client.id} label={client.name} />
                   ))}
                   <Tab icon={<Icon>add</Icon>} />
                 </Tabs>

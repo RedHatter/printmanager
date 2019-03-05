@@ -149,7 +149,7 @@ export default function Comments({ model }) {
       )}
 
       {comments.map(o => (
-        <div key={o._id} className="comment">
+        <div key={o.id} className="comment">
           <span className="user">{o.user.name}</span>
           <span className="created">{formatDateTime(o.created)}</span>
           <div
@@ -213,7 +213,7 @@ export default function Comments({ model }) {
                   inlineStyles
                 })
               },
-              model._id
+              model.id
             )
             setEditorState(EditorState.createEmpty())
           }}

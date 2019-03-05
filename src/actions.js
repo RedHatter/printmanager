@@ -66,7 +66,7 @@ export async function createEblast(file) {
 }
 
 export function updateEblast(body) {
-  return api('/api/eblast/' + body._id, 'Unable to update e-blasts.', { body })
+  return api('/api/eblast/' + body.id, 'Unable to update e-blasts.', { body })
 }
 
 export function deleteEblast(id) {
@@ -98,7 +98,7 @@ export async function fetchJobs() {
 }
 
 export function updateJob(body) {
-  return api('/api/job/' + (body._id || ''), 'Unable to update job.', { body })
+  return api('/api/job/' + (body.id || ''), 'Unable to update job.', { body })
 }
 
 export function addComment(body, id) {
@@ -169,7 +169,7 @@ export async function fetchClients() {
 }
 
 export function updateClient(body) {
-  return api('/api/client/' + (body._id || ''), 'Unable to update client.', {
+  return api('/api/client/' + (body.id || ''), 'Unable to update client.', {
     body
   })
 }

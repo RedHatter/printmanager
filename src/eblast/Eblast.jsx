@@ -29,7 +29,7 @@ export default function Eblast(props) {
       {isConfirmOpen && (
         <Confirm
           onClose={e => setIsEditOpen(false)}
-          onConfirm={deleteEblast(eblasts._id)}
+          onConfirm={deleteEblast(eblasts.id)}
         >
           Are you sure you want to delete <i>{eblasts.name}</i>? This action can
           not be reversed.
@@ -58,7 +58,7 @@ export default function Eblast(props) {
             </TableHead>
             <TableBody>
               {eblasts.map((row, i) => (
-                <TableRow key={row._id}>
+                <TableRow key={row.id}>
                   <TableCell>{row.name}</TableCell>
                   <TableCell>{formatDate(row.created)}</TableCell>
                   <TableCell>
@@ -75,7 +75,7 @@ export default function Eblast(props) {
                         Auth.currentSession().then(async auth => {
                           console.log('test')
                           const res = await fetch(
-                            `/api/eblast/${row._id}/download`,
+                            `/api/eblast/${row.id}/download`,
                             {
                               headers: {
                                 Authorization: auth.idToken.jwtToken
