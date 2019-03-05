@@ -1,15 +1,19 @@
 import React from 'react'
 import { TextField, MenuItem } from '@material-ui/core'
-import DatePicker from 'material-ui-pickers/DatePicker'
+import { DatePicker } from 'material-ui-pickers'
 
 import { updateFilter, fetchJobs } from '../actions.js'
 import { useStore } from '../store.js'
 import { enums, colorize } from '../../utils.js'
+import DateRangePicker from '../DateRangePicker.jsx'
 
 export default function Filters(props) {
   const { filter, users, clients } = useStore()
   const salesmen = users.filter(o => o.salesman)
-  const handleChange = o => updateFilter(o).then(fetchJobs)
+  const handleChange = o => {
+    updateFilter(o)
+    fetchJobs()
+  }
 
   return (
     <div className="filters">
@@ -61,13 +65,11 @@ export default function Filters(props) {
           </MenuItem>
         ))}
       </TextField>
-      <DatePicker
+      <DateRangePicker
         fullWidth
         label="Date"
         value={filter.created}
         onChange={created => handleChange({ created })}
-        range
-        formatSeperator=" - "
         disableFuture={true}
         clearable={true}
       />

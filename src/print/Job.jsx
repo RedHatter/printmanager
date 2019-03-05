@@ -31,6 +31,7 @@ function Job(props) {
     quantity,
     dueDate,
     dropDate,
+    secondDropDate,
     printDate,
     artStatus,
     dropStatus,
@@ -74,7 +75,7 @@ function Job(props) {
                   'Postal',
                   'Prize board'
                 ].every(key => key in files)),
-            late: dropDate[0] < today && !dropStatus
+            late: dropDate < today && !dropStatus
           },
           'job-row'
         )}
@@ -89,12 +90,9 @@ function Job(props) {
           </span>
         </Column>
         <Column group="dropDate">
-          {dropDate.map(date => (
-            <Fragment key={date}>
-              {formatDate(date)}
-              <br />
-            </Fragment>
-          ))}
+          {formatDate(dropDate)}
+          <br />
+          {secondDropDate && formatDate(secondDropDate)}
         </Column>
         <Column group="artStatus">{artStatus}</Column>
         <Column group="printDate">{formatDate(printDate)}</Column>
@@ -270,9 +268,9 @@ function Job(props) {
             </tr>
             {pixels.map(o => (
               <tr>
-                <td>{format(o.created, 'h:mm a MM/DD/YYYY')}</td>
+                <td>{format(o.created, 'h:mm a MM/dd/yyyy')}</td>
                 <td>
-                  {o.viewed ? format(o.viewed, 'h:mm a MM/DD/YYYY') : 'No'}
+                  {o.viewed ? format(o.viewed, 'h:mm a MM/dd/yyyy') : 'No'}
                 </td>
               </tr>
             ))}

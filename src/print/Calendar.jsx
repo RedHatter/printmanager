@@ -15,7 +15,7 @@ import {
   addDays,
   addMonths,
   isSameMonth,
-  isEqual
+  isSameDay
 } from 'date-fns'
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
@@ -44,9 +44,9 @@ class Calendar extends Component {
 
   render() {
     let model = this.props.model.reduce((model, job) => {
-      job.dropDate
-        .concat(job.printDate)
-        .forEach(date => (model[date] ||= []).push(job))
+      ;[job.dropDate, job.printDate, job.dueDate, job.secondDropDate].forEach(
+        date => (model[startOfDay(date)] ||= []).push(job)
+      )
 
       return model
     }, {})
@@ -74,7 +74,7 @@ class Calendar extends Component {
               <thead>
                 <tr>
                   <th className="previous" onClick={this.handlePrevious} />
-                  <th colSpan="5">{format(selectedDay, 'MMMM YYYY')}</th>
+                  <th colSpan="5">{format(selectedDay, 'MMMM yyyy')}</th>
                   <th className="next" onClick={this.handleNext} />
                 </tr>
                 <tr>
@@ -93,24 +93,25 @@ class Calendar extends Component {
                     {range(7).map(d => (
                       <td
                         key={d}
-                        className={classnames({ today: isEqual(day, today) })}
+                        className={classnames({ today: isSameDay(day, today) })}
                       >
                         <div
                           className={classnames({
                             inactive: !isSameMonth(day, selectedDay)
                           })}
                         >
-                          {format(day, 'DD')}
+                          {format(day, 'dd')}
                         </div>
                         {model[day]?.map((job, i) => (
                           <div
-                            key={job._id + i}
+                            key={job._id}
                             onClick={this.handleSelectEvent.bind(this, job)}
                             className={classnames({
-                              print: isEqual(day, job.printDate),
-                              drop: job.dropDate.some(date =>
-                                isEqual(day, date)
-                              )
+                              print: isSameDay(day, job.printDate),
+                              due: isSameDay(day, job.dueDate),
+                              drop:
+                                isSameDay(day, job.dropDate) ||
+                                isSameDay(day, job.secondDropDate)
                             })}
                           >
                             {job.name}
@@ -250,6 +251,7 @@ export default connect(state => ({ model: state.jobs }))(Calendar)
 }
 
 .calendar td .print,
+.calendar td .due,
 .calendar td .drop {
   margin: 2px;
   padding: 5px;
@@ -261,6 +263,10 @@ export default connect(state => ({ model: state.jobs }))(Calendar)
 
 .calendar td .drop {
   background-color: #673ab7;
+}
+
+.calendar td .due {
+  background-color: #3f51b5;
 }
 
 .back-to-calendar {

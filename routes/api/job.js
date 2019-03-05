@@ -85,13 +85,11 @@ router.post('/', async ctx => {
         break
     }
 
-    model.name = `${client.acronym} ${format(today, 'MMYY')}-${n +
+    model.name = `${client.acronym} ${format(today, 'MMyy')}-${n +
       1} ${type}${list}`
   }
 
   model = mapObjectValues(model, val => (val === '' ? undefined : val))
-
-  if (model.dropDate[1] == null) model.dropDate.pop()
 
   let job = new Job(model)
   try {

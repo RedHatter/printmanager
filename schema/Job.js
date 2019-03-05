@@ -75,8 +75,9 @@ module.exports = new Schema(
     },
     quantity: { type: Number, required: true, min: 0 },
     dueDate: { type: Date, required: true },
-    dropDate: [{ type: Date, required: true }],
     printDate: { type: Date, required: true },
+    dropDate: { type: Date, required: true },
+    secondDropDate: { type: Date },
     expire: { type: Date, required: true },
     vendor: { type: String, required: true },
     trackingNumber: {

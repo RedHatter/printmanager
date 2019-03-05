@@ -98,7 +98,7 @@ function formatPhone(phone) {
 }
 
 function formatDate(date) {
-  return format(date, 'MM/DD/YYYY')
+  return format(date, 'MM/dd/yyyy')
 }
 
 function formatDateTime(date) {

@@ -29,7 +29,8 @@ export default function CreateDialog(props) {
     client: '',
     salesman: '',
     dueDate: null,
-    dropDate: [null, null],
+    dropDate: null,
+    secondDropDate: null,
     printDate: null,
     expire: null,
     trackingNumber: '',
@@ -77,6 +78,7 @@ export default function CreateDialog(props) {
     quantity,
     dueDate,
     dropDate,
+    secondDropDate,
     printDate,
     expire,
     vendor,
@@ -97,7 +99,7 @@ export default function CreateDialog(props) {
       ]
     }
 
-    _setModel(Object.assign(model, values))
+    _setModel(Object.assign({}, model, values))
   }
 
   return (
@@ -226,7 +228,7 @@ export default function CreateDialog(props) {
               label="Due Date"
               component={DatePicker}
               value={dueDate}
-              onChange={value => setModel({ dueDate: value[0] })}
+              onChange={dueDate => setModel({ dueDate })}
             />
           </Grid>
           <Grid item sm={4}>
@@ -237,11 +239,8 @@ export default function CreateDialog(props) {
               clearable
               label="Drop date"
               component={DatePicker}
-              value={dropDate[0]}
-              onChange={value => {
-                model.dropDate[0] = value[0]
-                _setModel(model)
-              }}
+              value={dropDate}
+              onChange={dropDate => _setModel({ dropDate })}
             />
           </Grid>
           <Grid item sm={4}>
@@ -267,8 +266,8 @@ export default function CreateDialog(props) {
                   clearable
                   label="Droped On"
                   component={DatePicker}
-                  value={dropStatus || null}
-                  onChange={value => setModel({ dropStatus: value[0] })}
+                  value={secondDropDate}
+                  onChange={secondDropDate => _setModel({ secondDropDate })}
                 />
               </Grid>
               <Grid item sm={4}>
@@ -319,7 +318,7 @@ export default function CreateDialog(props) {
                   label="Expire"
                   component={DatePicker}
                   value={expire}
-                  onChange={value => setModel({ expire: value[0] })}
+                  onChange={printDate => setModel({ printDate })}
                 />
               </Grid>
             </Fragment>
