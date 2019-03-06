@@ -1,6 +1,5 @@
 import React, { Fragment, useState } from 'react'
 import { Paper, Button } from '@material-ui/core'
-import classnames from 'classnames'
 import { differenceInCalendarDays } from 'date-fns'
 
 import { formatDate, enums } from '../utils.js'

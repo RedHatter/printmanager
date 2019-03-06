@@ -17,7 +17,7 @@
     "@dbeining/react-atom": "^4.1.0",
     "aws-amplify": "^1.1.19",
     "bound-decorator": "^1.1.0",
-    "classnames": "^2.2.6",
+    "clsx": "^1.0.3",
     "cognito-express": "^2.0.12",
     "draft-js": "^0.10.5",
     "immer": "^2.1.0",

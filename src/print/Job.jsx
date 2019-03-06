@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react'
-import classnames from 'classnames'
+import clsx from 'clsx'
 import PropTypes from 'prop-types'
 import { Storage } from 'aws-amplify'
 import {
@@ -62,7 +62,7 @@ function Job(props) {
     <ExpansionPanel {...rest}>
       <ExpansionPanelSummary
         expandIcon={<ExpandMoreIcon />}
-        className={classnames(
+        className={clsx(
           {
             complete:
               forceComplete ||
@@ -85,10 +85,7 @@ function Job(props) {
         <Column group="dropStatus">
           {dropStatusFromatted && (
             <span
-              className={classnames(
-                'statusBlock',
-                colorize(dropStatusFromatted)
-              )}
+              className={clsx('statusBlock', colorize(dropStatusFromatted))}
             >
               {dropStatusFromatted}
             </span>

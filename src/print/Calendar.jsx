@@ -17,7 +17,7 @@ import {
   isSameMonth,
   isSameDay
 } from 'date-fns'
-import classnames from 'classnames'
+import clsx from 'clsx'
 import PropTypes from 'prop-types'
 
 import connect from '../connect.js'
@@ -93,10 +93,10 @@ class Calendar extends Component {
                     {range(7).map(d => (
                       <td
                         key={d}
-                        className={classnames({ today: isSameDay(day, today) })}
+                        className={clsx({ today: isSameDay(day, today) })}
                       >
                         <div
-                          className={classnames({
+                          className={clsx({
                             inactive: !isSameMonth(day, selectedDay)
                           })}
                         >
@@ -106,7 +106,7 @@ class Calendar extends Component {
                           <div
                             key={job.id}
                             onClick={this.handleSelectEvent.bind(this, job)}
-                            className={classnames({
+                            className={clsx({
                               print: isSameDay(day, job.printDate),
                               due: isSameDay(day, job.dueDate),
                               drop:

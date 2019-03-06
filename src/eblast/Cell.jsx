@@ -1,5 +1,5 @@
 import React from 'react'
-import classnames from 'classnames'
+import clsx from 'clsx'
 import PropTypes from 'prop-types'
 import { IconButton } from '@material-ui/core'
 
@@ -9,7 +9,7 @@ function Cell({ x, width, active, onClick, onRemove }) {
   return (
     <div
       onClick={onClick}
-      className={classnames('cell', { active })}
+      className={clsx('cell', { active })}
       style={{
         left: x + '%',
         width: width + '%'

@@ -3,6 +3,7 @@ import { Editor, EditorState, RichUtils, Modifier } from 'draft-js'
 import { Button, Popover, Chip } from '@material-ui/core'
 import { stateToHTML } from 'draft-js-export-html'
 import { Auth } from 'aws-amplify'
+import clsx from 'clsx'
 
 import { addComment } from '../actions.js'
 import { useStore } from '../store.js'
@@ -160,13 +161,13 @@ export default function Comments({ model }) {
       ))}
       <div className="comment-box">
         <Button
-          className={styles.has('BOLD') ? 'active-toggle' : undefined}
+          className={clsx({ 'active-toggle': styles.has('BOLD') })}
           onMouseDown={toggleInlineStyle.bind(this, 'BOLD')}
         >
           Bold
         </Button>
         <Button
-          className={styles.has('ITALIC') ? 'active-toggle' : undefined}
+          className={clsx({ 'active-toggle': styles.has('ITALIC') })}
           onMouseDown={toggleInlineStyle.bind(this, 'ITALIC')}
         >
           Italic
