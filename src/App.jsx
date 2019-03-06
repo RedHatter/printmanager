@@ -16,6 +16,7 @@ import {
 import PropTypes from 'prop-types'
 import { Auth } from 'aws-amplify'
 
+import { parseJSON } from '../utils.js'
 import CloseIcon from './icons/Close.js'
 import connect from './connect.js'
 import { ClientType } from './types.js'
@@ -72,7 +73,7 @@ class App extends Component {
         Authorization: (await Auth.currentSession()).idToken.jwtToken
       }
     })
-    const selectedJob = await res.json()
+    const selectedJob = parseJSON(await res.text())
     if (selectedJob.id == id) this.setState({ selectedJob, selectedTab: -1 })
   }
 

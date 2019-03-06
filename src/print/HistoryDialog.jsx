@@ -13,25 +13,29 @@ import {
 import PropTypes from 'prop-types'
 import { Auth } from 'aws-amplify'
 
-import { formatDateTime } from '../../utils.js'
 import JobHeader from './JobHeader.jsx'
 import Job from './Job.jsx'
+import { formatDateTime, parseJSON } from '../../utils.js'
 
 export default function HistoryDialog({ model, onClose }) {
   const [patches, setPatches] = useState([])
   const [selected, setSelected] = useState(undefined)
-  useEffect(async () => {
-    let res = await fetch(`/api/job/${model.id}/patches`, {
-      headers: { Authorization: (await Auth.currentSession()).idToken.jwtToken }
-    })
-    setPatches(await res.json())
+  useEffect(() => {
+    ;(async () => {
+      let res = await fetch(`/api/job/${model.id}/patches`, {
+        headers: {
+          Authorization: (await Auth.currentSession()).idToken.jwtToken
+        }
+      })
+      setPatches(parseJSON(await res.text()))
+    })()
   }, [])
 
   async function select(patch) {
-    let res = await fetch(`/api/job/${model.id}/patches/${patch.id}`, {
+    let res = await fetch(`/api/job/${model.id}/patches/${patch._id}`, {
       headers: { Authorization: (await Auth.currentSession()).idToken.jwtToken }
     })
-    setSelected(await res.json())
+    setSelected(parseJSON(await res.text()))
   }
 
   return (
@@ -54,7 +58,7 @@ export default function HistoryDialog({ model, onClose }) {
             <TableBody>
               {patches.map((o, i) => (
                 <TableRow
-                  key={o.id}
+                  key={o._id}
                   hover={i != 0}
                   onClick={i != 0 ? () => select(o) : undefined}
                 >

@@ -125,11 +125,11 @@ function Job({ highlighted, model, files, isAdmin, ...rest }) {
             <tr>
               <th rowSpan="2">Contact</th>
               <td rowSpan="2">
-                {client?.contact.name}
+                {client?.contact?.name}
                 <br />
-                {client?.contact.email}
+                {client?.contact?.email}
                 <br />
-                {client && formatPhone(client.contact.phone)}
+                {client && formatPhone(client?.contact?.phone)}
               </td>
               <th>Envelope</th>
               <td>{envelope}</td>

@@ -139,7 +139,7 @@ export default function Filters(props) {
 
 <style>
 .filters {
-  width: 1200px !important;
+  width: 1300px !important;
   margin-bottom: 5px !important;
 }
 

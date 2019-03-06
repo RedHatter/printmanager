@@ -100,7 +100,9 @@ router.post('/', async ctx => {
       1} ${type}${list}`
   }
 
-  model = mapObjectValues(model, val => (val === '' ? undefined : val))
+  model = mapObjectValues(model, val =>
+    val === '' || val === null ? undefined : val
+  )
 
   let job = new Job(model)
   try {
