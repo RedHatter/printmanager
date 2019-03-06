@@ -13,10 +13,10 @@ import {
   Slide,
   Snackbar
 } from '@material-ui/core'
-import CloseIcon from './icons/Close'
 import PropTypes from 'prop-types'
 import { Auth } from 'aws-amplify'
 
+import CloseIcon from './icons/Close.js'
 import connect from './connect.js'
 import { ClientType } from './types.js'
 import { SlideRight } from './transitions.jsx'
@@ -145,9 +145,9 @@ class App extends Component {
               </Fragment>
             )}
             <Typography variant="headline">Search</Typography>
-            <Filters />
           </div>
           <div className="content-container">
+            <Filters />
             {selectedJob && (
               <Fragment>
                 <JobHeader />

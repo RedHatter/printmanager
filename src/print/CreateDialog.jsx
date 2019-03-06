@@ -18,6 +18,7 @@ import { DatePicker } from 'material-ui-pickers'
 import { Form, TextField } from 'material-ui-utils'
 import NumberFormat from 'react-number-format'
 import PropTypes from 'prop-types'
+import clsx from 'clsx'
 
 import { enums, colorize } from '../../utils.js'
 import { deleteFiles, updateJob } from '../actions.js'
@@ -121,22 +122,28 @@ export default function CreateDialog(props) {
     >
       <DialogContent className="content">
         <Grid container spacing={16}>
-          <Grid item sm={11}>
-            <label className="type-select">
-              <input
-                type="checkbox"
-                checked={type == 'Print'}
-                onChange={e =>
-                  setModel({ type: e.target.checked ? 'Print' : 'Digital' })
-                }
-              />
-              <Typography variant="headline" align="left">
-                Print
-              </Typography>
-              <Typography variant="headline" align="left">
-                Digital
-              </Typography>
-            </label>
+          <Grid
+            item
+            sm={11}
+            onClick={e =>
+              setModel({ type: type == 'Print' ? 'Digital' : 'Print' })
+            }
+            className="type-select"
+          >
+            <Typography
+              variant="headline"
+              align="left"
+              className={clsx({ selected: type == 'Print' })}
+            >
+              Print
+            </Typography>
+            <Typography
+              variant="headline"
+              align="left"
+              className={clsx({ selected: type == 'Digital' })}
+            >
+              Digital
+            </Typography>
           </Grid>
           <Grid item sm={1}>
             <div
@@ -522,29 +529,17 @@ CreateDialog.propTypes = {
   cursor: pointer;
 }
 
-.type-select input {
-  display: none;
-}
-
 .type-select h1 {
   display: inline-block;
+  color: #e0e0e0;
+  margin: 2px;
   transition: all 0.3s;
+  transform: scale(0.8) translateY(2px);
 }
 
-.type-select input + h1 {
-  margin-right: 5px;
-}
-
-.type-select input + h1 + h1,
-.type-select input:checked + h1 {
+.type-select h1.selected {
   color: black;
   transform: scale(1) translateY(0);
-}
-
-.type-select input + h1,
-.type-select input:checked + h1 + h1 {
-  color: #e0e0e0;
-  transform: scale(0.8) translateY(2px);
 }
 
 .create-modal {

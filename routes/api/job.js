@@ -113,22 +113,41 @@ function escapeRegExp(str) {
 }
 
 router.post('/search', async ctx => {
-  let { search, artStatus, salesman, client, created } = ctx.request.body
+  let { type, search, assignee, client, created, dueDate } = ctx.request.body
   let regex = new RegExp(`.*${escapeRegExp(search)}.*`, 'i')
 
   ctx.response.type = 'json'
   ctx.body = await Job.find({
+    ...(type && { type }),
     ...(search && {
-      $or: [{ name: regex }, { details: regex }, { vendor: regex }]
+      $or: [
+        { name: regex },
+        { details: regex },
+        { vendor: regex },
+        { jobType: regex },
+        {
+          comments: {
+            $elemMatch: {
+              html: regex
+            }
+          }
+        }
+      ]
     }),
-    ...(artStatus && { artStatus }),
-    ...(salesman && { salesman }),
+    ...(assignee && { assignee }),
     ...(client && { client }),
     ...(created &&
       created.length > 0 && {
         created: {
           $gte: created[0],
           $lt: created[1]
+        }
+      }),
+    ...(dueDate &&
+      dueDate.length > 0 && {
+        dueDate: {
+          $gte: dueDate[0],
+          $lt: dueDate[1]
         }
       })
   })

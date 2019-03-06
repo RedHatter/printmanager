@@ -1,8 +1,12 @@
 import React, { useState, useContext, useRef } from 'react'
 import { DatePicker } from 'material-ui-pickers'
 import { MuiPickersContext } from 'material-ui-pickers'
+import withStyles from '@material-ui/core/styles/withStyles'
+import { styles as dayStyles } from 'material-ui-pickers/DatePicker/components/Day'
+import clsx from 'clsx'
 
-export default function DateRangePicker({
+function DateRangePicker({
+  classes,
   value,
   onChange,
   labelFunc,
@@ -14,7 +18,7 @@ export default function DateRangePicker({
 }) {
   const [begin, setBegin] = useState(value[0])
   const [end, setEnd] = useState(value[1])
-  const [hover, setHover] = useState(null)
+  const [hover, setHover] = useState(undefined)
   const picker = useRef()
   const utils = useContext(MuiPickersContext)
 
@@ -22,20 +26,6 @@ export default function DateRangePicker({
   const max = Math.max(begin, end || hover)
 
   function renderDay(day, selectedDate, dayInCurrentMonth, dayComponent) {
-    const style = {
-      margin: 0,
-      width: '40px'
-    }
-
-    if (day >= min && day <= max) {
-      style.backgroundColor = '#3f51b5'
-      style.color = 'white'
-    }
-
-    if (utils.isSameDay(day, min)) style.borderRadius = '50% 0 0 50%'
-    else if (utils.isSameDay(day, max)) style.borderRadius = '0 50% 50% 0'
-    else style.borderRadius = '0'
-
     return React.cloneElement(dayComponent, {
       onClick: e => {
         e.stopPropagation()
@@ -43,16 +33,23 @@ export default function DateRangePicker({
         else if (!end) {
           setEnd(day)
           if (autoOk) {
-            onChange([begin, end].sort())
+            onChange([begin, day].sort())
             picker.current.close()
           }
         } else {
           setBegin(day)
-          setEnd(null)
+          setEnd(undefined)
         }
       },
       onMouseEnter: e => setHover(day),
-      style
+      className: clsx(classes.day, {
+        [classes.hidden]: dayComponent.props.hidden,
+        [classes.current]: dayComponent.props.current,
+        [classes.isDisabled]: dayComponent.props.disabled,
+        [classes.isSelected]: day >= min && day <= max,
+        [classes.beginCap]: utils.isSameDay(day, min),
+        [classes.endCap]: utils.isSameDay(day, max)
+      })
     })
   }
 
@@ -61,21 +58,48 @@ export default function DateRangePicker({
   return (
     <DatePicker
       {...props}
-      value={null}
+      value={begin}
       renderDay={renderDay}
       onClose={() => {
         onChange([begin, end].sort())
         if (onClose) onClose()
       }}
       onChange={() => {}}
+      onClear={() => {
+        setBegin(undefined)
+        setEnd(undefined)
+        setHover(undefined)
+        onChange([])
+      }}
       ref={picker}
       labelFunc={(date, invalid) =>
         labelFunc
           ? labelFunc([begin, end].sort(), invalid)
-          : begin && end
+          : date && begin && end
           ? `${formatDate(begin)} - ${formatDate(end)}`
-          : emptyLabel
+          : emptyLabel || ''
       }
     />
   )
 }
+
+export const styles = theme => {
+  const base = dayStyles(theme)
+  return {
+    ...base,
+    day: {
+      ...base.day,
+      margin: 0,
+      width: '40px',
+      borderRadius: '0'
+    },
+    beginCap: {
+      borderRadius: '50% 0 0 50%'
+    },
+    endCap: {
+      borderRadius: '0 50% 50% 0'
+    }
+  }
+}
+
+export default withStyles(styles, { name: 'DateRangePicker' })(DateRangePicker)
