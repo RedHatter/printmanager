@@ -23,7 +23,7 @@ class JobTable extends Component {
 
   render() {
     let { expanded } = this.state
-    let { model, files, isAdmin } = this.props
+    let { user, model, files, isAdmin } = this.props
 
     return (
       <div>
@@ -35,6 +35,7 @@ class JobTable extends Component {
             files={files[o.id]}
             isAdmin={isAdmin}
             expanded={expanded == o.id}
+            highlighted={o?.assignee.id == user}
             onChange={this.handleChange.bind(this, o.id)}
           />
         ))}

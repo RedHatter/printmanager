@@ -155,13 +155,13 @@ class App extends Component {
               </Fragment>
             )}
             <SlideRight in={selectedTab == 0}>
-              <JobTable isAdmin={isAdmin} />
+              <JobTable user={authData.username} isAdmin={isAdmin} />
             </SlideRight>
             <SlideRight in={selectedTab == 1}>
-              <Calendar />
+              <Calendar user={authData.username} />
             </SlideRight>
             <SlideRight in={selectedTab == 2}>
-              <Sprint />
+              <Sprint user={authData.username} />
             </SlideRight>
             <SlideRight in={selectedTab == 3}>
               <Eblast />

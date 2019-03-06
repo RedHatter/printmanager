@@ -111,7 +111,8 @@ class Calendar extends Component {
                               due: isSameDay(day, job.dueDate),
                               drop:
                                 isSameDay(day, job.dropDate) ||
-                                isSameDay(day, job.secondDropDate)
+                                isSameDay(day, job.secondDropDate),
+                              highlighted: job?.assignee.id == this.props.user
                             })}
                           >
                             {job.name}

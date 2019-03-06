@@ -18,11 +18,12 @@ import { colorize, formatNumber, formatPhone, formatDate } from '../../utils.js'
 
 Job.propTypes = {
   model: JobType.isRequired,
-  files: PropTypes.object
+  highlighted: PropTypes.bool,
+  files: PropTypes.object,
+  isAdmin: PropTypes.bool
 }
 
-function Job(props) {
-  let { model, files, isAdmin, ...rest } = props
+function Job({ highlighted, model, files, isAdmin, ...rest }) {
   let {
     name,
     jobType,
@@ -75,7 +76,8 @@ function Job(props) {
                   'Postal',
                   'Prize board'
                 ].every(key => key in files)),
-            late: dropDate < today && !dropStatus
+            late: dropDate < today && !dropStatus,
+            highlighted
           },
           'job-row'
         )}
@@ -295,6 +297,11 @@ function handleFileClick(key) {
 export default Job
 
 <style>
+.highlighted {
+  font-weight: 500;
+  font-style: italic;
+}
+
 .complete {
   border-left: 5px solid #4caf50 !important;
   padding-left: 19px !important;

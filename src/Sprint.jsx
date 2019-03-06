@@ -1,6 +1,7 @@
 import React, { Fragment, useState } from 'react'
 import { Paper, Button } from '@material-ui/core'
 import { differenceInCalendarDays } from 'date-fns'
+import clsx from 'clsx'
 
 import { formatDate, enums } from '../utils.js'
 import { updateJob } from './actions.js'
@@ -9,7 +10,7 @@ import { SlideDown, Fade } from './transitions.jsx'
 import Job from './print/Job.jsx'
 import JobHeader from './print/JobHeader.jsx'
 
-export default function Sprint(props) {
+export default function Sprint({ user }) {
   const [isOpen, setIsOpen] = useState(false)
   const [selected, setSelected] = useState(undefined)
   const { jobs } = useStore()
@@ -56,7 +57,9 @@ export default function Sprint(props) {
               {value.map(job => (
                 <div
                   key={job.id}
-                  className={'priority-' + job.priority}
+                  className={clsx('priority-' + job.priority, {
+                    highlighted: job?.assignee.id == user
+                  })}
                   draggable
                   onDragStart={e => {
                     e.dataTransfer.setData('jobId', job.id)
