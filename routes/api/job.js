@@ -5,6 +5,17 @@ const { mapObjectValues } = require('../../utils.js')
 
 const router = new Router()
 
+function notifiyAssignee(ctx, job) {
+  return ctx.sendMail({
+    to: job.assignee.email,
+    subject: job.name,
+    html: `The job <i>${job.name}</i> has been assigned to you.<br><br>
+<a href="http://printmanager.dealerdigitalgroup.com/?${
+      job.id
+    }">View in PrintManager</a>`
+  })
+}
+
 router.post('/', async ctx => {
   let model = ctx.request.body
 
@@ -97,6 +108,7 @@ router.post('/', async ctx => {
     ctx.response.type = 'json'
     ctx.body = job
     ctx.socketIo.emit('invalidateJobs')
+    await notifiyAssignee(ctx, job)
   } catch (err) {
     if (err.name == 'ValidationError') {
       console.error(err.message)
@@ -173,13 +185,16 @@ router.post('/:id', async ctx => {
     delete model.id
     if (!model.completed && model.artStatus == 'Complete')
       model.completed = new Date()
-    let job = await Job.findByIdAndUpdate(ctx.params.id, model, {
-      runValidators: true,
-      new: true
-    })
+
+    const job = await Job.findById(ctx.params.id)
+    const assigned = job.assignee.id != model.assignee
+    await job.set(model)
+    await job.save()
+
     ctx.response.type = 'json'
     ctx.body = job
     ctx.socketIo.emit('invalidateJobs')
+    if (assigned) await notifiyAssignee(ctx, job)
   } catch (err) {
     if (err.name == 'ValidationError') {
       console.error(err.message)
@@ -206,23 +221,15 @@ router.post('/:id/comments', async ctx => {
     ctx.body = job
     ctx.socketIo.emit('invalidateJobs')
 
-    await new Promise((resolve, reject) =>
-      ctx.mail.sendMail(
-        {
-          to,
-          subject: job.name,
-          html: `A new comment has been posted to <i>${job.name}</i>
+    await ctx.sendMail({
+      to,
+      subject: job.name,
+      html: `A new comment has been posted to <i>${job.name}</i>
 <blockquote>${comment.html}</blockquote>
 <a href="http://printmanager.dealerdigitalgroup.com/?${
-            job.id
-          }">View in PrintManager</a>`
-        },
-        (err, info) => {
-          if (err) reject(err)
-          else resolve(info)
-        }
-      )
-    )
+        job.id
+      }">View in PrintManager</a>`
+    })
   } catch (err) {
     if (err.name == 'ValidationError') {
       console.error(err.message)

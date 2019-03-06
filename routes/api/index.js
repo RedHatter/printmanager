@@ -58,31 +58,20 @@ router.post('/send', async ctx => {
   job.pixels.push(pixel)
   await job.save()
 
-  ctx.body = await new Promise((resolve, reject) =>
-    mail.sendMail(
-      {
-        to: recipients,
-        subject,
-        html: `${message.replace(
-          /\n/g,
-          '<br>'
-        )}<img src="https://printmanager.dealerdigitalgroup.com/pixel/${
-          pixel.id
-        }.png">`,
-        attachments: attachments.map(path => ({
-          path,
-          filename: path.substring(
-            path.lastIndexOf('/') + 1,
-            path.lastIndexOf('?')
-          )
-        }))
-      },
-      (err, info) => {
-        if (err) reject(err)
-        else resolve(info)
-      }
-    )
-  )
+  ctx.body = await ctx.sendMail({
+    to: recipients,
+    subject,
+    html: `${message.replace(
+      /\n/g,
+      '<br>'
+    )}<img src="https://printmanager.dealerdigitalgroup.com/pixel/${
+      pixel.id
+    }.png">`,
+    attachments: attachments.map(path => ({
+      path,
+      filename: path.substring(path.lastIndexOf('/') + 1, path.lastIndexOf('?'))
+    }))
+  })
 })
 
 module.exports = router.routes()

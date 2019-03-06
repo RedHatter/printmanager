@@ -28,6 +28,13 @@ app.context.mail = nodemailer.createTransport(
     from: '"Erica Garcia" <ericag@dealerdigitalgroup.com>'
   }
 )
+app.context.sendMail = body =>
+  new Promise((resolve, reject) =>
+    app.context.mail.sendMail(body, (err, info) => {
+      if (err) reject(err)
+      else resolve(info)
+    })
+  )
 
 router.use('/api', require(path.join(__dirname, 'routes', 'api/index.js')))
 router.use('/pixel', require(path.join(__dirname, 'routes', 'pixel.js')))
