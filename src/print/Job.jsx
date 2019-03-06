@@ -81,23 +81,28 @@ function Job(props) {
         )}
       >
         <Column group="name">{name}</Column>
-        <Column group="quantity">{formatNumber(quantity)}</Column>
+        <Column group="quantity">{quantity && formatNumber(quantity)}</Column>
         <Column group="dropStatus">
-          <span
-            className={classnames('statusBlock', colorize(dropStatusFromatted))}
-          >
-            {dropStatusFromatted}
-          </span>
+          {dropStatusFromatted && (
+            <span
+              className={classnames(
+                'statusBlock',
+                colorize(dropStatusFromatted)
+              )}
+            >
+              {dropStatusFromatted}
+            </span>
+          )}
         </Column>
         <Column group="dropDate">
-          {formatDate(dropDate)}
+          {dropDate && formatDate(dropDate)}
           <br />
           {secondDropDate && formatDate(secondDropDate)}
         </Column>
         <Column group="artStatus">{artStatus}</Column>
-        <Column group="printDate">{formatDate(printDate)}</Column>
-        <Column group="dueDate">{formatDate(dueDate)}</Column>
-        <Column group="assignee">{assignee.name}</Column>
+        <Column group="printDate">{printDate && formatDate(printDate)}</Column>
+        <Column group="dueDate">{dueDate && formatDate(dueDate)}</Column>
+        <Column group="assignee">{assignee?.name}</Column>
       </ExpansionPanelSummary>
       <ExpansionPanelDetails className="job-details">
         <table>
@@ -105,12 +110,12 @@ function Job(props) {
             <tr>
               <th rowSpan="2">Client</th>
               <td rowSpan="2">
-                {client.name}
+                {client?.name}
                 <br />
-                {client.address}
+                {client?.address}
               </td>
               <th>Salesman</th>
-              <td>{salesman.name}</td>
+              <td>{salesman?.name}</td>
             </tr>
             <tr>
               <th>Mailer Type</th>
@@ -121,18 +126,18 @@ function Job(props) {
             <tr>
               <th rowSpan="2">Contact</th>
               <td rowSpan="2">
-                {client.contact.name}
+                {client?.contact.name}
                 <br />
-                {client.contact.email}
+                {client?.contact.email}
                 <br />
-                {formatPhone(client.contact.phone)}
+                {client && formatPhone(client.contact.phone)}
               </td>
               <th>Envelope</th>
               <td>{envelope}</td>
             </tr>
             <tr>
               <th>Addons</th>
-              <td>{addons.join(', ')}</td>
+              <td>{addons?.join(', ')}</td>
             </tr>
             <tr>
               {trackingNumber && (
@@ -142,13 +147,13 @@ function Job(props) {
                 </Fragment>
               )}
               <th>Expiration</th>
-              <td>{formatDate(expire)}</td>
+              <td>{expire && formatDate(expire)}</td>
             </tr>
             <tr>
               <th>Vendor</th>
               <td>{vendor}</td>
               <th>Order Date</th>
-              <td>{formatDate(created)}</td>
+              <td>{created && formatDate(created)}</td>
             </tr>
             <tr>
               <th>List Type</th>

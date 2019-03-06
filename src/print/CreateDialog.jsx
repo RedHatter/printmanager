@@ -6,6 +6,7 @@ import {
   Grid,
   FormControlLabel,
   Button,
+  Switch,
   Input,
   MenuItem,
   Checkbox,
@@ -26,6 +27,7 @@ import EditFiles from './EditFiles.jsx'
 
 export default function CreateDialog(props) {
   let initalModel = {
+    type: 'Print',
     client: '',
     salesman: '',
     dueDate: null,
@@ -64,8 +66,8 @@ export default function CreateDialog(props) {
   const salesmen = users.filter(o => o.salesman)
 
   const {
-    created,
     id,
+    type,
     name,
     client,
     jobType,
@@ -119,18 +121,35 @@ export default function CreateDialog(props) {
     >
       <DialogContent className="content">
         <Grid container spacing={16}>
-          <Grid item sm={2}>
-            <Typography variant="headline" align="left">
-              General
-            </Typography>
+          <Grid item sm={11}>
+            <label className="type-select">
+              <input
+                type="checkbox"
+                checked={type == 'Print'}
+                onChange={e =>
+                  setModel({ type: e.target.checked ? 'Print' : 'Digital' })
+                }
+              />
+              <Typography variant="headline" align="left">
+                Print
+              </Typography>
+              <Typography variant="headline" align="left">
+                Digital
+              </Typography>
+            </label>
           </Grid>
-          <Grid item sm={10}>
+          <Grid item sm={1}>
             <div
               className={'priority-button priority-' + priority}
               onClick={() =>
                 setModel({ priority: priority < 3 ? priority + 1 : 1 })
               }
             />
+          </Grid>
+          <Grid item sm={12}>
+            <Typography variant="headline" align="left">
+              General
+            </Typography>
           </Grid>
 
           {editMode && (
@@ -149,16 +168,12 @@ export default function CreateDialog(props) {
                 <TextField
                   fullWidth
                   select
-                  label="Art Status"
+                  label="Job Status"
                   value={artStatus}
                   onChange={e => setModel({ artStatus: e.target.value })}
                 >
                   {enums.artStatus.map(value => (
-                    <MenuItem
-                      key={value}
-                      value={value}
-                      className={colorize(value)}
-                    >
+                    <MenuItem key={value} value={value}>
                       {value}
                     </MenuItem>
                   ))}
@@ -240,37 +255,36 @@ export default function CreateDialog(props) {
               label="Drop date"
               component={DatePicker}
               value={dropDate}
-              onChange={dropDate => _setModel({ dropDate })}
+              onChange={dropDate => setModel({ dropDate })}
             />
           </Grid>
-          <Grid item sm={4}>
-            <TextField
-              fullWidth
-              autoOk
-              clearable
-              label="Second drop date"
-              component={DatePicker}
-              value={dropDate[1]}
-              onChange={value => {
-                model.dropDate[1] = value[0]
-                _setModel(model)
-              }}
-            />
-          </Grid>
-          {editMode ? (
+          {type == 'Print' && (
             <Fragment>
               <Grid item sm={4}>
                 <TextField
                   fullWidth
                   autoOk
                   clearable
-                  label="Droped On"
+                  label="Second drop date"
                   component={DatePicker}
-                  value={secondDropDate}
-                  onChange={secondDropDate => _setModel({ secondDropDate })}
+                  value={secondDropDate || null}
+                  onChange={secondDropDate => setModel({ secondDropDate })}
                 />
               </Grid>
-              <Grid item sm={4}>
+              {editMode && (
+                <Grid item sm={4}>
+                  <TextField
+                    fullWidth
+                    autoOk
+                    clearable
+                    label="Droped On"
+                    component={DatePicker}
+                    value={dropStatus || null}
+                    onChange={dropStatus => setModel({ dropStatus })}
+                  />
+                </Grid>
+              )}
+              <Grid item sm={editMode ? 4 : 6}>
                 <TextField
                   required
                   fullWidth
@@ -279,50 +293,23 @@ export default function CreateDialog(props) {
                   label="Send to print"
                   component={DatePicker}
                   value={printDate}
-                  onChange={value => setModel({ printDate: value[0] })}
-                />
-              </Grid>
-              <Grid item sm={4}>
-                <TextField
-                  required
-                  fullWidth
-                  autoOk
-                  clearable
-                  label="Expire"
-                  component={DatePicker}
-                  value={expire}
-                  onChange={value => setModel({ expire: value[0] })}
-                />
-              </Grid>
-            </Fragment>
-          ) : (
-            <Fragment>
-              <Grid item sm={6}>
-                <TextField
-                  required
-                  fullWidth
-                  autoOk
-                  clearable
-                  label="Send to print"
-                  component={DatePicker}
-                  value={printDate}
-                  onChange={value => setModel({ printDate: value[0] })}
-                />
-              </Grid>
-              <Grid item sm={6}>
-                <TextField
-                  required
-                  fullWidth
-                  autoOk
-                  clearable
-                  label="Expire"
-                  component={DatePicker}
-                  value={expire}
                   onChange={printDate => setModel({ printDate })}
                 />
               </Grid>
             </Fragment>
           )}
+          <Grid item sm={editMode || type == 'Digital' ? 4 : 6}>
+            <TextField
+              required
+              fullWidth
+              autoOk
+              clearable
+              label="Expire"
+              component={DatePicker}
+              value={expire}
+              onChange={expire => setModel({ expire })}
+            />
+          </Grid>
           <Grid item sm={12}>
             <Typography variant="headline" align="left">
               Details
@@ -348,12 +335,12 @@ export default function CreateDialog(props) {
             <TextField
               required
               fullWidth
-              label="List type"
+              label="Size"
               select
-              value={listType}
-              onChange={e => setModel({ listType: e.target.value })}
+              value={size}
+              onChange={e => setModel({ size: e.target.value })}
             >
-              {enums.listType.map(value => (
+              {enums.size.map(value => (
                 <MenuItem key={value} value={value}>
                   {value}
                 </MenuItem>
@@ -375,95 +362,99 @@ export default function CreateDialog(props) {
               }
             />
           </Grid>
-          <Grid item sm={4}>
-            <TextField
-              fullWidth
-              required
-              label="Vendor"
-              value={vendor}
-              onChange={e => setModel({ vendor: e.target.value })}
-            />
-          </Grid>
-          <Grid item sm={4}>
-            <NumberFormat
-              fullWidth
-              required
-              isNumericString
-              thousandSeparator
-              label="Quantity"
-              customInput={TextField}
-              value={quantity}
-              onValueChange={format => setModel({ quantity: format.value })}
-            />
-          </Grid>
-          <Grid item sm={6}>
-            <TextField
-              required
-              fullWidth
-              label="Size"
-              select
-              value={size}
-              onChange={e => setModel({ size: e.target.value })}
-            >
-              {enums.size.map(value => (
-                <MenuItem key={value} value={value}>
-                  {value}
-                </MenuItem>
-              ))}
-            </TextField>
-          </Grid>
-          <Grid item sm={6}>
-            <TextField
-              required
-              fullWidth
-              label="Envelope"
-              select
-              value={envelope}
-              onChange={e => setModel({ envelope: e.target.value })}
-            >
-              {enums.envelope.map(value => (
-                <MenuItem key={value} value={value}>
-                  {value}
-                </MenuItem>
-              ))}
-            </TextField>
-          </Grid>
-          <Grid item sm={6}>
-            <TextField
-              value={addons}
-              onChange={e => setModel({ addons: e.target.value })}
-              fullWidth
-              label="Addons"
-              select
-              SelectProps={{
-                multiple: true,
-                renderValue: selected => selected.join(', ')
-              }}
-            >
-              {enums.addons.map(value => (
-                <MenuItem key={value} value={value}>
-                  <Checkbox checked={addons.indexOf(value) > -1} />
-                  <ListItemText primary={value} />
-                </MenuItem>
-              ))}
-            </TextField>
-          </Grid>
-          <Grid item sm={6}>
-            <TextField
-              required
-              fullWidth
-              label="Postage"
-              select
-              value={postage}
-              onChange={e => setModel({ postage: e.target.value })}
-            >
-              {enums.postage.map(value => (
-                <MenuItem key={value} value={value}>
-                  {value}
-                </MenuItem>
-              ))}
-            </TextField>
-          </Grid>
+          {type == 'Print' && (
+            <Fragment>
+              <Grid item sm={4}>
+                <TextField
+                  fullWidth
+                  required
+                  label="Vendor"
+                  value={vendor}
+                  onChange={e => setModel({ vendor: e.target.value })}
+                />
+              </Grid>
+              <Grid item sm={4}>
+                <NumberFormat
+                  fullWidth
+                  required
+                  isNumericString
+                  thousandSeparator
+                  label="Quantity"
+                  customInput={TextField}
+                  value={quantity}
+                  onValueChange={format => setModel({ quantity: format.value })}
+                />
+              </Grid>
+              <Grid item sm={6}>
+                <TextField
+                  required
+                  fullWidth
+                  label="List type"
+                  select
+                  value={listType}
+                  onChange={e => setModel({ listType: e.target.value })}
+                >
+                  {enums.listType.map(value => (
+                    <MenuItem key={value} value={value}>
+                      {value}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Grid>
+              <Grid item sm={6}>
+                <TextField
+                  required
+                  fullWidth
+                  label="Envelope"
+                  select
+                  value={envelope}
+                  onChange={e => setModel({ envelope: e.target.value })}
+                >
+                  {enums.envelope.map(value => (
+                    <MenuItem key={value} value={value}>
+                      {value}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Grid>
+              <Grid item sm={6}>
+                <TextField
+                  value={addons}
+                  onChange={e => setModel({ addons: e.target.value })}
+                  fullWidth
+                  label="Addons"
+                  select
+                  SelectProps={{
+                    multiple: true,
+                    renderValue: selected => selected.join(', ')
+                  }}
+                >
+                  {enums.addons.map(value => (
+                    <MenuItem key={value} value={value}>
+                      <Checkbox checked={addons.indexOf(value) > -1} />
+                      <ListItemText primary={value} />
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Grid>
+              <Grid item sm={6}>
+                <TextField
+                  required
+                  fullWidth
+                  label="Postage"
+                  select
+                  value={postage}
+                  onChange={e => setModel({ postage: e.target.value })}
+                >
+                  {enums.postage.map(value => (
+                    <MenuItem key={value} value={value}>
+                      {value}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Grid>
+            </Fragment>
+          )}
           <Grid item sm={12}>
             <TextField
               fullWidth
@@ -527,6 +518,35 @@ CreateDialog.propTypes = {
 }
 
 <style>
+.type-select {
+  cursor: pointer;
+}
+
+.type-select input {
+  display: none;
+}
+
+.type-select h1 {
+  display: inline-block;
+  transition: all 0.3s;
+}
+
+.type-select input + h1 {
+  margin-right: 5px;
+}
+
+.type-select input + h1 + h1,
+.type-select input:checked + h1 {
+  color: black;
+  transform: scale(1) translateY(0);
+}
+
+.type-select input + h1,
+.type-select input:checked + h1 + h1 {
+  color: #e0e0e0;
+  transform: scale(0.8) translateY(2px);
+}
+
 .create-modal {
   text-align: left;
   overflow: hidden;
@@ -554,6 +574,7 @@ li.green {
   height: 30px;
   border-radius: 50%;
   cursor: pointer;
+  transition: background-color 0.3s;
 }
 
 .priority-button.priority-1 {

@@ -35,6 +35,7 @@ CommentSchema.virtual('created').get(function() {
 
 module.exports = new Schema(
   {
+    type: { type: String, enum: ['Print', 'Digital'], required: true },
     created: { type: Date, default: Date.now },
     name: {
       type: String,
@@ -52,34 +53,13 @@ module.exports = new Schema(
       enum: enums.jobType,
       required: true
     },
-    envelope: { type: String, required: true },
     size: { type: String, required: true },
-    addons: [
-      {
-        type: String,
-        enum: enums.addons,
-        default: []
-      }
-    ],
-    listType: {
-      type: String,
-      required: true,
-      enum: enums.listType
-    },
     salesman: userType,
     assignee: userType,
-    postage: {
-      type: String,
-      required: true,
-      enum: enums.postage
-    },
-    quantity: { type: Number, required: true, min: 0 },
     dueDate: { type: Date, required: true },
-    printDate: { type: Date, required: true },
     dropDate: { type: Date, required: true },
     secondDropDate: { type: Date },
     expire: { type: Date, required: true },
-    vendor: { type: String, required: true },
     trackingNumber: {
       type: String,
       // required: true,
@@ -92,7 +72,6 @@ module.exports = new Schema(
       enum: enums.artStatus
     },
     completed: Date,
-    dropStatus: Date,
     forceComplete: Boolean,
     pixels: [
       {
@@ -108,7 +87,28 @@ module.exports = new Schema(
       max: 3,
       default: 1
     },
-    comments: [CommentSchema]
+    comments: [CommentSchema],
+
+    listType: {
+      type: String,
+      enum: enums.listType
+    },
+    envelope: { type: String },
+    addons: [
+      {
+        type: String,
+        enum: enums.addons,
+        default: []
+      }
+    ],
+    postage: {
+      type: String,
+      enum: enums.postage
+    },
+    quantity: { type: Number, min: 0 },
+    printDate: { type: Date },
+    vendor: { type: String },
+    dropStatus: Date
   },
   {
     toObject: { getters: true },
