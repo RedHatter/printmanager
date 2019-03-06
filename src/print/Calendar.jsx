@@ -24,8 +24,7 @@ import connect from '../connect.js'
 import { range } from '../../utils.js'
 import { JobType } from '../types.js'
 import { SlideDown, Fade } from '../transitions.jsx'
-import JobHeader from './JobHeader.jsx'
-import Job from './Job.jsx'
+import JobTable from './JobTable.jsx'
 
 class Calendar extends Component {
   static propTypes = {
@@ -58,8 +57,7 @@ class Calendar extends Component {
       <Fragment>
         <SlideDown in={isDetailsOpen}>
           <div>
-            <JobHeader />
-            {selectedEvent && <Job model={selectedEvent} expanded={true} />}
+            {selectedEvent && <JobTable show={selectedEvent} />}
             <Button
               onClick={this.handleCloseEvent}
               className="back-to-calendar"

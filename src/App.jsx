@@ -34,8 +34,6 @@ import UploadButton from './UploadButton.jsx'
 import Tabs from './Tabs.jsx'
 import Client from './Client.jsx'
 import Eblast from './eblast/Eblast.jsx'
-import JobHeader from './print/JobHeader.jsx'
-import Job from './print/Job.jsx'
 import JobTable from './print/JobTable.jsx'
 import CreateDialog from './print/CreateDialog.jsx'
 import Filters from './print/Filters.jsx'
@@ -149,14 +147,12 @@ class App extends Component {
           </div>
           <div className="content-container">
             <Filters />
-            {selectedJob && (
-              <Fragment>
-                <JobHeader />
-                <Job model={selectedJob} expanded />
-              </Fragment>
-            )}
-            <SlideRight in={selectedTab == 0}>
-              <JobTable user={authData.username} isAdmin={isAdmin} />
+            <SlideRight in={selectedTab == 0 || selectedJob}>
+              <JobTable
+                user={authData.username}
+                isAdmin={isAdmin}
+                show={selectedJob}
+              />
             </SlideRight>
             <SlideRight in={selectedTab == 1}>
               <Calendar user={authData.username} />

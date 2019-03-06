@@ -13,9 +13,8 @@ import {
 import PropTypes from 'prop-types'
 import { Auth } from 'aws-amplify'
 
-import JobHeader from './JobHeader.jsx'
-import Job from './Job.jsx'
 import { formatDateTime, parseJSON } from '../../utils.js'
+import JobTable from './JobTable.jsx'
 
 export default function HistoryDialog({ model, onClose }) {
   const [patches, setPatches] = useState([])
@@ -42,10 +41,7 @@ export default function HistoryDialog({ model, onClose }) {
     <Dialog open maxWidth={!selected && 'sm'}>
       <DialogContent>
         {selected ? (
-          <Fragment>
-            <JobHeader elevation={0} />
-            <Job model={selected} expanded={true} elevation={0} />
-          </Fragment>
+          <JobTable show={selected} elevation={0} />
         ) : (
           <Table>
             <TableHead>
