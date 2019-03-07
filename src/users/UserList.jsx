@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { Fragment, useState } from 'react'
 import {
   Paper,
   Table,
@@ -29,7 +29,7 @@ export default function UserList(props) {
   const { users } = useStore()
 
   return (
-    <Paper>
+    <Fragment>
       {isCreateOpen && (
         <CreateUser
           onClose={e => setIsCreateOpen(false)}
@@ -52,7 +52,7 @@ export default function UserList(props) {
           not be reversed.
         </Confirm>
       )}
-      <Table>
+      <Paper component={Table}>
         <TableHead>
           <TableRow>
             <TableCell>
@@ -82,7 +82,7 @@ export default function UserList(props) {
             </TableRow>
           ))}
         </TableBody>
-      </Table>
-    </Paper>
+      </Paper>
+    </Fragment>
   )
 }

@@ -14,6 +14,8 @@ export default function Sprint({ user }) {
   const [selected, setSelected] = useState(undefined)
   const { jobs } = useStore()
 
+  const width = 300 * Math.floor((document.body.clientWidth - 300) / 300)
+
   const today = new Date()
   const columns = {}
   enums.artStatus.forEach(o => (columns[o] = []))
@@ -33,7 +35,7 @@ export default function Sprint({ user }) {
         </div>
       </SlideDown>
       <Fade in={!isOpen}>
-        <Paper className="sprint">
+        <Paper className="sprint" style={{ width }}>
           {Object.entries(columns).map(([name, value]) => (
             <div
               key={name}
@@ -94,7 +96,7 @@ export default function Sprint({ user }) {
 
 .sprint .column {
   margin: 5px;
-  min-width: 240px;
+  width: 290px;
   min-height: 300px;
 }
 

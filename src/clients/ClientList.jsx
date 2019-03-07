@@ -25,7 +25,7 @@ export default function ClientList(props) {
   const { clients } = useStore()
 
   return (
-    <Paper>
+    <Fragment>
       {isCreateOpen && <Client onClose={() => setIsCreateOpen(false)} />}
       {selected && (
         <Client model={selected} onClose={() => setSelected(null)} />
@@ -39,7 +39,7 @@ export default function ClientList(props) {
           not be reversed.
         </Confirm>
       )}
-      <Table>
+      <Paper component={Table}>
         <TableHead>
           <TableRow>
             <TableCell>
@@ -66,7 +66,7 @@ export default function ClientList(props) {
             </TableRow>
           ))}
         </TableBody>
-      </Table>
-    </Paper>
+      </Paper>
+    </Fragment>
   )
 }
