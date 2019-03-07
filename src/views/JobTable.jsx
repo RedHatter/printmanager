@@ -4,8 +4,8 @@ import { Paper } from '@material-ui/core'
 
 import { useStore } from '../store.js'
 import { JobType } from '../types.js'
-import Job from './Job.jsx'
-import Column from '../Column.jsx'
+import Job from '../job/Job.jsx'
+import Column from '../components/Column.jsx'
 
 JobTable.propTypes = {
   user: PropTypes.string,

@@ -20,10 +20,10 @@ import NumberFormat from 'react-number-format'
 import PropTypes from 'prop-types'
 import clsx from 'clsx'
 
-import { enums, colorize } from '../../utils.js'
-import { deleteFiles, updateJob } from '../actions.js'
-import { useStore } from '../store.js'
-import { ClientType, JobType } from '../types.js'
+import { enums, colorize } from '../utils.js'
+import { deleteFiles, updateJob } from './actions.js'
+import { useStore } from './store.js'
+import { ClientType, JobType } from './types.js'
 import EditFiles from './EditFiles.jsx'
 
 export default function CreateDialog(props) {

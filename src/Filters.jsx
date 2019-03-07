@@ -10,11 +10,11 @@ import {
 import { DatePicker } from 'material-ui-pickers'
 import clsx from 'clsx'
 
-import { updateFilter, fetchJobs } from '../actions.js'
-import { useStore } from '../store.js'
-import { enums, colorize } from '../../utils.js'
-import CloseIcon from '../icons/Close.js'
-import DateRangePicker from '../DateRangePicker.jsx'
+import { updateFilter, fetchJobs } from './actions.js'
+import { useStore } from './store.js'
+import { enums, colorize } from '../utils.js'
+import CloseIcon from './icons/Close.js'
+import DateRangePicker from './components/DateRangePicker.jsx'
 
 export default function Filters(props) {
   const { filter, users, clients } = useStore()

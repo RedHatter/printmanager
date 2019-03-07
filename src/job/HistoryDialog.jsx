@@ -14,7 +14,7 @@ import PropTypes from 'prop-types'
 import { Auth } from 'aws-amplify'
 
 import { formatDateTime, parseJSON } from '../../utils.js'
-import JobTable from './JobTable.jsx'
+import JobTable from '../views/JobTable.jsx'
 
 export default function HistoryDialog({ model, onClose }) {
   const [patches, setPatches] = useState([])

@@ -14,9 +14,9 @@ import { EblastType } from '../types.js'
 import { formatDate } from '../../utils.js'
 import { createEblast, updateEblast, deleteEblast } from '../actions.js'
 import { useStore } from '../store.js'
-import { SlideDown, Fade } from '../transitions.jsx'
+import { SlideDown, Fade } from '../components/transitions.jsx'
 import Edit from './Edit.jsx'
-import Confirm from '../Confirm.jsx'
+import Confirm from '../components/Confirm.jsx'
 
 export default function Eblast(props) {
   const [isEditOpen, setIsEditOpen] = useState(false)

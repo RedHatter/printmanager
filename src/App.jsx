@@ -20,7 +20,7 @@ import { parseJSON } from '../utils.js'
 import CloseIcon from './icons/Close.js'
 import connect from './connect.js'
 import { ClientType } from './types.js'
-import { SlideRight } from './transitions.jsx'
+import { SlideRight } from './components/transitions.jsx'
 import {
   fetchJobs,
   fetchFiles,
@@ -30,15 +30,15 @@ import {
   clearError,
   createEblast
 } from './actions.js'
-import UploadButton from './UploadButton.jsx'
-import Tabs from './Tabs.jsx'
+import UploadButton from './components/UploadButton.jsx'
+import Tabs from './components/Tabs.jsx'
 import Client from './Client.jsx'
 import Eblast from './eblast/Eblast.jsx'
-import JobTable from './print/JobTable.jsx'
-import CreateDialog from './print/CreateDialog.jsx'
-import Filters from './print/Filters.jsx'
-import Calendar from './print/Calendar.jsx'
-import Sprint from './Sprint.jsx'
+import JobTable from './views/JobTable.jsx'
+import CreateDialog from './CreateDialog.jsx'
+import Filters from './Filters.jsx'
+import Calendar from './views/Calendar.jsx'
+import Sprint from './views/Sprint.jsx'
 import Users from './users/Users.jsx'
 
 class App extends Component {

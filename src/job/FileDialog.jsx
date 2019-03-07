@@ -13,7 +13,7 @@ import {
 import PropTypes from 'prop-types'
 
 import { uploadFiles } from '../actions.js'
-import UploadButton from '../UploadButton.jsx'
+import UploadButton from '../components/UploadButton.jsx'
 
 export default class FileDialog extends Component {
   static propTypes = {

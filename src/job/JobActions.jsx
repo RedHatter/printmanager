@@ -14,7 +14,7 @@ import { JobType } from '../types.js'
 import { deleteJob } from '../actions.js'
 import { clone } from '../../utils.js'
 import HistoryDialog from './HistoryDialog.jsx'
-import CreateDialog from './CreateDialog.jsx'
+import CreateDialog from '../CreateDialog.jsx'
 import FileDialog from './FileDialog.jsx'
 import SendDialog from './SendDialog.jsx'
 

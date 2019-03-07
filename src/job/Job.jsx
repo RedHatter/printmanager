@@ -12,7 +12,7 @@ import { startOfDay, format } from 'date-fns'
 import ExpandMoreIcon from '../icons/ExpandMore.js'
 import { JobType } from '../types.js'
 import JobActions from './JobActions.jsx'
-import Column from '../Column.jsx'
+import Column from '../components/Column.jsx'
 import Comments from './Comments.jsx'
 import { colorize, formatNumber, formatPhone, formatDate } from '../../utils.js'
 

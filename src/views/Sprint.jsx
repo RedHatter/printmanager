@@ -3,11 +3,11 @@ import { Paper, Button } from '@material-ui/core'
 import { differenceInCalendarDays } from 'date-fns'
 import clsx from 'clsx'
 
-import { formatDate, enums } from '../utils.js'
-import { updateJob } from './actions.js'
-import { useStore } from './store.js'
-import { SlideDown, Fade } from './transitions.jsx'
-import JobTable from './print/JobTable.jsx'
+import { formatDate, enums } from '../../utils.js'
+import { updateJob } from '../actions.js'
+import { useStore } from '../store.js'
+import { SlideDown, Fade } from '../components/transitions.jsx'
+import JobTable from './JobTable.jsx'
 
 export default function Sprint({ user }) {
   const [isOpen, setIsOpen] = useState(false)

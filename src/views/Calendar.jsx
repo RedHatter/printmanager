@@ -23,7 +23,7 @@ import PropTypes from 'prop-types'
 import connect from '../connect.js'
 import { range } from '../../utils.js'
 import { JobType } from '../types.js'
-import { SlideDown, Fade } from '../transitions.jsx'
+import { SlideDown, Fade } from '../components/transitions.jsx'
 import JobTable from './JobTable.jsx'
 
 class Calendar extends Component {
