@@ -127,7 +127,16 @@ function escapeRegExp(str) {
 }
 
 router.post('/search', async ctx => {
-  let { type, search, assignee, client, created, dueDate } = ctx.request.body
+  let {
+    type,
+    search,
+    assignee,
+    client,
+    created,
+    dueDate,
+    skip,
+    limit
+  } = ctx.request.body
   let regex = new RegExp(`.*${escapeRegExp(search)}.*`, 'i')
 
   ctx.response.type = 'json'
@@ -165,6 +174,9 @@ router.post('/search', async ctx => {
         }
       })
   })
+    .skip(skip)
+    .limit(limit)
+    .exec()
 })
 
 router.get('/:id', async ctx => {

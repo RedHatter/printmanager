@@ -9,7 +9,12 @@ export const store = Atom.of({
   clients: [],
   users: [],
   files: {},
-  filter: { created: [], dueDate: [] },
+  filter: {
+    created: [],
+    dueDate: [],
+    skip: 0,
+    limit: 50
+  },
   eblasts: [],
   errors: []
 })
