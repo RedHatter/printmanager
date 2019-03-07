@@ -20,7 +20,7 @@ import Edit from './Edit.jsx'
 import Confirm from '../components/Confirm.jsx'
 import AddIcon from '../icons/Add.js'
 
-export default function Eblast(props) {
+export default function EblastList(props) {
   const [isEditOpen, setIsEditOpen] = useState(false)
   const [selected, setSelected] = useState(0)
   const [confirm, setConfirm] = useState(false)
@@ -107,9 +107,7 @@ export default function Eblast(props) {
                     >
                       Download
                     </Button>
-                    <Button onClick={e => setConfirm(row)}>
-                      Delete
-                    </Button>
+                    <Button onClick={e => setConfirm(row)}>Delete</Button>
                   </TableCell>
                 </TableRow>
               ))}

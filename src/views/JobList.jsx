@@ -7,13 +7,13 @@ import { JobType } from '../types.js'
 import Job from '../job/Job.jsx'
 import Column from '../components/Column.jsx'
 
-JobTable.propTypes = {
+JobList.propTypes = {
   user: PropTypes.string,
   isAdmin: PropTypes.bool,
   show: JobType
 }
 
-export default function JobTable({ user, show, isAdmin, elevation }) {
+export default function JobList({ user, show, isAdmin, elevation }) {
   const [expanded, setExpanded] = useState(false)
   const { jobs, files } = useStore()
 

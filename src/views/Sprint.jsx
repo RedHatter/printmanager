@@ -7,7 +7,7 @@ import { formatDate, enums } from '../../utils.js'
 import { updateJob } from '../actions.js'
 import { useStore } from '../store.js'
 import { SlideDown, Fade } from '../components/transitions.jsx'
-import JobTable from './JobTable.jsx'
+import JobList from './JobList.jsx'
 
 export default function Sprint({ user }) {
   const [isOpen, setIsOpen] = useState(false)
@@ -26,7 +26,7 @@ export default function Sprint({ user }) {
     <Fragment>
       <SlideDown in={isOpen}>
         <div>
-          {selected && <JobTable show={selected} />}
+          {selected && <JobList show={selected} />}
           <Button onClick={e => setIsOpen(false)} className="back-to-calendar">
             Back to Sprint
           </Button>

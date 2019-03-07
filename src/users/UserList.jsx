@@ -22,7 +22,7 @@ import EditUser from './EditUser.jsx'
 import AddIcon from '../icons/Add.js'
 import Confirm from '../components/Confirm.jsx'
 
-export default function Users(props) {
+export default function UserList(props) {
   const [confirm, setConfirm] = useState(null)
   const [isCreateOpen, setIsCreateOpen] = useState(false)
   const [editing, setEditing] = useState(null)

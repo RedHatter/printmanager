@@ -30,13 +30,13 @@ import {
   createEblast
 } from './actions.js'
 import Tabs from './components/Tabs.jsx'
-import Eblast from './eblast/Eblast.jsx'
-import JobTable from './views/JobTable.jsx'
+import EblastList from './eblast/EblastList.jsx'
+import JobList from './views/JobList.jsx'
 import CreateDialog from './CreateDialog.jsx'
 import Filters from './Filters.jsx'
 import Calendar from './views/Calendar.jsx'
 import Sprint from './views/Sprint.jsx'
-import Users from './users/Users.jsx'
+import UserList from './users/UserList.jsx'
 import ClientList from './clients/ClientList.jsx'
 
 class App extends Component {
@@ -121,12 +121,11 @@ class App extends Component {
               {isAdmin && <Tab label="Users" />}
               {isAdmin && <Tab label="Clients" />}
             </Tabs>
-            <Typography variant="headline">Search</Typography>
           </div>
           <div className="content-container">
             <Filters />
             <SlideRight in={selectedTab == 0 || selectedJob}>
-              <JobTable
+              <JobList
                 user={authData.username}
                 isAdmin={isAdmin}
                 show={selectedJob}
@@ -139,10 +138,10 @@ class App extends Component {
               <Sprint user={authData.username} />
             </SlideRight>
             <SlideRight in={selectedTab == 3}>
-              <Eblast />
+              <EblastList />
             </SlideRight>
             <SlideRight in={selectedTab == 4}>
-              <Users />
+              <UserList />
             </SlideRight>
             <SlideRight in={selectedTab == 5}>
               <ClientList />

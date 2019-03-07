@@ -14,7 +14,7 @@ import PropTypes from 'prop-types'
 import { Auth } from 'aws-amplify'
 
 import { formatDateTime, parseJSON } from '../../utils.js'
-import JobTable from '../views/JobTable.jsx'
+import JobList from '../views/JobList.jsx'
 
 export default function HistoryDialog({ model, onClose }) {
   const [patches, setPatches] = useState([])
@@ -41,7 +41,7 @@ export default function HistoryDialog({ model, onClose }) {
     <Dialog open maxWidth={!selected && 'sm'}>
       <DialogContent>
         {selected ? (
-          <JobTable show={selected} elevation={0} />
+          <JobList show={selected} elevation={0} />
         ) : (
           <Table>
             <TableHead>
