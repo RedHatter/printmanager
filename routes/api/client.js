@@ -56,6 +56,12 @@ router.post('/:id', async ctx => {
   }
 })
 
+router.delete('/:id', async ctx => {
+  ctx.response.type = 'json'
+  ctx.body = await Client.findByIdAndDelete(ctx.params.id)
+  ctx.socketIo.emit('invalidateClients')
+})
+
 router.get('/', async ctx => {
   ctx.response.type = 'json'
   ctx.body = await Client.find()

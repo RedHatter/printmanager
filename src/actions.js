@@ -168,7 +168,13 @@ export async function fetchClients() {
   })
 }
 
-export function updateClient(body) {
+export function deleteClient(id) {
+  return api('/api/client/' + id, 'Unable to delete client.', {
+    method: 'DELETE'
+  })
+}
+
+export function updateOrCreateClient(body) {
   return api('/api/client/' + (body.id || ''), 'Unable to update client.', {
     body
   })

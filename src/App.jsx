@@ -7,7 +7,6 @@ import {
   Toolbar,
   Tab,
   IconButton,
-  Icon,
   Typography,
   Fade,
   Slide,
@@ -32,7 +31,6 @@ import {
 } from './actions.js'
 import UploadButton from './components/UploadButton.jsx'
 import Tabs from './components/Tabs.jsx'
-import Client from './Client.jsx'
 import Eblast from './eblast/Eblast.jsx'
 import JobTable from './views/JobTable.jsx'
 import CreateDialog from './CreateDialog.jsx'
@@ -40,6 +38,7 @@ import Filters from './Filters.jsx'
 import Calendar from './views/Calendar.jsx'
 import Sprint from './views/Sprint.jsx'
 import Users from './users/Users.jsx'
+import ClientList from './clients/ClientList.jsx'
 
 class App extends Component {
   static propTypes = {
@@ -51,8 +50,7 @@ class App extends Component {
 
     this.state = {
       isCreateDialogOpen: false,
-      selectedTab: 0,
-      selectedClient: undefined
+      selectedTab: 0
     }
 
     fetchUsers().then(fetchJobs)
@@ -131,18 +129,8 @@ class App extends Component {
               <Tab label="Sprint" />
               <Tab label="E-blasts" />
               {isAdmin && <Tab label="Users" />}
+              {isAdmin && <Tab label="Clients" />}
             </Tabs>
-            {isAdmin && (
-              <Fragment>
-                <Typography variant="headline">Clients</Typography>
-                <Tabs value={selectedClient} onChange={this.handleClientChange}>
-                  {clients.map(client => (
-                    <Tab key={client.id} label={client.name} />
-                  ))}
-                  <Tab icon={<Icon>add</Icon>} />
-                </Tabs>
-              </Fragment>
-            )}
             <Typography variant="headline">Search</Typography>
           </div>
           <div className="content-container">
@@ -166,8 +154,8 @@ class App extends Component {
             <SlideRight in={selectedTab == 4}>
               <Users />
             </SlideRight>
-            <SlideRight in={selectedClient != undefined}>
-              <Client model={clients[selectedClient]} />
+            <SlideRight in={selectedTab == 5}>
+              <ClientList />
             </SlideRight>
           </div>
         </div>
