@@ -99,8 +99,8 @@ router.post('/:id', async ctx => {
   ctx.socketIo.emit('invalidateUsers')
 })
 
-router.delete('/user/:id', async ctx => {
-  adminDeleteUser({
+router.delete('/:id', async ctx => {
+  await adminDeleteUser({
     UserPoolId: 'us-west-2_***REMOVED***',
     Username: ctx.params.id
   })
@@ -109,7 +109,7 @@ router.delete('/user/:id', async ctx => {
   ctx.socketIo.emit('invalidateUsers')
 })
 
-router.get('/user/:id/reset', async ctx => {
+router.get('/:id/reset', async ctx => {
   ctx.body = await adminResetUserPassword({
     UserPoolId: 'us-west-2_***REMOVED***',
     Username: ctx.params.id

@@ -29,7 +29,6 @@ import {
   clearError,
   createEblast
 } from './actions.js'
-import UploadButton from './components/UploadButton.jsx'
 import Tabs from './components/Tabs.jsx'
 import Eblast from './eblast/Eblast.jsx'
 import JobTable from './views/JobTable.jsx'
@@ -110,15 +109,6 @@ class App extends Component {
               <Button onClick={this.openCreateDialog}>Create Job</Button>
             )}
             <br />
-            <UploadButton
-              onSelect={e => {
-                createEblast(e.target.files[0])
-                this.handleTabChange(null, 2)
-              }}
-              accept="image/*"
-            >
-              Create e-blast
-            </UploadButton>
             {this.state.isCreateDialogOpen && (
               <CreateDialog onClose={this.closeCreateDialog} />
             )}

@@ -6,7 +6,8 @@ import {
   TableHead,
   TableRow,
   TableCell,
-  TableBody
+  TableBody,
+  IconButton
 } from '@material-ui/core'
 import { Auth } from 'aws-amplify'
 
@@ -17,21 +18,22 @@ import { useStore } from '../store.js'
 import { SlideDown, Fade } from '../components/transitions.jsx'
 import Edit from './Edit.jsx'
 import Confirm from '../components/Confirm.jsx'
+import AddIcon from '../icons/Add.js'
 
 export default function Eblast(props) {
   const [isEditOpen, setIsEditOpen] = useState(false)
   const [selected, setSelected] = useState(0)
-  const [isConfirmOpen, setIsConfirmOpen] = useState(false)
+  const [confirm, setConfirm] = useState(false)
   const { eblasts } = useStore()
 
   return (
     <Fragment>
-      {isConfirmOpen && (
+      {confirm && (
         <Confirm
-          onClose={e => setIsEditOpen(false)}
-          onConfirm={deleteEblast(eblasts.id)}
+          onClose={e => setConfirm(false)}
+          onConfirm={deleteEblast(confirm.id)}
         >
-          Are you sure you want to delete <i>{eblasts.name}</i>? This action can
+          Are you sure you want to delete <i>{confirm.name}</i>? This action can
           not be reversed.
         </Confirm>
       )}
@@ -51,7 +53,17 @@ export default function Eblast(props) {
           <Paper component={Table}>
             <TableHead>
               <TableRow>
-                <TableCell>Name</TableCell>
+                <TableCell>
+                  <IconButton component="label" className="upload-button">
+                    <AddIcon style={{ verticalAlign: 'bottom' }} />
+                    <input
+                      onSelect={e => createEblast(e.target.files[0])}
+                      type="file"
+                      accept="image/*"
+                    />
+                  </IconButton>
+                  &nbsp;Name
+                </TableCell>
                 <TableCell>Created</TableCell>
                 <TableCell>Actions</TableCell>
               </TableRow>
@@ -95,7 +107,7 @@ export default function Eblast(props) {
                     >
                       Download
                     </Button>
-                    <Button onClick={e => setIsConfirmOpen(true)}>
+                    <Button onClick={e => setConfirm(row)}>
                       Delete
                     </Button>
                   </TableCell>

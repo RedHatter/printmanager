@@ -13,7 +13,15 @@ import {
 import PropTypes from 'prop-types'
 
 import { uploadFiles } from '../actions.js'
-import UploadButton from '../components/UploadButton.jsx'
+
+function UploadButton({ onSelect }) {
+  return (
+    <IconButton component="label" className="upload-button">
+      Upload
+      <input onChange={onSelect} type="file" accept="image/*" />
+    </IconButton>
+  )
+}
 
 export default class FileDialog extends Component {
   static propTypes = {
@@ -35,7 +43,12 @@ export default class FileDialog extends Component {
     for (let file of this.state.files) files.push(file.name)
 
     if (this.state.files.length < 1)
-      return <UploadButton onSelect={this.handleSelect}>Upload</UploadButton>
+      return (
+        <Button component="label" className="upload-button">
+          Upload
+          <input onSelect={this.handleSelect} type="file" />
+        </Button>
+      )
     else
       return (
         <Dialog open>
@@ -123,3 +136,18 @@ export default class FileDialog extends Component {
       .finally(() => this.setState({ uploading: false }))
   }
 }
+
+<style>
+.sidebar .upload-button {
+  display: inline-block;
+  margin-top: 10px;
+}
+
+.upload-button {
+  cursor: pointer;
+}
+
+.upload-button input {
+  display: none;
+}
+</style>

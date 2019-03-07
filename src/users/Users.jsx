@@ -6,7 +6,8 @@ import {
   TableRow,
   TableCell,
   TableBody,
-  Button
+  Button,
+  IconButton
 } from '@material-ui/core'
 
 import {
@@ -18,8 +19,11 @@ import {
 import { useStore } from '../store.js'
 import CreateUser from './CreateUser.jsx'
 import EditUser from './EditUser.jsx'
+import AddIcon from '../icons/Add.js'
+import Confirm from '../components/Confirm.jsx'
 
 export default function Users(props) {
+  const [confirm, setConfirm] = useState(null)
   const [isCreateOpen, setIsCreateOpen] = useState(false)
   const [editing, setEditing] = useState(null)
   const { users } = useStore()
@@ -39,11 +43,24 @@ export default function Users(props) {
           value={editing}
         />
       )}
-      <Button onClick={e => setIsCreateOpen(true)}>Create User</Button>
+      {confirm && (
+        <Confirm
+          onClose={e => setConfirm(null)}
+          onConfirm={e => deleteUser(confirm.id)}
+        >
+          Are you sure you want to delete <i>{confirm.name}</i>? This action can
+          not be reversed.
+        </Confirm>
+      )}
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>User</TableCell>
+            <TableCell>
+              <IconButton onClick={e => setIsCreateOpen(true)}>
+                <AddIcon />
+              </IconButton>
+              &nbsp;User
+            </TableCell>
             <TableCell>Email</TableCell>
             <TableCell>Admin</TableCell>
             <TableCell>Salesman</TableCell>
@@ -58,7 +75,7 @@ export default function Users(props) {
               <TableCell>{user.admin ? 'Yes' : 'No'}</TableCell>
               <TableCell>{user.salesmen ? 'Yes' : 'No'}</TableCell>
               <TableCell>
-                <Button onClick={e => deleteUser(user)}>Delete</Button>
+                <Button onClick={e => setConfirm(user)}>Delete</Button>
                 <Button onClick={e => setEditing(user)}>Edit</Button>
                 <Button onClick={e => resetUserPassword(user)}>Reset</Button>
               </TableCell>

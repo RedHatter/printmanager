@@ -109,8 +109,8 @@ export function deleteJob(id) {
   return api('/api/job/' + id, 'Unable to delete job.', { method: 'DELETE' })
 }
 
-export function deleteUser(body) {
-  return api('/api/user/' + body.id, 'Unable to create user.', {
+export function deleteUser(id) {
+  return api('/api/user/' + id, 'Unable to create user.', {
     method: 'DELETE'
   })
 }
