@@ -50,7 +50,7 @@ module.exports = new Schema(
     },
     jobType: {
       type: String,
-      enum: enums.jobType,
+      enum: enums.jobType.all,
       required: true
     },
     size: { type: String, required: true },

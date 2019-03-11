@@ -63,6 +63,7 @@ export default function CreateDialog(props) {
   const [model, _setModel] = useState(initalModel)
   const [submitDisabled, setSubmitDisabled] = useState(false)
   const [selectedFiles, setSelectedFiles] = useState([])
+  const [customSize, setCustomSize] = useState(false)
   const { clients, users, files } = useStore()
   const salesmen = users.filter(o => o.salesman)
 
@@ -331,7 +332,10 @@ export default function CreateDialog(props) {
               value={jobType}
               onChange={e => setModel({ jobType: e.target.value })}
             >
-              {enums.jobType.map(value => (
+              {(type == 'Print'
+                ? enums.jobType.print
+                : enums.jobType.digital
+              ).map(value => (
                 <MenuItem key={value} value={value}>
                   {value}
                 </MenuItem>
@@ -339,20 +343,40 @@ export default function CreateDialog(props) {
             </TextField>
           </Grid>
           <Grid item sm={6}>
-            <TextField
-              required
-              fullWidth
-              label="Size"
-              select
-              value={size}
-              onChange={e => setModel({ size: e.target.value })}
-            >
-              {enums.size.map(value => (
-                <MenuItem key={value} value={value}>
-                  {value}
-                </MenuItem>
-              ))}
-            </TextField>
+            {customSize ? (
+              <TextField
+                required
+                fullWidth
+                label="Size"
+                value={size}
+                onChange={e => setModel({ size: e.target.value })}
+                onBlur={e => {
+                  if (e.target.value == '') setCustomSize(false)
+                }}
+                autoFocus
+              />
+            ) : (
+              <TextField
+                required
+                fullWidth
+                label="Size"
+                select
+                value={size}
+                onChange={e => {
+                  if (e.target.value == 'custom') setCustomSize(true)
+                  else setModel({ size: e.target.value })
+                }}
+              >
+                {(type == 'Print' ? enums.size.print : enums.size.digital).map(
+                  value => (
+                    <MenuItem key={value} value={value}>
+                      {value}
+                    </MenuItem>
+                  )
+                )}
+                <MenuItem value="custom">Custom...</MenuItem>
+              </TextField>
+            )}
           </Grid>
           <Grid item sm={4}>
             <NumberFormat

@@ -1,23 +1,35 @@
 const { format, formatRelative } = require('date-fns')
 
 const enums = {
-  jobType: [
-    'Postcard',
-    'Tri-fold service',
-    'Tri-fold offer sales',
-    'Invoice w/ voucher buy back',
-    'Invoice w/ck',
-    'Invoice bilingual w/voucher',
-    'Email buy back',
-    'Letter orignal',
-    'Letter w/voucher w/offers',
-    'Letter certificate',
-    'Letter tax double window bilingual',
-    'Letter w/offers buy back',
-    'Check stub w/voucher',
-    'Carbon',
-    'Tax snap buy back'
-  ],
+  jobType: {
+    print: [
+      'Postcard',
+      'Tri-fold service',
+      'Tri-fold offer sales',
+      'Invoice w/ voucher buy back',
+      'Invoice w/ck',
+      'Invoice bilingual w/voucher',
+      'Email buy back',
+      'Letter orignal',
+      'Letter w/voucher w/offers',
+      'Letter certificate',
+      'Letter tax double window bilingual',
+      'Letter w/offers buy back',
+      'Check stub w/voucher',
+      'Carbon',
+      'Tax snap buy back'
+    ],
+    digital: [
+      'Website Sliders',
+      'Google Banner',
+      'Email Blast',
+      'Service',
+      'Facebook',
+      'Instagram',
+      'Lease / Purchase',
+      'Billboards'
+    ]
+  },
   addons: [
     'Scratcher',
     'Key',
@@ -51,7 +63,22 @@ const enums = {
     '6 x 9 Windowed',
     '6 x 9 Double-Windowed'
   ],
-  size: ['8.5 x 11', '8.5 x 14', '9 x 7', '11 x 15', '11 x 17'],
+  size: {
+    print: ['8.5 x 11', '8.5 x 14', '9 x 7', '11 x 15', '11 x 17'],
+    digital: [
+      '1920 x 1080',
+      '1920 x 850',
+      '1920 x 300',
+      '1600 x 514',
+      '1080 x 1350',
+      '575 x 375',
+      '464 x 240',
+      '336 x 280',
+      '320 x 100',
+      '300 x 250',
+      '160 x 600'
+    ]
+  },
   artStatus: [
     'New Project',
     'Info Needed',
@@ -69,6 +96,8 @@ const enums = {
   ],
   eventTypes: ['created', 'changed']
 }
+
+enums.jobType.all = [...enums.jobType.print, ...enums.jobType.digital]
 
 function colorize(status) {
   switch (status) {

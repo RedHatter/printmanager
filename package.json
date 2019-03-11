@@ -31,7 +31,6 @@
     "mongoose-autopopulate": "^0.9.1",
     "mongoose-patch-history": "https://github.com/RedHatter/mongoose-patch-history.git#all-changes",
     "nodemailer": "^5.1.1",
-    "react-number-format": "^4.0.6",
     "react-transition-group": "^2.6.0",
     "socket.io": "^2.0.3",
     "xss": "^1.0.3"
@@ -71,6 +70,7 @@
     "react": "^16.8.3",
     "react-dom": "^16.8.3",
     "react-draggable": "^3.2.1",
+    "react-number-format": "^4.0.6",
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0"
   }

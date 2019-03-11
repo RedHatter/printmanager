@@ -12,7 +12,7 @@ import clsx from 'clsx'
 
 import { updateFilter, fetchJobs } from './actions.js'
 import { useStore } from './store.js'
-import { enums, colorize } from '../utils.js'
+import { colorize } from '../utils.js'
 import CloseIcon from './icons/Close.js'
 import DateRangePicker from './components/DateRangePicker.jsx'
 

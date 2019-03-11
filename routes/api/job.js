@@ -78,6 +78,31 @@ router.post('/', async ctx => {
       case 'Tax snap buy back':
         type = 'TSNAP_BB'
         break
+
+      // Digital
+      case 'Website Sliders':
+        type = 'SLD'
+        break
+      case 'Google Banner':
+        type = 'GB'
+      case 'Email Blast':
+        type = 'Eblast'
+        break
+      case 'Service':
+        type = 'SVC'
+        break
+      case 'Facebook':
+        type = 'FB'
+        break
+      case 'Instagram':
+        type = 'IG'
+        break
+      case 'Lease / Purchase':
+        type = 'LP'
+        break
+      case 'Billboards':
+        type = 'Billboards'
+        break
     }
 
     let list = ''
