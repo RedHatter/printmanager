@@ -1,12 +1,28 @@
 const Koa = require('koa')
 const path = require('path')
 const http = require('http')
+const AWS = require('aws-sdk')
 const body = require('koa-body')
 const serve = require('koa-static')
 const Router = require('koa-router')
 const session = require('koa-session')
 const socketIo = require('socket.io')
 const nodemailer = require('nodemailer')
+const Amplify = require('aws-amplify').default
+
+AWS.config.update({
+  credentials: new AWS.Credentials({
+    accessKeyId: '***REMOVED***',
+    secretAccessKey: '***REMOVED***'
+  })
+})
+
+Amplify.configure({
+  Storage: {
+    region: 'us-west-1',
+    bucket: 'dealerdigitalgroup.media'
+  }
+})
 
 const app = new Koa()
 const router = new Router()

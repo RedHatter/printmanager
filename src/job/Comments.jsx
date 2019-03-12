@@ -289,12 +289,18 @@ export default function Comments({ model }) {
 }
 
 .public-DraftEditor-content:focus {
-  border-color: #2196f3;
+  border: 2px solid #2196f3;
+  padding: 20px;
+}
+
+.public-DraftEditor-content:hover {
+  border-width: 2px;
+  padding: 20px;
 }
 
 .public-DraftEditor-content {
   border-radius: 3px;
-  padding: 20px;
+  padding: 21px;
   min-height: 70px;
   border: 1px solid #9e9e9e;
 }

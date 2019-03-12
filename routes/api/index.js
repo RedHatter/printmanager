@@ -1,9 +1,7 @@
 const { promisify } = require('util')
 const Cognito = require('cognito-express')
-const Amplify = require('aws-amplify').default
 const Router = require('koa-router')
 const path = require('path')
-const AWS = require('aws-sdk')
 
 const { Job, Pixel } = require('../../schema')
 
@@ -13,20 +11,6 @@ const cognitoExpress = new Cognito({
   tokenUse: 'id'
 })
 const validate = promisify(cognitoExpress.validate).bind(cognitoExpress)
-
-AWS.config.update({
-  credentials: new AWS.Credentials({
-    accessKeyId: '***REMOVED***',
-    secretAccessKey: '***REMOVED***'
-  })
-})
-
-Amplify.configure({
-  Storage: {
-    region: 'us-west-1',
-    bucket: 'dealerdigitalgroup.media'
-  }
-})
 
 const router = new Router()
 
