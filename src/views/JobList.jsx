@@ -46,7 +46,7 @@ export default function JobList({ user, show, isAdmin, elevation }) {
             files={files[o.id]}
             isAdmin={isAdmin}
             expanded={expanded == o.id}
-            highlighted={o?.assignee.id == user}
+            highlighted={o?.assignee?.id == user}
             onChange={e => setExpanded(o.id)}
           />
         ))

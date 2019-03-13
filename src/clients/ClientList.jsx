@@ -58,7 +58,7 @@ export default function ClientList(props) {
             <TableRow key={o.id}>
               <TableCell>{o.name}</TableCell>
               <TableCell>{o.acronym}</TableCell>
-              <TableCell>{o?.contact.name}</TableCell>
+              <TableCell>{o?.contact?.name}</TableCell>
               <TableCell>
                 <Button onClick={e => setConfirm(o)}>Delete</Button>
                 <Button onClick={e => setSelected(o)}>Edit</Button>

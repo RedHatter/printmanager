@@ -9,7 +9,6 @@ const whiteList = { ...xss.whiteList, span: ['style'] }
 
 const userType = {
   type: String,
-  required: true,
   match: /\w{8}-\w{4}-\w{4}-\w{4}-\w{12}/,
   set: o => (typeof o === 'object' ? o.id : o),
   get: value => users.value.find(o => o.id == value)
@@ -54,7 +53,7 @@ module.exports = new Schema(
       required: true
     },
     size: { type: String, required: true },
-    salesman: userType,
+    salesman: { ...userType, require: true },
     assignee: userType,
     dueDate: { type: Date, required: true },
     dropDate: { type: Date, required: true },

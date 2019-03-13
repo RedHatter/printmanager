@@ -56,7 +56,8 @@ export default function CreateDialog(props) {
     initalModel = JSON.parse(JSON.stringify(props.model))
     initalModel.client = initalModel.client.id
     initalModel.salesman = initalModel.salesman.id
-    initalModel.assignee = initalModel.assignee.id
+
+    if (initalModel.assignee) initalModel.assignee = initalModel.assignee.id
     editMode = !!initalModel.id
   }
 
@@ -208,7 +209,6 @@ export default function CreateDialog(props) {
           </Grid>
           <Grid item sm={4}>
             <TextField
-              required
               value={assignee}
               onChange={e => setModel({ assignee: e.target.value })}
               label="Assignee"

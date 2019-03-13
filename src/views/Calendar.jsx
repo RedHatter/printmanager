@@ -110,7 +110,7 @@ class Calendar extends Component {
                               drop:
                                 isSameDay(day, job.dropDate) ||
                                 isSameDay(day, job.secondDropDate),
-                              highlighted: job?.assignee.id == this.props.user
+                              highlighted: job?.assignee?.id == this.props.user
                             })}
                           >
                             {job.name}
