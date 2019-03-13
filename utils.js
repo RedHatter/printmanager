@@ -80,7 +80,7 @@ const enums = {
     ]
   },
   artStatus: [
-    'New Project',
+    'Unassigned',
     'Info Needed',
     'In Progress',
     'Art Review',

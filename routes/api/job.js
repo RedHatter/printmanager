@@ -5,15 +5,32 @@ const { mapObjectValues } = require('../../utils.js')
 
 const router = new Router()
 
-function notifiyAssignee(ctx, job) {
-  return ctx.sendMail({
-    to: job.assignee.email,
-    subject: job.name,
-    html: `The job <i>${job.name}</i> has been assigned to you.<br><br>
+async function notifiyAssignee(ctx, job, oldAssignee) {
+  const user = ctx.state.user
+
+  if (job.assignee && user['cognito:username'] != job.assignee.id)
+    await ctx.sendMail({
+      to: job.assignee.email,
+      subject: job.name,
+      html: `The job <i>${job.name}</i> has been assigned to you by ${
+        user.name
+      }.<br><br>
 <a href="http://printmanager.dealerdigitalgroup.com/?${
-      job.id
-    }">View in PrintManager</a>`
-  })
+        job.id
+      }">View in PrintManager</a>`
+    })
+
+  if (oldAssignee && user['cognito:username'] != oldAssignee.id)
+    await ctx.sendMail({
+      to: oldAssignee.email,
+      subject: job.name,
+      html: `You have been remove from the job <i>${job.name}</i> by ${
+        user.name
+      }.<br><br>
+<a href="http://printmanager.dealerdigitalgroup.com/?${
+        job.id
+      }">View in PrintManager</a>`
+    })
 }
 
 router.post('/', async ctx => {
@@ -226,14 +243,15 @@ router.post('/:id', async ctx => {
       model.completed = new Date()
 
     const job = await Job.findById(ctx.params.id)
-    const assigned = job.assignee.id != model.assignee
+    const oldAssignee = job.assignee
     await job.set(model)
     await job.save()
 
     ctx.response.type = 'json'
     ctx.body = job
     ctx.socketIo.emit('invalidateJobs')
-    if (assigned) await notifiyAssignee(ctx, job)
+    if (!(oldAssignee && job.assignee && oldAssignee.id == job.assignee.id))
+      await notifiyAssignee(ctx, job, oldAssignee)
   } catch (err) {
     if (err.name == 'ValidationError') {
       console.error(err.message)

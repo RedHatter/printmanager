@@ -14,6 +14,58 @@ export default function Sprint({ user }) {
   const [selected, setSelected] = useState(undefined)
   const { jobs } = useStore()
 
+  function Column({ name, value }) {
+    return (
+      <div
+        className="column"
+        onDragOver={e => e.preventDefault()}
+        onDragEnter={e => e.target.classList.add('hover')}
+        onDragLeave={e => e.target.classList.remove('hover')}
+        onDrop={e => {
+          e.preventDefault()
+          const id = e.dataTransfer.getData('jobId')
+          const job = jobs.find(o => id == o.id)
+          if (job.artStatus == name) return
+
+          if (job.artStatus == 'Unassigned') job.assignee = user
+          else if (name == 'Unassigned') job.assignee = ''
+
+          job.artStatus = name
+          updateJob(job)
+        }}
+      >
+        <div>{name}</div>
+        {value.map(job => (
+          <div
+            key={job.id}
+            className={clsx('priority-' + job.priority, {
+              highlighted: job?.assignee?.id == user
+            })}
+            draggable
+            onDragStart={e => {
+              e.dataTransfer.setData('jobId', job.id)
+              e.target.style.visibility = 'hidden'
+            }}
+            onDragEnd={e => {
+              document
+                .querySelectorAll('.column.hover')
+                .forEach(o => o.classList.remove('hover'))
+              if (job.artStatus == name) e.target.removeAttribute('style')
+            }}
+            onClick={e => {
+              setIsOpen(true)
+              setSelected(job)
+            }}
+          >
+            {job.name}
+            <br />
+            {formatDate(job.dueDate)}
+          </div>
+        ))}
+      </div>
+    )
+  }
+
   const width = 300 * Math.floor((document.body.clientWidth - 300) / 300)
 
   const today = new Date()
@@ -24,6 +76,8 @@ export default function Sprint({ user }) {
 
     columns[o.artStatus].push(o)
   })
+  const unassigned = columns['Unassigned']
+  delete columns['Unassigned']
   return (
     <Fragment>
       <SlideDown in={isOpen}>
@@ -35,54 +89,14 @@ export default function Sprint({ user }) {
         </div>
       </SlideDown>
       <Fade in={!isOpen}>
-        <Paper className="sprint" style={{ width }}>
-          {Object.entries(columns).map(([name, value]) => (
-            <div
-              key={name}
-              className="column"
-              onDragOver={e => e.preventDefault()}
-              onDragEnter={e => e.target.classList.add('hover')}
-              onDragLeave={e => e.target.classList.remove('hover')}
-              onDrop={e => {
-                e.preventDefault()
-                const id = e.dataTransfer.getData('jobId')
-                const job = jobs.find(o => id == o.id)
-                if (job.artStatus == name) return
-
-                job.artStatus = name
-                updateJob(job)
-              }}
-            >
-              <div>{name}</div>
-              {value.map(job => (
-                <div
-                  key={job.id}
-                  className={clsx('priority-' + job.priority, {
-                    highlighted: job?.assignee.id == user
-                  })}
-                  draggable
-                  onDragStart={e => {
-                    e.dataTransfer.setData('jobId', job.id)
-                    e.target.style.visibility = 'hidden'
-                  }}
-                  onDragEnd={e =>
-                    document
-                      .querySelectorAll('.column.hover')
-                      .forEach(o => o.classList.remove('hover'))
-                  }
-                  onClick={e => {
-                    setIsOpen(true)
-                    setSelected(job)
-                  }}
-                >
-                  {job.name}
-                  <br />
-                  {formatDate(job.dueDate)}
-                </div>
-              ))}
-            </div>
-          ))}
-        </Paper>
+        <div className="sprint" style={{ width }}>
+          <Column name="Unassigned" value={unassigned} />
+          <Paper className="column-wrapper">
+            {Object.entries(columns).map(([name, value]) => (
+              <Column key={name} name={name} value={value} />
+            ))}
+          </Paper>
+        </div>
       </Fade>
     </Fragment>
   )
@@ -90,6 +104,16 @@ export default function Sprint({ user }) {
 
 <style>
 .sprint {
+  display: flex;
+}
+
+.sprint .column:first-child {
+  flex-shrink: 0;
+  max-height: 600px;
+  overflow: auto;
+}
+
+.sprint .column-wrapper {
   display: flex;
   flex-wrap: wrap;
 }
@@ -100,11 +124,11 @@ export default function Sprint({ user }) {
   min-height: 300px;
 }
 
-.sprint .column.hover * {
+.sprint .column-wrapper .column.hover * {
   pointer-events: none;
 }
 
-.sprint .column.hover::after {
+.sprint .column-wrapper .column.hover::after {
   content: "";
   display: block;
   box-sizing: border-box;
