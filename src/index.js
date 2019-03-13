@@ -27,6 +27,13 @@ Amplify.configure({
 const theme = createMuiTheme({
   palette: {
     primary: { main: blue[500] }
+  },
+  overrides: {
+    MuiTable: {
+      root: {
+        width: 'auto'
+      }
+    }
   }
 })
 

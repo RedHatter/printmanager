@@ -123,29 +123,31 @@ class App extends Component {
             </Tabs>
           </div>
           <div className="content-container">
-            <Filters />
-            <SlideRight in={selectedTab == 0 || selectedJob}>
-              <JobList
-                user={authData.username}
-                isAdmin={isAdmin}
-                show={selectedJob}
-              />
-            </SlideRight>
-            <SlideRight in={selectedTab == 1}>
-              <Calendar user={authData.username} />
-            </SlideRight>
-            <SlideRight in={selectedTab == 2}>
-              <Sprint user={authData.username} />
-            </SlideRight>
-            <SlideRight in={selectedTab == 3}>
-              <EblastList />
-            </SlideRight>
-            <SlideRight in={selectedTab == 4}>
-              <UserList />
-            </SlideRight>
-            <SlideRight in={selectedTab == 5}>
-              <ClientList />
-            </SlideRight>
+            {selectedTab <= 2 && <Filters />}
+            <div className="content-wrapper">
+              <SlideRight in={selectedTab == 0 || selectedJob}>
+                <JobList
+                  user={authData.username}
+                  isAdmin={isAdmin}
+                  show={selectedJob}
+                />
+              </SlideRight>
+              <SlideRight in={selectedTab == 1}>
+                <Calendar user={authData.username} />
+              </SlideRight>
+              <SlideRight in={selectedTab == 2}>
+                <Sprint user={authData.username} />
+              </SlideRight>
+              <SlideRight in={selectedTab == 3}>
+                <EblastList />
+              </SlideRight>
+              <SlideRight in={selectedTab == 4}>
+                <UserList />
+              </SlideRight>
+              <SlideRight in={selectedTab == 5}>
+                <ClientList />
+              </SlideRight>
+            </div>
           </div>
         </div>
       </Fragment>
@@ -205,8 +207,16 @@ h2 {
 }
 
 .content-container {
-  position: relative;
   margin: 24px 16px;
+  width: 100%;
+}
+
+.content-wrapper {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
 }
 
 .app .sidebar {

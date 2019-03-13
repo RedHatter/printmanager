@@ -18,7 +18,7 @@ export default function JobList({ user, show, isAdmin, elevation }) {
   const { jobs, files } = useStore()
 
   return (
-    <div>
+    <div className="job-list">
       <Paper className="header" elevation={elevation}>
         <Column group="name">Job Name</Column>
         <Column group="quantity">Quanity</Column>
@@ -58,6 +58,11 @@ export default function JobList({ user, show, isAdmin, elevation }) {
 }
 
 <style>
+.job-list {
+  display: flex;
+  flex-direction: column;
+}
+
 .empty {
   color: gray;
   font-style: italic;
