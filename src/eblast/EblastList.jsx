@@ -37,8 +37,7 @@ export default function EblastList(props) {
           not be reversed.
         </Confirm>
       )}
-      {/* <SlideDown in={ isEditOpen }> */}
-      {isEditOpen && (
+      <SlideDown in={isEditOpen}>
         <Edit
           model={eblasts[selected]}
           updateEblast={data => {
@@ -46,8 +45,7 @@ export default function EblastList(props) {
             setIsEditOpen(false)
           }}
         />
-      )}
-      {/* </SlideDown> */}
+      </SlideDown>
       <Fade in={!isEditOpen}>
         <Fragment>
           <Paper component={Table}>
@@ -57,7 +55,7 @@ export default function EblastList(props) {
                   <IconButton component="label" className="upload-button">
                     <AddIcon style={{ verticalAlign: 'bottom' }} />
                     <input
-                      onSelect={e => createEblast(e.target.files[0])}
+                      onChange={e => createEblast(e.target.files[0])}
                       type="file"
                       accept="image/*"
                     />

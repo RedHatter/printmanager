@@ -74,6 +74,8 @@ class App extends Component {
 
   render() {
     const { authData, clients, error } = this.props
+    if (!authData) return null
+
     const { selectedTab, selectedClient, selectedJob } = this.state
     const isAdmin =
       'cognito:groups' in authData.signInUserSession.idToken.payload &&
@@ -195,6 +197,10 @@ export default connect(state => ({
 body {
   font-family: "Roboto", sans-serif;
   background-color: #f2f3f4;
+}
+
+.logo {
+  max-width: calc(100% - 30px);
 }
 
 .app {

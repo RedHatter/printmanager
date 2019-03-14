@@ -28,6 +28,7 @@ function DuplicateButton(props) {
         onClick={() => {
           const model = clone(props.model)
           delete model.id
+          delete model._id
           delete model.__v
           delete model.created
           delete model.name

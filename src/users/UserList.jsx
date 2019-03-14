@@ -73,7 +73,7 @@ export default function UserList(props) {
               <TableCell>{user.name}</TableCell>
               <TableCell>{user.email}</TableCell>
               <TableCell>{user.admin ? 'Yes' : 'No'}</TableCell>
-              <TableCell>{user.salesmen ? 'Yes' : 'No'}</TableCell>
+              <TableCell>{user.salesman ? 'Yes' : 'No'}</TableCell>
               <TableCell>
                 <Button onClick={e => setConfirm(user)}>Delete</Button>
                 <Button onClick={e => setEditing(user)}>Edit</Button>

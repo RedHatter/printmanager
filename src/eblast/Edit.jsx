@@ -151,9 +151,10 @@ const reducer = produce((draft, action) => {
 
 function Edit(props) {
   const [active, setActive] = useState({ row: 0, cell: 0 })
-  const [model, dispatch] = useReducer(reducer, props.model, {
-    type: 'INITIALIZE'
-  })
+  const [model, dispatch] = useReducer(
+    reducer,
+    reducer(props.model, { type: 'INITIALIZE' })
+  )
   const boundingRef = useRef(null)
   const scrollRef = useRef(null)
 
@@ -327,8 +328,9 @@ function Edit(props) {
             />
           </CardContent>
         </Card>
+        <br />
         <Button
-          variant="raised"
+          variant="contained"
           color="primary"
           onClick={e => props.updateEblast(model)}
         >

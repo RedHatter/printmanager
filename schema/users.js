@@ -54,6 +54,4 @@ async function invalidateUsers() {
   })
 }
 
-invalidateUsers()
-
 module.exports = { value: [], invalidateUsers }

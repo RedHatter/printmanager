@@ -46,7 +46,7 @@ router.post('/', async ctx => {
 
 router.get('/', async ctx => {
   ctx.response.type = 'json'
-  ctx.body = await Eblast.find()
+  ctx.body = (await Eblast.find()).reverse()
 })
 
 router.delete('/:id', async ctx => {

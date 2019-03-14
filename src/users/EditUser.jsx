@@ -11,8 +11,7 @@ import {
 
 export default function EditUser({ onClose, onChange, value }) {
   const [admin, setAdmin] = useState(value.admin || false)
-  const [salesmen, setSalesmen] = useState(value.salesmen || false)
-  console.log(admin, salesmen)
+  const [salesman, setSalesman] = useState(value.salesman || false)
 
   return (
     <Dialog open>
@@ -30,8 +29,8 @@ export default function EditUser({ onClose, onChange, value }) {
         <FormControlLabel
           control={
             <Checkbox
-              checked={salesmen}
-              onChange={e => setSalesmen(e.target.checked)}
+              checked={salesman}
+              onChange={e => setSalesman(e.target.checked)}
               value="salesman"
             />
           }

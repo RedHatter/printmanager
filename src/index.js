@@ -40,7 +40,7 @@ const theme = createMuiTheme({
 ReactDOM.render(
   <MuiThemeProvider theme={theme}>
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
-      <Authenticator logo={<img src="/images/logo.png" />}>
+      <Authenticator logo={<img className="logo" src="/images/logo.png" />}>
         <App />
       </Authenticator>
     </MuiPickersUtilsProvider>

@@ -5,6 +5,9 @@ const ClientSchema = require('./Client.js')
 const JobSchema = require('./Job.js')
 const PixelSchema = require('./Pixel.js')
 const EblastSchema = require('./Eblast.js')
+const { invalidateUsers } = require('./users.js')
+
+invalidateUsers()
 
 mongoose.Promise = Promise
 mongoose.connect('mongodb://localhost/printmanager', { useNewUrlParser: true })
