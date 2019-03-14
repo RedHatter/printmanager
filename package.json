@@ -1,5 +1,5 @@
 {
-  "name": "printmanager",
+  "name": "workflow",
   "version": "4.0.0",
   "description": "Manages print jobs.",
   "main": "app.js",

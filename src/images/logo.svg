@@ -9,12 +9,12 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="300"
-   height="52"
-   viewBox="0 0 79.374995 13.758333"
+   width="400"
+   height="100"
+   viewBox="0 0 105.83332 26.458334"
    version="1.1"
    id="svg8"
-   inkscape:version="0.92.2 (5c3e80d, 2017-08-06)"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
    sodipodi:docname="logo.svg">
   <defs
      id="defs2" />
@@ -25,26 +25,26 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.979899"
-     inkscape:cx="198.69433"
-     inkscape:cy="88.110362"
+     inkscape:zoom="3.959798"
+     inkscape:cx="186.97739"
+     inkscape:cy="30.533125"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
      inkscape:window-width="2493"
-     inkscape:window-height="1379"
-     inkscape:window-x="1667"
+     inkscape:window-height="1376"
+     inkscape:window-x="1987"
      inkscape:window-y="27"
      inkscape:window-maximized="1"
      units="px"
      showguides="true"
      inkscape:guide-bbox="true"
-     fit-margin-top="0"
-     fit-margin-left="0"
-     fit-margin-right="0"
-     fit-margin-bottom="0">
+     fit-margin-top="20"
+     fit-margin-left="20"
+     fit-margin-right="20"
+     fit-margin-bottom="20">
     <sodipodi:guide
-       position="84.590797,7.7508417"
+       position="7.5953624,34.76935"
        orientation="0,1"
        id="guide819"
        inkscape:locked="false" />
@@ -57,7 +57,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -65,30 +65,32 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-1.4185889e-8,-283.24167)">
+     transform="translate(10.677688,-276.52164)">
+    <path
+       inkscape:connector-curvature="0"
+       id="path1449"
+       style="font-style:normal;font-weight:normal;font-size:medium;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#616161;fill-opacity:1;stroke:none;stroke-width:0.55292434"
+       d="m 4.2145584,287.62402 h -3.142597 l -0.90714132,3.607 H 3.3290151 Z m -1.6198954,-6.1448 -1.1231274,4.48174 h 3.1533952 l 1.1339284,-4.48174 h 1.727887 l -1.1123274,4.48174 h 3.3693807 v 1.66306 H 5.9532468 l -0.885543,3.607 h 3.4341751 v 1.65228 H 4.6465311 l -1.1231276,4.47092 H 1.7955148 l 1.112328,-4.47092 h -3.16419572 l -1.11232818,4.47092 h -1.7386876 l 1.1231273,-4.47092 h -3.4017801 v -1.65228 h 3.8013543 l 0.90714155,-3.607 H -4.1549011 v -1.66306 h 3.89854818 l 1.10152909,-4.48174 z" />
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:13.20509815px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#4d4d4d;fill-opacity:1;stroke:none;stroke-width:0.33012742"
-       x="-0.092435673"
-       y="293.12158"
-       id="text817"
-       transform="scale(0.99999881,1.0000012)"><tspan
+       style="font-style:normal;font-weight:normal;font-size:14.26661777px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3566654"
+       x="22.564371"
+       y="294.86432"
+       id="text5364"><tspan
          sodipodi:role="line"
-         id="tspan815"
-         x="-0.092435673"
-         y="293.12158"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Dancing Script OT';-inkscape-font-specification:'Dancing Script OT';fill:#4d4d4d;stroke-width:0.33012742">Print</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:13.20509815px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#3498db;fill-opacity:1;stroke:none;stroke-width:0.33012742"
-       x="24.807346"
-       y="293.82733"
-       id="text821"
-       transform="scale(0.99999881,1.0000012)"><tspan
-         sodipodi:role="line"
-         id="tspan819"
-         x="24.807346"
-         y="293.82733"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Open Sans';-inkscape-font-specification:'Open Sans';fill:#3498db;fill-opacity:1;stroke-width:0.33012742">Manager</tspan></text>
+         id="tspan5362"
+         x="22.564371"
+         y="294.86432"
+         style="fill:#3498db;fill-opacity:1;stroke-width:0.3566654">Workflow</tspan></text>
+    <path
+       style="fill:#616161;fill-opacity:1;stroke:none;stroke-width:0.12360272;stroke-miterlimit:4;stroke-dasharray:none"
+       d="m 19.08278,281.47922 v 4.9441 h 1.236027 v -3.70808 h 3.708081 v -1.23602 z"
+       id="rect5369"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:#616161;fill-opacity:1;stroke:none;stroke-width:0.12360272;stroke-miterlimit:4;stroke-dasharray:none"
+       d="m 89.967645,297.68831 v -4.9441 h -1.236028 v 3.70808 h -3.708082 v 1.23602 z"
+       id="rect5369-0"
+       inkscape:connector-curvature="0" />
   </g>
 </svg>

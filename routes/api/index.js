@@ -48,7 +48,7 @@ router.post('/send', async ctx => {
     html: `${message.replace(
       /\n/g,
       '<br>'
-    )}<img src="https://printmanager.dealerdigitalgroup.com/pixel/${
+    )}<img src="https://workflow.dealerdigitalgroup.com/pixel/${
       pixel.id
     }.png">`,
     attachments: attachments.map(path => ({

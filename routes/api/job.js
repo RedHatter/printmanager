@@ -15,9 +15,9 @@ async function notifiyAssignee(ctx, job, oldAssignee) {
       html: `The job <i>${job.name}</i> has been assigned to you by ${
         user.name
       }.<br><br>
-<a href="http://printmanager.dealerdigitalgroup.com/?${
+<a href="http://workflow.dealerdigitalgroup.com/?${
         job.id
-      }">View in PrintManager</a>`
+      }">View in #Workflow</a>`
     })
 
   if (oldAssignee && user['cognito:username'] != oldAssignee.id)
@@ -27,9 +27,9 @@ async function notifiyAssignee(ctx, job, oldAssignee) {
       html: `You have been remove from the job <i>${job.name}</i> by ${
         user.name
       }.<br><br>
-<a href="http://printmanager.dealerdigitalgroup.com/?${
+<a href="http://workflow.dealerdigitalgroup.com/?${
         job.id
-      }">View in PrintManager</a>`
+      }">View in #Workflow</a>`
     })
 }
 
@@ -283,9 +283,9 @@ router.post('/:id/comments', async ctx => {
       subject: job.name,
       html: `A new comment has been posted to <i>${job.name}</i>
 <blockquote>${comment.html}</blockquote>
-<a href="http://printmanager.dealerdigitalgroup.com/?${
+<a href="http://workflow.dealerdigitalgroup.com/?${
         job.id
-      }">View in PrintManager</a>`
+      }">View in #Workflow</a>`
     })
   } catch (err) {
     if (err.name == 'ValidationError') {
