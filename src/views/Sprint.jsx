@@ -1,9 +1,9 @@
-import React, { Fragment, useState } from 'react'
-import { Paper, Button } from '@material-ui/core'
+import React, { Fragment, useState, useEffect, useRef } from 'react'
+import { Paper, Button, RootRef } from '@material-ui/core'
 import { differenceInCalendarDays } from 'date-fns'
 import clsx from 'clsx'
 
-import { formatDate, enums } from '../../utils.js'
+import { formatDate, enums, throttle } from '../../utils.js'
 import { updateJob } from '../actions.js'
 import { useStore } from '../store.js'
 import { SlideDown, Fade } from '../components/transitions.jsx'
@@ -12,12 +12,29 @@ import JobList from './JobList.jsx'
 export default function Sprint({ user }) {
   const [isOpen, setIsOpen] = useState(false)
   const [selected, setSelected] = useState(undefined)
+  const columnWrapper = useRef(undefined)
   const { jobs } = useStore()
+
+  function resize() {
+    const dom = columnWrapper.current
+    dom.style.width = Math.floor(dom.clientWidth / 300) * 300 + 'px'
+  }
+
+  useEffect(resize)
+  useEffect(() => {
+    const removeStyle = throttle(() => {
+      columnWrapper.current.removeAttribute('style')
+      resize()
+    }, 100)
+
+    window.addEventListener('resize', removeStyle)
+    return () => window.removeEventListener('resize', removeStyle)
+  }, [])
 
   function Column({ name, value }) {
     return (
       <div
-        className="column"
+        className="sprint-column"
         onDragOver={e => e.preventDefault()}
         onDragEnter={e => e.target.classList.add('hover')}
         onDragLeave={e => e.target.classList.remove('hover')}
@@ -44,7 +61,7 @@ export default function Sprint({ user }) {
             draggable
             onDragStart={e => {
               e.dataTransfer.setData('jobId', job.id)
-              e.target.style.visibility = 'hidden'
+              e.target.style.opacity = '0'
             }}
             onDragEnd={e => {
               document
@@ -66,7 +83,6 @@ export default function Sprint({ user }) {
     )
   }
 
-  const width = 300 * Math.floor((document.body.clientWidth - 300) / 300)
 
   const today = new Date()
   const columns = {}
@@ -89,13 +105,15 @@ export default function Sprint({ user }) {
         </div>
       </SlideDown>
       <Fade in={!isOpen}>
-        <div className="sprint" style={{ width }}>
+        <div className="sprint">
           <Column name="Unassigned" value={unassigned} />
-          <Paper className="column-wrapper">
-            {Object.entries(columns).map(([name, value]) => (
-              <Column key={name} name={name} value={value} />
-            ))}
-          </Paper>
+          <RootRef rootRef={columnWrapper}>
+            <Paper className="column-wrapper">
+              {Object.entries(columns).map(([name, value]) => (
+                <Column key={name} name={name} value={value} />
+              ))}
+            </Paper>
+          </RootRef>
         </div>
       </Fade>
     </Fragment>
@@ -107,7 +125,7 @@ export default function Sprint({ user }) {
   display: flex;
 }
 
-.sprint .column:first-child {
+.sprint .sprint-column:first-child {
   flex-shrink: 0;
   max-height: 600px;
   overflow: auto;
@@ -118,10 +136,13 @@ export default function Sprint({ user }) {
   flex-wrap: wrap;
 }
 
-.sprint .column {
-  margin: 5px;
-  width: 290px;
+.sprint .sprint-column {
+  box-sizing: border-box;
+  padding: 5px;
+  width: 300px;
   min-height: 300px;
+  margin-bottom: 10px;
+  border-right: 1px solid #e0e0e0;
 }
 
 .sprint .column-wrapper .column.hover * {
@@ -137,7 +158,7 @@ export default function Sprint({ user }) {
   border-radius: 3px;
 }
 
-.sprint .column div:first-child {
+.sprint .sprint-column div:first-child {
   white-space: nowrap;
   background-color: inherit;
   font-weight: 500;
@@ -145,7 +166,7 @@ export default function Sprint({ user }) {
   opacity: 0.7;
 }
 
-.sprint .column div {
+.sprint .sprint-column div {
   background-color: #f2f3f4;
   border-radius-top-right: 3px;
   border-radius-bottom-right: 3px;
