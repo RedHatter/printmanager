@@ -14,15 +14,6 @@ import PropTypes from 'prop-types'
 
 import { uploadFiles } from '../actions.js'
 
-function UploadButton({ onSelect }) {
-  return (
-    <IconButton component="label" className="upload-button">
-      Upload
-      <input onChange={onSelect} type="file" accept="image/*" />
-    </IconButton>
-  )
-}
-
 export default class FileDialog extends Component {
   static propTypes = {
     path: PropTypes.string.isRequired
@@ -46,7 +37,7 @@ export default class FileDialog extends Component {
       return (
         <Button component="label" className="upload-button">
           Upload
-          <input onSelect={this.handleSelect} type="file" />
+          <input onChange={this.handleSelect} type="file" />
         </Button>
       )
     else

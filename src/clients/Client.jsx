@@ -56,7 +56,7 @@ export default function Client(props) {
         component: Form,
         onSubmit: () => {
           updateOrCreateClient(model)
-          onClose()
+          props.onClose()
         },
         onValid: () => setSubmitDisabled(false),
         onInvalid: () => setSubmitDisabled(true)

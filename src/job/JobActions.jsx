@@ -32,6 +32,11 @@ function DuplicateButton(props) {
           delete model.__v
           delete model.created
           delete model.name
+          delete model.comments
+          delete model.completed
+          delete model.forceComplete
+          delete model.pixels
+          delete model.versionComment
           setIsOpen(true)
           setModel(model)
         }}

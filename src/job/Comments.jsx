@@ -173,7 +173,7 @@ export default function Comments({ model }) {
           Italic
         </Button>
         <ColorSelection
-          label="Heighlight"
+          label="Highlight"
           onChange={color => {
             const selection = editorState.getSelection()
             let contentState = editorState.getCurrentContent()

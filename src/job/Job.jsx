@@ -55,7 +55,7 @@ function Job({ highlighted, model, files, isAdmin, ...rest }) {
 
   let listStatus = 'Count Pending'
   if (files && 'Data List' in files) listStatus = 'List Uploaded'
-  else if ((listType = 'Saturation')) listStatus = 'List Pending'
+  else if (listType == 'Saturation') listStatus = 'List Pending'
 
   let today = startOfDay(new Date())
 
