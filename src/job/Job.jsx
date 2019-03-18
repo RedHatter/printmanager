@@ -303,20 +303,20 @@ export default Job
 }
 
 .complete {
-  border-left: 5px solid #4caf50 !important;
   padding-left: 19px !important;
+  border-left: 5px solid #4caf50 !important;
 }
 
 .late {
-  border-left: 5px solid #f44336 !important;
   padding-left: 19px !important;
+  border-left: 5px solid #f44336 !important;
 }
 
 span.statusBlock {
   display: block;
+  padding: 5px;
   width: 120px;
   text-align: center;
-  padding: 5px;
 }
 
 span.red {
@@ -348,15 +348,15 @@ span.green {
 }
 
 .job-details th {
-  font-weight: normal;
-  text-align: right;
   padding: 5px 15px;
   vertical-align: top;
+  text-align: right;
+  font-weight: normal;
 }
 
 .job-details td {
-  min-width: 160px;
   padding: 5px 0;
+  min-width: 160px;
   color: #757575;
 }
 

@@ -64,10 +64,10 @@ export default function JobList({ user, show, isAdmin, elevation }) {
 }
 
 .empty {
-  color: gray;
-  font-style: italic;
-  text-align: left;
   padding: 10px 30px;
+  color: gray;
+  text-align: left;
+  font-style: italic;
 }
 
 .header {
@@ -78,8 +78,8 @@ export default function JobList({ user, show, isAdmin, elevation }) {
 }
 
 .header > div {
-  white-space: nowrap;
-  min-width: 100px;
   margin: auto 15px;
+  min-width: 100px;
+  white-space: nowrap;
 }
 </style>

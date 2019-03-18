@@ -251,13 +251,13 @@ export default function Comments({ model }) {
 
 .comment .created {
   margin-left: 12px;
-  font-size: 0.8em;
   color: #9e9e9e;
+  font-size: 0.8em;
 }
 
 .comment .content {
-  padding: 18px 20px 22px 20px;
   margin-bottom: 20px;
+  padding: 18px 20px 22px 20px;
   border-bottom: 1px solid #eeeeee;
 }
 
@@ -271,17 +271,17 @@ export default function Comments({ model }) {
 
 .color-selection-option {
   float: left;
-  height: 30px;
   width: 30px;
+  height: 30px;
   cursor: pointer;
 }
 
 .color-selection-option:hover::after {
-  content: "";
   display: block;
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.1);
+  content: '';
 }
 
 .color-selection-option:nth-child(3n + 1) {
@@ -289,20 +289,20 @@ export default function Comments({ model }) {
 }
 
 .public-DraftEditor-content:focus {
-  border: 2px solid #2196f3;
   padding: 20px;
+  border: 2px solid #2196f3;
 }
 
 .public-DraftEditor-content:hover {
-  border-width: 2px;
   padding: 20px;
+  border-width: 2px;
 }
 
 .public-DraftEditor-content {
-  border-radius: 3px;
   padding: 21px;
   min-height: 70px;
   border: 1px solid #9e9e9e;
+  border-radius: 3px;
 }
 
 .comment-box button {

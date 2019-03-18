@@ -555,8 +555,8 @@ CreateDialog.propTypes = {
 
 .type-select h1 {
   display: inline-block;
-  color: #e0e0e0;
   margin: 2px;
+  color: #e0e0e0;
   transition: all 0.3s;
   transform: scale(0.8) translateY(2px);
 }
@@ -567,8 +567,8 @@ CreateDialog.propTypes = {
 }
 
 .create-modal {
-  text-align: left;
   overflow: hidden;
+  text-align: left;
 }
 
 .create-modal .version-comment {

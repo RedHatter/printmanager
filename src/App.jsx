@@ -195,8 +195,8 @@ export default connect(state => ({
 
 <style>
 body {
-  font-family: "Roboto", sans-serif;
   background-color: #f2f3f4;
+  font-family: 'Roboto', sans-serif;
 }
 
 .logo {
@@ -218,10 +218,10 @@ h2 {
 }
 
 .content-wrapper {
+  position: relative;
   display: flex;
   align-items: flex-start;
   flex-direction: column;
-  position: relative;
   width: 100%;
 }
 

@@ -73,9 +73,9 @@ export default Handle
 }
 
 .e-blast .handle::after {
-  content: "";
   display: block;
   background-color: blue;
+  content: '';
 }
 
 .e-blast .handle.horizontal {
@@ -85,8 +85,8 @@ export default Handle
 
 .e-blast .handle.horizontal::after {
   margin-top: 4px;
-  height: 2px;
   width: 100%;
+  height: 2px;
 }
 
 .e-blast .handle.vertical {

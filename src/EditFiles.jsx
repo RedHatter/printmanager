@@ -47,8 +47,8 @@ export default EditFiles
 <style>
 .file-checkbox {
   display: block;
-  cursor: pointer;
   margin: 10px;
+  cursor: pointer;
 }
 
 .file-checkbox input {
@@ -64,8 +64,8 @@ export default EditFiles
 }
 
 .file-checkbox input:checked + span {
+  border-bottom: none;
   color: red;
   text-decoration: line-through;
-  border-bottom: none;
 }
 </style>

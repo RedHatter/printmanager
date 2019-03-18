@@ -37,8 +37,8 @@ export default Cell
 <style>
 .e-blast .cell {
   position: absolute;
-  box-sizing: border-box;
   top: 0;
+  box-sizing: border-box;
   height: 100%;
   cursor: pointer;
 }
@@ -49,10 +49,10 @@ export default Cell
 
 .e-blast .cell .remove {
   position: absolute;
-  width: 50px;
-  height: 50px;
   top: calc(50% - 25px);
   left: calc(50% - 25px);
+  width: 50px;
+  height: 50px;
   color: blue;
 }
 </style>

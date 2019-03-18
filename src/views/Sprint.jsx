@@ -83,7 +83,6 @@ export default function Sprint({ user }) {
     )
   }
 
-
   const today = new Date()
   const columns = {}
   enums.artStatus.forEach(o => (columns[o] = []))
@@ -126,9 +125,9 @@ export default function Sprint({ user }) {
 }
 
 .sprint .sprint-column:first-child {
+  overflow: auto;
   flex-shrink: 0;
   max-height: 600px;
-  overflow: auto;
 }
 
 .sprint .column-wrapper {
@@ -138,10 +137,10 @@ export default function Sprint({ user }) {
 
 .sprint .sprint-column {
   box-sizing: border-box;
-  padding: 5px;
-  width: 300px;
-  min-height: 300px;
   margin-bottom: 10px;
+  padding: 5px;
+  min-height: 300px;
+  width: 300px;
   border-right: 1px solid #e0e0e0;
 }
 
@@ -150,30 +149,31 @@ export default function Sprint({ user }) {
 }
 
 .sprint .column-wrapper .column.hover::after {
-  content: "";
   display: block;
   box-sizing: border-box;
   height: 60px;
   border: 2px dashed lightgray;
   border-radius: 3px;
+  content: '';
 }
 
 .sprint .sprint-column div:first-child {
-  white-space: nowrap;
   background-color: inherit;
-  font-weight: 500;
   text-align: left;
+  white-space: nowrap;
+  font-weight: 500;
   opacity: 0.7;
 }
 
 .sprint .sprint-column div {
+  margin: 5px 0;
+  padding: 10px;
   background-color: #f2f3f4;
+  text-align: left;
+  white-space: nowrap;
+
   border-radius-top-right: 3px;
   border-radius-bottom-right: 3px;
-  margin: 5px 0;
-  text-align: left;
-  padding: 10px;
-  white-space: nowrap;
 }
 
 .priority-1 {

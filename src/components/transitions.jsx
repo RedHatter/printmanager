@@ -27,8 +27,8 @@ export let SlideRight = transition('slide-right'),
 
 .slide-right-enter-active {
   opacity: 1;
-  transform: translateX(0);
   transition: all 200ms ease-out;
+  transform: translateX(0);
 }
 
 .slide-right-exit {
@@ -39,8 +39,8 @@ export let SlideRight = transition('slide-right'),
 
 .slide-right-exit-active {
   opacity: 0.01;
-  transform: translateX(-50px);
   transition: all 200ms ease-out;
+  transform: translateX(-50px);
 }
 
 .slide-down-enter {
@@ -51,8 +51,8 @@ export let SlideRight = transition('slide-right'),
 
 .slide-down-enter-active {
   opacity: 1;
-  transform: translateY(0);
   transition: all 200ms ease-out;
+  transform: translateY(0);
 }
 
 .slide-down-exit {
@@ -63,8 +63,8 @@ export let SlideRight = transition('slide-right'),
 
 .slide-down-exit-active {
   opacity: 0.01;
-  transform: translateY(-50px);
   transition: all 200ms ease-out;
+  transform: translateY(-50px);
 }
 
 .fade-enter {

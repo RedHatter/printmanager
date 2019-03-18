@@ -165,15 +165,15 @@ export default connect(state => ({ model: state.jobs }))(Calendar)
 }
 
 .calendar table {
-  border-collapse: collapse;
   width: 1421px;
+  border-collapse: collapse;
 }
 
 .calendar td.legend span {
   display: inline-block;
+  margin-right: 20px;
   width: 36px;
   height: 8px;
-  margin-right: 20px;
   vertical-align: middle;
 }
 
@@ -187,16 +187,16 @@ export default connect(state => ({ model: state.jobs }))(Calendar)
 .calendar .previous::after,
 .calendar .next::before,
 .calendar .next::after {
-  content: "";
-  display: block;
   position: absolute;
-  width: 20px;
-  height: 20px;
   top: calc(50% - 10px);
   left: calc(50% - 10px);
+  display: block;
+  width: 20px;
+  height: 20px;
   background-color: #e0e0e0;
-  transform: rotate(45deg);
+  content: '';
   transition: all 0.2s;
+  transform: rotate(45deg);
 }
 
 .calendar .previous:hover::after,
@@ -218,28 +218,28 @@ export default connect(state => ({ model: state.jobs }))(Calendar)
 }
 
 .calendar .next::after {
+  z-index: 10;
   background-color: white;
   transform: translateX(-5px) rotate(45deg);
-  z-index: 10;
 }
 
 .calendar .previous::after {
+  z-index: 10;
   background-color: white;
   transform: translateX(5px) rotate(45deg);
-  z-index: 10;
 }
 
 .calendar tr.headline th {
-  border-bottom: 1px solid #eeeeee;
   height: 200px;
-  font-size: 2em;
+  border-bottom: 1px solid #eeeeee;
   text-transform: none;
+  font-size: 2em;
 }
 
 .calendar tr th {
   height: 50px;
-  font-weight: normal;
   text-transform: uppercase;
+  font-weight: normal;
 }
 
 .calendar tbody td {
@@ -250,14 +250,14 @@ export default connect(state => ({ model: state.jobs }))(Calendar)
 }
 
 .calendar tbody td div:first-child {
-  font-size: 1.1em;
-  text-align: right;
   margin: 10px;
+  text-align: right;
+  font-size: 1.1em;
 }
 
 .calendar tbody td.today div:first-child {
-  font-weight: bold;
   color: #2196f3;
+  font-weight: bold;
 }
 
 .calendar tbody td div.inactive:first-child {
@@ -270,8 +270,8 @@ export default connect(state => ({ model: state.jobs }))(Calendar)
   margin: 2px;
   padding: 5px;
   border-radius: 2px;
-  color: white;
   background-color: #9c27b0;
+  color: white;
   cursor: pointer;
 }
 

@@ -139,8 +139,8 @@ export default function Filters(props) {
 
 <style>
 .filters {
-  width: 1300px !important;
   margin-bottom: 5px !important;
+  width: 1300px !important;
 }
 
 .filters .type-select {

@@ -27,17 +27,17 @@ export default Tabs
 
 <style>
 .vertical-tabs {
+  position: relative;
   display: flex;
   flex-direction: column;
-  position: relative;
   width: 228px;
 }
 
 .vertical-tabs-highlight {
-  width: 4px;
-  height: 48px;
   position: absolute;
   left: 0;
+  width: 4px;
+  height: 48px;
   background-color: #4285f4;
   transition: top 0.3s;
 }
