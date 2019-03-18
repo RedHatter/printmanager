@@ -47,7 +47,7 @@ export default function JobList({ user, show, isAdmin, elevation }) {
             isAdmin={isAdmin}
             expanded={expanded == o.id}
             highlighted={o?.assignee?.id == user}
-            onChange={e => setExpanded(o.id)}
+            onChange={e => setExpanded(expanded == o.id ? false : o.id)}
           />
         ))
       ) : (
