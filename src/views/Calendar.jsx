@@ -71,6 +71,13 @@ class Calendar extends Component {
             <table>
               <thead>
                 <tr>
+                  <td colspan="7" className="legend">
+                    Send to print <span className="print" />
+                    Drop date <span className="drop" />
+                    Due date <span className="due" />
+                  </td>
+                </tr>
+                <tr className="headline">
                   <th className="previous" onClick={this.handlePrevious} />
                   <th colSpan="5">{format(selectedDay, 'MMMM yyyy')}</th>
                   <th className="next" onClick={this.handleNext} />
@@ -162,6 +169,14 @@ export default connect(state => ({ model: state.jobs }))(Calendar)
   width: 1421px;
 }
 
+.calendar td.legend span {
+  display: inline-block;
+  width: 36px;
+  height: 8px;
+  margin-right: 20px;
+  vertical-align: middle;
+}
+
 .calendar .previous,
 .calendar .next {
   position: relative;
@@ -214,7 +229,7 @@ export default connect(state => ({ model: state.jobs }))(Calendar)
   z-index: 10;
 }
 
-.calendar tr:first-child th {
+.calendar tr.headline th {
   border-bottom: 1px solid #eeeeee;
   height: 200px;
   font-size: 2em;
@@ -227,25 +242,25 @@ export default connect(state => ({ model: state.jobs }))(Calendar)
   text-transform: uppercase;
 }
 
-.calendar td {
+.calendar tbody td {
   width: 200px;
   height: 200px;
   border: 1px solid #eeeeee;
   vertical-align: top;
 }
 
-.calendar td div:first-child {
+.calendar tbody td div:first-child {
   font-size: 1.1em;
   text-align: right;
   margin: 10px;
 }
 
-.calendar td.today div:first-child {
+.calendar tbody td.today div:first-child {
   font-weight: bold;
   color: #2196f3;
 }
 
-.calendar td div.inactive:first-child {
+.calendar tbody td div.inactive:first-child {
   color: #9e9e9e;
 }
 
