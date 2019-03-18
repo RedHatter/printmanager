@@ -1,6 +1,8 @@
 const Router = require('koa-router')
 const Jimp = require('jimp')
 const Storage = require('aws-amplify').Storage
+const querystring = require('querystring')
+const { subDays } = require('date-fns')
 
 const { Eblast } = require('../../schema')
 
@@ -46,7 +48,9 @@ router.post('/', async ctx => {
 
 router.get('/', async ctx => {
   ctx.response.type = 'json'
-  ctx.body = (await Eblast.find()).reverse()
+  ctx.body = await Eblast.find({
+    created: { $gte: subDays(new Date(), 30) }
+  }).sort({ created: -1 })
 })
 
 router.delete('/:id', async ctx => {

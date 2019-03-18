@@ -218,6 +218,7 @@ router.post('/search', async ctx => {
   })
     .skip(skip)
     .limit(limit)
+    .sort({ created: -1 })
     .exec()
 })
 
