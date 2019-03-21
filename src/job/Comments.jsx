@@ -1,11 +1,12 @@
 import React, { Fragment, useState, useRef } from 'react'
 import { Editor, EditorState, RichUtils, Modifier } from 'draft-js'
-import { Button, Popover, Chip } from '@material-ui/core'
+import { Button, Popover, Chip, IconButton } from '@material-ui/core'
 import { stateToHTML } from 'draft-js-export-html'
 import { Auth } from 'aws-amplify'
 import clsx from 'clsx'
 
-import { addComment } from '../actions.js'
+import DeleteIcon from '../icons/Delete.js'
+import { addComment, deleteComment } from '../actions.js'
 import { useStore } from '../store.js'
 import { formatDateTime } from '../../utils.js'
 
@@ -153,6 +154,11 @@ export default function Comments({ model }) {
         <div key={o.id} className="comment">
           <span className="user">{o.user.name}</span>
           <span className="created">{formatDateTime(o.created)}</span>
+          <DeleteIcon
+            fontSize="small"
+            className="delete"
+            onClick={e => deleteComment(model.id, o.id)}
+          />
           <div
             className="content"
             dangerouslySetInnerHTML={{ __html: o.html }}
@@ -253,6 +259,23 @@ export default function Comments({ model }) {
   margin-left: 12px;
   color: #9e9e9e;
   font-size: 0.8em;
+}
+
+.comment .delete {
+  margin: 0 10px;
+  color: #eeeeee;
+  vertical-align: middle;
+  opacity: 0;
+  cursor: pointer;
+  transition: all 300ms;
+}
+
+.comment:hover .delete {
+  opacity: 1;
+}
+
+.comment:hover .delete:hover {
+  color: #616161;
 }
 
 .comment .content {

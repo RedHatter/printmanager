@@ -279,15 +279,17 @@ router.post('/:id/comments', async ctx => {
     ctx.body = job
     ctx.socketIo.emit('invalidateJobs')
 
-    await ctx.sendMail({
-      to,
-      subject: job.name,
-      html: `A new comment has been posted to <i>${job.name}</i>
+    if (to) {
+      await ctx.sendMail({
+        to,
+        subject: job.name,
+        html: `A new comment has been posted to <i>${job.name}</i>
 <blockquote>${comment.html}</blockquote>
 <a href="http://workflow.dealerdigitalgroup.com/?${
-        job.id
-      }">View in #Workflow</a>`
-    })
+          job.id
+        }">View in #Workflow</a>`
+      })
+    }
   } catch (err) {
     if (err.name == 'ValidationError') {
       console.error(err.message)
@@ -297,6 +299,13 @@ router.post('/:id/comments', async ctx => {
 
     throw err
   }
+})
+
+router.delete('/:ref/comments/:id', async ctx => {
+  const job = await Job.findById(ctx.params.ref)
+  job.comments.splice(job.comments.findIndex(o => o._id == ctx.params.id), 1)
+  await job.save()
+  ctx.socketIo.emit('invalidateJobs')
 })
 
 router.get('/:ref/patches', async ctx => {

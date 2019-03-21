@@ -105,6 +105,14 @@ export function addComment(body, id) {
   return api(`/api/job/${id}/comments`, 'Unable to comment on job.', { body })
 }
 
+export function deleteComment(job, comment) {
+  return api(
+    `/api/job/${job}/comments/${comment}`,
+    'Unable to comment on job.',
+    { method: 'DELETE' }
+  )
+}
+
 export function deleteJob(id) {
   return api('/api/job/' + id, 'Unable to delete job.', { method: 'DELETE' })
 }
