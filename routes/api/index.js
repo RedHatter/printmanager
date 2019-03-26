@@ -27,7 +27,6 @@ router.use(async (ctx, next) => {
 router.use('/job', require(path.join(__dirname, 'job.js')))
 router.use('/client', require(path.join(__dirname, 'client.js')))
 router.use('/user', require(path.join(__dirname, 'user.js')))
-router.use('/eblast', require(path.join(__dirname, 'eblast.js')))
 
 router.post('/send', async ctx => {
   let { recipients, attachments, subject, message, jobId } = ctx.request.body

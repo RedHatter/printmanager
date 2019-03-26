@@ -12,14 +12,20 @@ const cognito = new CognitoIdentityServiceProvider({
 
 async function api(url, error, { body, method }) {
   try {
-    let res = await fetch(url, {
+    const request = {
       method: method || 'POST',
-      body: body ? JSON.stringify(body) : undefined,
       headers: {
-        'Content-Type': 'application/json',
         Authorization: (await Auth.currentSession()).idToken.jwtToken
       }
-    })
+    }
+
+    if (body instanceof FormData) request.body = body
+    else if (body) {
+      request.body = JSON.stringify(body)
+      request.headers['Content-Type'] = 'application/json'
+    }
+
+    let res = await fetch(url, request)
 
     if (!res.ok) throw new Error(`Error code ${res.status}.`)
 
@@ -48,42 +54,15 @@ async function showError(message, err) {
   return false
 }
 
-export async function createEblast(file) {
-  let path = encodeURIComponent(file.name.replace(/ /g, '_'))
-  Storage.put(path, file, {
-    contentType: file.type,
-    bucket: 'dealerdigitalgroup.media'
-  }).catch(err => showError('Unable to upload e-blast.', err))
+export async function createEblast(id, file) {
+  const body = new FormData()
+  body.append('file', file)
 
-  return api('/api/eblast', 'Unable to create e-blast.', {
-    body: {
-      name: file.name.substring(0, file.name.lastIndexOf('.')),
-      image:
-        'https://s3-us-west-1.amazonaws.com/dealerdigitalgroup.media/public/' +
-        path
-    }
-  })
+  return api(`/api/job/${id}/eblast`, 'Unable to create e-blast.', { body })
 }
 
-export function updateEblast(body) {
-  return api('/api/eblast/' + body.id, 'Unable to update e-blasts.', { body })
-}
-
-export function deleteEblast(id) {
-  return api('/api/eblast/' + id, 'Unable to delete e-blast.', {
-    method: 'DELETE'
-  })
-}
-
-export async function fetchEblasts() {
-  const eblasts = await api('/api/eblast', 'Unable to retrieve e-blasts.', {
-    method: 'GET'
-  })
-  if (eblasts === false) return false
-
-  return update(state => {
-    state.eblasts = eblasts
-  })
+export function updateEblast(id, body) {
+  return api(`/api/job/${id}/eblast`, 'Unable to update e-blast.', { body })
 }
 
 export async function fetchJobs() {

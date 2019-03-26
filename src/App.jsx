@@ -25,12 +25,9 @@ import {
   fetchFiles,
   fetchClients,
   fetchUsers,
-  fetchEblasts,
-  clearError,
-  createEblast
+  clearError
 } from './actions.js'
 import Tabs from './components/Tabs.jsx'
-import EblastList from './eblast/EblastList.jsx'
 import JobList from './views/JobList.jsx'
 import CreateDialog from './CreateDialog.jsx'
 import Filters from './Filters.jsx'
@@ -55,7 +52,6 @@ class App extends Component {
     fetchUsers().then(fetchJobs)
     fetchFiles()
     fetchClients()
-    fetchEblasts()
 
     const query = document.location.search.substring(1)
     if (query.length == 24) this.viewJob(query)
@@ -119,7 +115,6 @@ class App extends Component {
               <Tab label="All Jobs" />
               <Tab label="Calendar" />
               <Tab label="Sprint" />
-              <Tab label="E-blasts" />
               {isAdmin && <Tab label="Users" />}
               {isAdmin && <Tab label="Clients" />}
             </Tabs>
@@ -141,12 +136,9 @@ class App extends Component {
                 <Sprint user={authData.username} />
               </SlideRight>
               <SlideRight in={selectedTab == 3}>
-                <EblastList />
-              </SlideRight>
-              <SlideRight in={selectedTab == 4}>
                 <UserList />
               </SlideRight>
-              <SlideRight in={selectedTab == 5}>
+              <SlideRight in={selectedTab == 4}>
                 <ClientList />
               </SlideRight>
             </div>

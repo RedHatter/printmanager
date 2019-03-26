@@ -3,7 +3,6 @@ import fromSchema from 'prop-types-from-mongoose'
 import JobSchema from '../schema/Job.js'
 import ClientSchema from '../schema/Client.js'
 import PixelSchema from '../schema/Pixel.js'
-import EblastSchema from '../schema/Eblast.js'
 
 export const JobType = fromSchema(
     {
@@ -44,5 +43,4 @@ export const JobType = fromSchema(
       Pixel: PixelSchema
     }
   ),
-  ClientType = fromSchema(ClientSchema),
-  EblastType = fromSchema(EblastSchema)
+  ClientType = fromSchema(ClientSchema)

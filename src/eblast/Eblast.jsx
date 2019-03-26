@@ -1,4 +1,5 @@
 import React, { Fragment, useState, useReducer, useRef } from 'react'
+import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
 import {
   Paper,
@@ -7,12 +8,14 @@ import {
   Card,
   CardHeader,
   CardContent,
-  Button
+  Button,
+  Dialog,
+  DialogContent,
+  DialogActions
 } from '@material-ui/core'
 import produce from 'immer'
 
 import SaveIcon from '../icons/Save.js'
-import { EblastType } from '../types.js'
 import Row from './Row.jsx'
 import Cell from './Cell.jsx'
 import Handle from './Handle.jsx'
@@ -149,7 +152,7 @@ const reducer = produce((draft, action) => {
   }
 })
 
-function Edit(props) {
+function Eblast(props) {
   const [active, setActive] = useState({ row: 0, cell: 0 })
   const [model, dispatch] = useReducer(
     reducer,
@@ -159,15 +162,18 @@ function Edit(props) {
   const scrollRef = useRef(null)
 
   function getOffset() {
-    return scrollRef.current ? getRelative(0, scrollRef.current.scrollTop).y : 0
+    const dom = ReactDOM.findDOMNode(scrollRef.current)
+    return dom ? dom.scrollTop - 24 : -24
   }
 
   function split(at, orientation) {
+    const offset = getRelative(24, getOffset())
+
     dispatch({
       type: 'SPLIT',
       payload: {
         index: active.row,
-        at: orientation == 'vertical' ? at : at + getOffset(),
+        at: orientation == 'vertical' ? at - offset.x : at + offset.y,
         orientation
       }
     })
@@ -230,7 +236,7 @@ function Edit(props) {
 
   if (!model) return null
 
-  const { name, utmSource = '', image, rows } = model
+  const { utmSource = '', image, rows } = model
   const activeCell = rows[active.row]?.cells[active.cell]
 
   if (!activeCell) {
@@ -241,128 +247,124 @@ function Edit(props) {
   const { url = '', alt = '' } = activeCell
 
   return (
-    <Grid container spacing={24}>
-      <Grid item>
-        <Paper className="e-blast">
-          <div>
-            <Handle getRelative={getRelative} onDrop={split} fixed />
-            <Handle
-              // start={ rows[active.row]?.y }
-              // length={ rows[active.row]?.height }
-              orientation="vertical"
-              getRelative={getRelative}
-              onDrag={setActiveFromEvent}
-              onDrop={split}
-              fixed
-            />
-            <div className="scroll-container" ref={scrollRef}>
-              <div>
-                <img src={image} ref={boundingRef} />
-                {rows.map((row, i) => (
-                  <Fragment key={i}>
-                    <Row y={row.y} height={row.height}>
-                      {row.cells.map((cell, j) => (
-                        <Fragment key={`${i}-${j}`}>
-                          <Cell
-                            x={cell.x}
-                            width={cell.width}
-                            active={i == active.row && j == active.cell}
-                            onClick={() => setActive({ row: i, cell: j })}
-                            onRemove={remove.bind(this, i, j)}
-                          />
-                          <Handle
-                            orientation="vertical"
-                            getRelative={getRelative}
-                            position={cell.x + cell.width}
-                            onDrop={grow.bind(this, i, j)}
-                            key={cell.x + cell.width}
-                          />
-                        </Fragment>
-                      ))}
-                    </Row>
+    <Dialog open maxWidth={false} PaperProps={{ className: 'e-blast' }}>
+      <DialogContent ref={scrollRef}>
+        <Handle getRelative={getRelative} onDrop={split} fixed />
+        <Handle
+          getRelative={getRelative}
+          // start={ rows[active.row]?.y }
+          // length={ rows[active.row]?.height }
+          orientation="vertical"
+          onDrag={setActiveFromEvent}
+          onDrop={split}
+          fixed
+        />
+        <div className="canvas">
+          <img src={image} ref={boundingRef} />
+          {rows.map((row, i) => (
+            <Fragment key={i}>
+              <Row y={row.y} height={row.height}>
+                {row.cells.map((cell, j) => (
+                  <Fragment key={`${i}-${j}`}>
+                    <Cell
+                      x={cell.x}
+                      width={cell.width}
+                      active={i == active.row && j == active.cell}
+                      onClick={() => setActive({ row: i, cell: j })}
+                      onRemove={remove.bind(this, i, j)}
+                    />
                     <Handle
                       getRelative={getRelative}
-                      position={row.y + row.height}
-                      onDrop={grow.bind(this, i, -1)}
-                      key={row.y + row.height}
+                      orientation="vertical"
+                      position={cell.x + cell.width}
+                      onDrop={grow.bind(this, i, j)}
+                      key={cell.x + cell.width}
                     />
                   </Fragment>
                 ))}
-              </div>
-            </div>
-          </div>
-        </Paper>
-      </Grid>
-      <Grid item>
-        <Card style={{ marginBottom: '24px' }}>
-          <CardHeader title="Campaign" />
-          <CardContent>
-            <TextField
-              onChange={e => update({ name: e.target.value })}
-              value={name}
-              fullWidth
-              label="Name"
-            />
-            <TextField
-              onChange={e => update({ utmSource: e.target.value })}
-              value={utmSource}
-              fullWidth
-              label="Source"
-            />
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader title="Link" />
-          <CardContent>
-            <TextField
-              onChange={e => updateActive({ url: e.target.value })}
-              value={url}
-              fullWidth
-              label="URL"
-            />
-            <TextField
-              onChange={e => updateActive({ alt: e.target.value })}
-              value={alt}
-              fullWidth
-              label="Alt Text"
-            />
-          </CardContent>
-        </Card>
-        <br />
+              </Row>
+              <Handle
+                getRelative={getRelative}
+                position={row.y + row.height}
+                onDrop={grow.bind(this, i, -1)}
+                key={row.y + row.height}
+              />
+            </Fragment>
+          ))}
+        </div>
+        <div className="details">
+          <Card>
+            <CardHeader title="Campaign" />
+            <CardContent>
+              <TextField
+                onChange={e => update({ utmSource: e.target.value })}
+                value={utmSource}
+                fullWidth
+                label="Source"
+              />
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader title="Link" />
+            <CardContent>
+              <TextField
+                onChange={e => updateActive({ url: e.target.value })}
+                value={url}
+                fullWidth
+                label="URL"
+              />
+              <TextField
+                onChange={e => updateActive({ alt: e.target.value })}
+                value={alt}
+                fullWidth
+                label="Alt Text"
+              />
+            </CardContent>
+          </Card>
+        </div>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={e => props.onClose()}>Cancel</Button>
         <Button
-          variant="contained"
-          color="primary"
-          onClick={e => props.updateEblast(model)}
+          onClick={e => {
+            props.onClose()
+            props.updateEblast(model)
+          }}
         >
           Save &nbsp; <SaveIcon />
         </Button>
-      </Grid>
-    </Grid>
+      </DialogActions>
+    </Dialog>
   )
 }
 
-Edit.propTypes = {
-  model: EblastType.isRequired,
+Eblast.propTypes = {
+  model: PropTypes.object.isRequired,
   updateEblast: PropTypes.func.isRequired
 }
 
-export default Edit
+export default Eblast
 
 <style>
 .e-blast {
-  padding: 50px;
+  overflow-y: visible !important;
 }
 
-.e-blast > div {
+.e-blast .canvas {
   position: relative;
 }
 
-.e-blast .scroll-container {
-  overflow-y: scroll;
-  max-height: calc(100vh - 100px);
+.e-blast .canvas img {
+  width: 100%;
 }
 
-.e-blast .scroll-container > div {
-  position: relative;
+.details {
+  position: absolute;
+  top: 0;
+  right: -442px;
+}
+
+.details > div {
+  margin: 0 0 20px 20px;
 }
 </style>

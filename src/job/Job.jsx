@@ -1,8 +1,9 @@
-import React, { Fragment } from 'react'
+import React, { useState, Fragment } from 'react'
 import clsx from 'clsx'
 import PropTypes from 'prop-types'
-import { Storage } from 'aws-amplify'
+import { Auth, Storage } from 'aws-amplify'
 import {
+  Button,
   ExpansionPanel,
   ExpansionPanelSummary,
   ExpansionPanelDetails
@@ -14,6 +15,8 @@ import { JobType } from '../types.js'
 import JobActions from './JobActions.jsx'
 import Column from '../components/Column.jsx'
 import Comments from './Comments.jsx'
+import Eblast from '../eblast/Eblast.jsx'
+import { createEblast, updateEblast } from '../actions.js'
 import { colorize, formatNumber, formatPhone, formatDate } from '../../utils.js'
 
 Job.propTypes = {
@@ -24,7 +27,8 @@ Job.propTypes = {
 }
 
 function Job({ highlighted, model, files, isAdmin, ...rest }) {
-  let {
+  const [isEblastOpen, setIsEblastOpen] = useState(false)
+  const {
     name,
     jobType,
     size,
@@ -48,7 +52,8 @@ function Job({ highlighted, model, files, isAdmin, ...rest }) {
     expire,
     details,
     forceComplete,
-    pixels
+    pixels,
+    eblast
   } = model
 
   let dropStatusFromatted = dropStatus ? formatDate(dropStatus) : 'Incomplete'
@@ -104,6 +109,47 @@ function Job({ highlighted, model, files, isAdmin, ...rest }) {
         <Column group="assignee">{assignee?.name}</Column>
       </ExpansionPanelSummary>
       <ExpansionPanelDetails className="job-details">
+        {jobType == 'Email Blast' && (
+          <div className="eblast">
+            <Button component="label" className="upload-button">
+              <input
+                onChange={e => createEblast(model.id, e.target.files[0])}
+                type="file"
+                accept="image/*"
+              />
+              {eblast && eblast.image ? 'Re-upload E-blast' : 'Upload E-blast'}
+            </Button>
+            {eblast && eblast.image && (
+              <Fragment>
+                <Button onClick={e => setIsEblastOpen(true)}>Edit</Button>
+                {isEblastOpen && (
+                  <Eblast
+                    model={eblast}
+                    onClose={() => setIsEblastOpen(false)}
+                    updateEblast={data => updateEblast(model.id, data)}
+                  />
+                )}
+                <Button
+                  onClick={e =>
+                    Auth.currentSession().then(async auth => {
+                      const res = await fetch(`/api/job/${model.id}/eblast`, {
+                        headers: { Authorization: auth.idToken.jwtToken }
+                      })
+                      const a = document.createElement('a')
+                      a.href = window.URL.createObjectURL(await res.blob())
+                      a.download = 'download.html'
+                      document.body.appendChild(a)
+                      a.click()
+                      a.remove()
+                    })
+                  }
+                >
+                  Download
+                </Button>
+              </Fragment>
+            )}
+          </div>
+        )}
         <table>
           <tbody>
             <tr>
@@ -259,7 +305,7 @@ function Job({ highlighted, model, files, isAdmin, ...rest }) {
             </tbody>
           </table>
         )}
-        {pixels.length > 0 && (
+        {isAdmin && pixels.length > 0 && (
           <table className="emails">
             <tr>
               <th colSpan="2" className="section-header">
@@ -337,6 +383,10 @@ span.green {
 .job-row div > div {
   margin: auto 15px;
   white-space: nowrap;
+}
+
+.job-details .eblast {
+  text-align: center;
 }
 
 .job-details {

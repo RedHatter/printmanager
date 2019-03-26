@@ -2,7 +2,7 @@ import { Atom, swap, deref, useAtom } from '@dbeining/react-atom'
 import produce, { original } from 'immer'
 import io from 'socket.io-client'
 
-import { fetchJobs, fetchClients, fetchEblasts, fetchUsers } from './actions.js'
+import { fetchJobs, fetchClients, fetchUsers } from './actions.js'
 
 export const store = Atom.of({
   jobs: [],
@@ -15,7 +15,6 @@ export const store = Atom.of({
     skip: 0,
     limit: 50
   },
-  eblasts: [],
   errors: []
 })
 
@@ -35,5 +34,4 @@ export function getStore() {
 const socket = io()
 socket.on('invalidateJobs', fetchJobs)
 socket.on('invalidateClients', fetchClients)
-socket.on('invalidateEblasts', fetchEblasts)
 socket.on('invalidateUsers', fetchUsers)

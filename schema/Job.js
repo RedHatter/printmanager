@@ -107,7 +107,29 @@ module.exports = new Schema(
     quantity: { type: Number, min: 0 },
     printDate: { type: Date },
     vendor: { type: String },
-    dropStatus: Date
+    dropStatus: Date,
+
+    eblast: {
+      utmSource: String,
+      image: {
+        type: String,
+        match: /https:\/\/s3-us-west-1\.amazonaws\.com\/dealerdigitalgroup\.media\/public\/.+/
+      },
+      rows: [
+        {
+          y: { type: Number, min: 0 },
+          height: { type: Number, min: 0 },
+          cells: [
+            {
+              x: { type: Number, min: 0 },
+              width: { type: Number, min: 0 },
+              url: String,
+              alt: String
+            }
+          ]
+        }
+      ]
+    }
   },
   {
     toObject: { getters: true },

@@ -4,7 +4,6 @@ const mongoose = require('mongoose')
 const ClientSchema = require('./Client.js')
 const JobSchema = require('./Job.js')
 const PixelSchema = require('./Pixel.js')
-const EblastSchema = require('./Eblast.js')
 const { invalidateUsers } = require('./users.js')
 
 invalidateUsers()
@@ -29,6 +28,5 @@ JobSchema.plugin(patchHistory, {
 module.exports = {
   Pixel: mongoose.model('Pixel', PixelSchema),
   Client: mongoose.model('Client', ClientSchema),
-  Job: mongoose.model('Job', JobSchema),
-  Eblast: mongoose.model('Eblast', EblastSchema)
+  Job: mongoose.model('Job', JobSchema)
 }
