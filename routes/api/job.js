@@ -106,6 +106,7 @@ router.post('/', async ctx => {
         break
       case 'Google Banner':
         type = 'GB'
+        break
       case 'Email Blast':
         type = 'Eblast'
         break
@@ -283,7 +284,7 @@ router.post('/:id/comments', async ctx => {
     ctx.body = job
     ctx.socketIo.emit('invalidateJobs')
 
-    if (to) {
+    if (to.length > 0) {
       await ctx.sendMail({
         to,
         subject: job.name,
@@ -399,7 +400,7 @@ router.get('/:id/eblast', async ctx => {
   }
   html += '</table></body></html>'
 
-  ctx.attachment('eblast.html')
+  ctx.attachment(job.name + '.html')
   ctx.body = html
 })
 

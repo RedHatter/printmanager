@@ -114,10 +114,10 @@ export default function CreateDialog(props) {
       PaperComponent={Paper}
       PaperProps={{
         component: Form,
-        onSubmit: () =>
-          Promise.all([deleteFiles(selectedFiles), updateJob(model)]).then(
-            props.onClose
-          ),
+        onSubmit: async () =>
+          (await deleteFiles(selectedFiles)) &&
+          (await updateJob(model)) &&
+          props.onClose(),
         onValid: () => setSubmitDisabled(false),
         onInvalid: () => setSubmitDisabled(true)
       }}
@@ -536,7 +536,7 @@ export default function CreateDialog(props) {
         )}
         <Button onClick={props.onClose}>Cancel</Button>
         <Button type="submit" disabled={submitDisabled}>
-          {editMode ? 'Save' : 'Create'}
+          Done
         </Button>
       </DialogActions>
     </Dialog>

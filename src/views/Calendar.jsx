@@ -71,7 +71,7 @@ class Calendar extends Component {
             <table>
               <thead>
                 <tr>
-                  <td colspan="7" className="legend">
+                  <td colSpan="7" className="legend">
                     Send to print <span className="print" />
                     Drop date <span className="drop" />
                     Due date <span className="due" />

@@ -211,8 +211,8 @@ export default function Comments({ model }) {
           onChange={setEditorState}
         />
         <Button
-          onClick={async e => {
-            addComment(
+          onClick={async e =>
+            (await addComment(
               {
                 notify: notify.map(o => o.email),
                 user: (await Auth.currentAuthenticatedUser()).username,
@@ -221,9 +221,8 @@ export default function Comments({ model }) {
                 })
               },
               model.id
-            )
-            setEditorState(EditorState.createEmpty())
-          }}
+            )) && setEditorState(EditorState.createEmpty())
+          }
         >
           Comment
         </Button>

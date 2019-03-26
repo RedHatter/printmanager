@@ -53,12 +53,7 @@ export default function({ onClose, onChange }) {
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
-        <Button
-          onClick={e => {
-            onClose()
-            onChange({ name, email, admin, salesmen })
-          }}
-        >
+        <Button onClick={e => onChange({ name, email, admin, salesmen })}>
           Done
         </Button>
       </DialogActions>

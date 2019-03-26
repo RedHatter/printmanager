@@ -91,7 +91,13 @@ function DeleteButton({ model }) {
           </DialogContent>
           <DialogActions>
             <Button onClick={() => setIsOpen(false)}>Cancel</Button>
-            <Button onClick={() => deleteJob(model.id)}>Delete</Button>
+            <Button
+              onClick={async () =>
+                (await deleteJob(model.id)) && setIsOpen(false)
+              }
+            >
+              Delete
+            </Button>
           </DialogActions>
         </Dialog>
       )}

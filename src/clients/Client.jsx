@@ -54,10 +54,8 @@ export default function Client(props) {
       PaperComponent={Paper}
       PaperProps={{
         component: Form,
-        onSubmit: () => {
-          updateOrCreateClient(model)
-          props.onClose()
-        },
+        onSubmit: async () =>
+          (await updateOrCreateClient(model)) && props.onClose(),
         onValid: () => setSubmitDisabled(false),
         onInvalid: () => setSubmitDisabled(true)
       }}

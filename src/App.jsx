@@ -182,7 +182,7 @@ class App extends Component {
 
 export default connect(state => ({
   clients: state.clients,
-  error: state.errors > 0 ? state.errors[0].message : undefined
+  error: state.errors.length > 0 ? state.errors[0].message : undefined
 }))(App)
 
 <style>

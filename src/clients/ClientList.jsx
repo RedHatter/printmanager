@@ -33,7 +33,9 @@ export default function ClientList(props) {
       {confirm && (
         <Confirm
           onClose={e => setConfirm(null)}
-          onConfirm={e => deleteClient(confirm.id)}
+          onConfirm={async e =>
+            (await deleteClient(confirm.id)) && setConfirm(null)
+          }
         >
           Are you sure you want to delete <i>{confirm.name}</i>? This action can
           not be reversed.

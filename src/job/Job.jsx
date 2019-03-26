@@ -126,7 +126,10 @@ function Job({ highlighted, model, files, isAdmin, ...rest }) {
                   <Eblast
                     model={eblast}
                     onClose={() => setIsEblastOpen(false)}
-                    updateEblast={data => updateEblast(model.id, data)}
+                    updateEblast={async data =>
+                      (await updateEblast(model.id, data)) &&
+                      setIsEblastOpen(false)
+                    }
                   />
                 )}
                 <Button
@@ -387,6 +390,11 @@ span.green {
 
 .job-details .eblast {
   text-align: center;
+}
+
+.job-details pre {
+  max-width: 1000px;
+  white-space: pre-wrap;
 }
 
 .job-details {

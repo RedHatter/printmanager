@@ -7,14 +7,7 @@ export default function Confirm({ onClose, onConfirm, children }) {
       <DialogContent>{children}</DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
-        <Button
-          onClick={e => {
-            onClose()
-            onConfirm()
-          }}
-        >
-          Delete
-        </Button>
+        <Button onClick={e => onConfirm()}>Delete</Button>
       </DialogActions>
     </Dialog>
   )

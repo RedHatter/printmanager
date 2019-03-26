@@ -56,7 +56,7 @@ router.use('/api', require(path.join(__dirname, 'routes', 'api/index.js')))
 router.use('/pixel', require(path.join(__dirname, 'routes', 'pixel.js')))
 
 app
-  .use(body({ multipart: true }))
+  .use(body({ multipart: true, formLimit: '5mb' }))
   .use(session({ maxAge: 'session' }, app))
   .use(router.routes())
   .use(serve(path.join(__dirname, 'public')))

@@ -33,8 +33,8 @@ function DateRangePicker({
         else if (!end) {
           setEnd(day)
           if (autoOk) {
-            onChange([begin, day].sort())
             picker.current.close()
+            onChange([begin, day].sort())
           }
         } else {
           setBegin(day)

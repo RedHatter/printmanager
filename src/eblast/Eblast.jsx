@@ -325,12 +325,7 @@ function Eblast(props) {
       </DialogContent>
       <DialogActions>
         <Button onClick={e => props.onClose()}>Cancel</Button>
-        <Button
-          onClick={e => {
-            props.onClose()
-            props.updateEblast(model)
-          }}
-        >
+        <Button onClick={e => props.updateEblast(model)}>
           Save &nbsp; <SaveIcon />
         </Button>
       </DialogActions>
@@ -340,7 +335,8 @@ function Eblast(props) {
 
 Eblast.propTypes = {
   model: PropTypes.object.isRequired,
-  updateEblast: PropTypes.func.isRequired
+  updateEblast: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired
 }
 
 export default Eblast

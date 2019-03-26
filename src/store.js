@@ -1,4 +1,5 @@
 import { Atom, swap, deref, useAtom } from '@dbeining/react-atom'
+import { subDays } from 'date-fns'
 import produce, { original } from 'immer'
 import io from 'socket.io-client'
 
@@ -10,7 +11,7 @@ export const store = Atom.of({
   users: [],
   files: {},
   filter: {
-    created: [],
+    created: [subDays(new Date(), 30), new Date()],
     dueDate: [],
     skip: 0,
     limit: 50

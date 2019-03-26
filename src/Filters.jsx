@@ -18,10 +18,7 @@ import DateRangePicker from './components/DateRangePicker.jsx'
 
 export default function Filters(props) {
   const { filter, users, clients } = useStore()
-  const handleChange = o => {
-    updateFilter(o)
-    fetchJobs()
-  }
+  const handleChange = async o => (await updateFilter(o)) && fetchJobs()
 
   return (
     <Grid container spacing={16} className="filters">

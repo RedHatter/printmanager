@@ -17,6 +17,7 @@ export default function Sprint({ user }) {
 
   function resize() {
     const dom = columnWrapper.current
+    if (!dom) return
     dom.style.width = Math.floor(dom.clientWidth / 300) * 300 + 'px'
   }
 

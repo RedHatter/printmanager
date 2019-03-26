@@ -33,20 +33,24 @@ export default function UserList(props) {
       {isCreateOpen && (
         <CreateUser
           onClose={e => setIsCreateOpen(false)}
-          onChange={info => createUser(info)}
+          onChange={async info =>
+            (await createUser(info)) && setIsCreateOpen(false)
+          }
         />
       )}
       {editing != null && (
         <EditUser
           onClose={e => setEditing(null)}
-          onChange={info => editUser(info)}
+          onChange={async info => (await editUser(info)) && setEditing(null)}
           value={editing}
         />
       )}
       {confirm && (
         <Confirm
           onClose={e => setConfirm(null)}
-          onConfirm={e => deleteUser(confirm.id)}
+          onConfirm={async e =>
+            (await deleteUser(confirm.id)) && setConfirm(null)
+          }
         >
           Are you sure you want to delete <i>{confirm.name}</i>? This action can
           not be reversed.
