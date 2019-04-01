@@ -50,10 +50,15 @@ router.post('/send', async ctx => {
     )}<img src="https://workflow.dealerdigitalgroup.com/pixel/${
       pixel.id
     }.png">`,
-    attachments: attachments.map(path => ({
-      path,
-      filename: path.substring(path.lastIndexOf('/') + 1, path.lastIndexOf('?'))
-    }))
+    attachments: await Promise.all(
+      attachments.map(id =>
+        Storage.get(job.files.id(id).path, {
+          bucket: 'dealerdigitalgroup.printmanager'
+        }).then(path => ({
+          path,
+          filename: path.substring(path.lastIndexOf('/') + 1, path.lastIndexOf('?'))
+        }))
+    ))
   })
 })
 

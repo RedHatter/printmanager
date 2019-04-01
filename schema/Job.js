@@ -70,6 +70,12 @@ module.exports = new Schema(
       required: true,
       enum: enums.artStatus
     },
+    files: [
+      {
+        type: { type: String },
+        path: String
+      }
+    ],
     completed: Date,
     forceComplete: Boolean,
     pixels: [

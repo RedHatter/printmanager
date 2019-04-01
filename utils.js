@@ -249,6 +249,10 @@ function throttle(func, wait, options) {
   return throttled
 }
 
+function basename (file) {
+  return decodeURIComponent(file.substring(file.lastIndexOf('/') + 1))
+}
+
 module.exports = {
   enums,
   colorize,
@@ -262,5 +266,6 @@ module.exports = {
   range,
   isObject,
   deepmerge,
-  throttle
+  throttle,
+  basename
 }

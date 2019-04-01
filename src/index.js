@@ -12,10 +12,6 @@ import blue from '@material-ui/core/colors/blue'
 import App from './App.jsx'
 
 Amplify.configure({
-  Storage: {
-    region: 'us-west-1',
-    bucket: 'dealerdigitalgroup.printmanager'
-  },
   Auth: {
     region: 'us-west-2',
     identityPoolId: 'us-west-2:ebaf2604-1d7e-4e64-8d72-bb1b9d4f7f01',

@@ -2,44 +2,40 @@ import React, { Component, Fragment } from 'react'
 import { Typography } from '@material-ui/core'
 import PropTypes from 'prop-types'
 
-function EditFiles(props) {
-  if (props.files.length < 1) return null
+import { basename } from '../utils.js'
+
+function EditFiles({ files, onChange, selected }) {
+  if (files.length < 1) return null
 
   return (
     <Fragment>
       <Typography variant="headline" align="left">
         Files
       </Typography>
-      {Object.values(props.files).reduce(
-        (list, type) =>
-          list.concat(
-            type.map(file => (
-              <label className="file-checkbox" key={file.key}>
-                <input
-                  type="checkbox"
-                  checked={props.selected.includes(file.key)}
-                  value={file.key}
-                  onChange={e =>
-                    props.onChange(
-                      e.target.checked
-                        ? props.selected.concat(e.target.value)
-                        : props.selected.filter(key => key != e.target.value)
-                    )
-                  }
-                />
-                <span>{file.name}</span>
-              </label>
-            ))
-          ),
-        []
-      )}
+      {files.map(file => (
+        <label className="file-checkbox" key={file._id}>
+          <input
+            type="checkbox"
+            checked={selected.find(o => o._id == file._id) != null}
+            value={file._id}
+            onChange={e =>
+              onChange(
+                e.target.checked
+                  ? selected.concat(file)
+                  : selected.filter(o => o._id != file._id)
+              )
+            }
+          />
+          <span>{basename(file.path)}</span>
+        </label>
+      ))}
     </Fragment>
   )
 }
 
 EditFiles.propTypes = {
-  files: PropTypes.object.isRequired,
-  selected: PropTypes.array.isRequired
+  files: PropTypes.arrayOf(PropTypes.object).isRequired,
+  selected: PropTypes.arrayOf(PropTypes.object).isRequired
 }
 
 export default EditFiles

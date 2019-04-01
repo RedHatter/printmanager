@@ -48,7 +48,8 @@ export default function CreateDialog(props) {
     details: '',
     artStatus: enums.artStatus[0],
     priority: 1,
-    assignee: ''
+    assignee: '',
+    files: []
   }
   let editMode = false
 
@@ -65,7 +66,7 @@ export default function CreateDialog(props) {
   const [submitDisabled, setSubmitDisabled] = useState(false)
   const [selectedFiles, setSelectedFiles] = useState([])
   const [customSize, setCustomSize] = useState(false)
-  const { clients, users, files } = useStore()
+  const { clients, users } = useStore()
   const salesmen = users.filter(o => o.salesman)
 
   const {
@@ -94,7 +95,8 @@ export default function CreateDialog(props) {
     forceComplete,
     versionComment,
     priority,
-    assignee
+    assignee,
+    files
   } = model
 
   function setModel(values) {
@@ -115,8 +117,8 @@ export default function CreateDialog(props) {
       PaperProps={{
         component: Form,
         onSubmit: async () =>
-          (await deleteFiles(selectedFiles)) &&
           (await updateJob(model)) &&
+          (await deleteFiles(model.id, selectedFiles)) &&
           props.onClose(),
         onValid: () => setSubmitDisabled(false),
         onInvalid: () => setSubmitDisabled(true)
@@ -498,10 +500,10 @@ export default function CreateDialog(props) {
           </Grid>
           {editMode && (
             <Fragment>
-              {id in files && (
+              {files.length > 0 && (
                 <Grid item sm={12}>
                   <EditFiles
-                    files={files[id]}
+                    files={files}
                     selected={selectedFiles}
                     onChange={setSelectedFiles}
                   />

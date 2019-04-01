@@ -1,7 +1,7 @@
 import React, { useState, Fragment } from 'react'
 import clsx from 'clsx'
 import PropTypes from 'prop-types'
-import { Auth, Storage } from 'aws-amplify'
+import { Auth } from 'aws-amplify'
 import {
   Button,
   ExpansionPanel,
@@ -22,11 +22,10 @@ import { colorize, formatNumber, formatPhone, formatDate } from '../../utils.js'
 Job.propTypes = {
   model: JobType.isRequired,
   highlighted: PropTypes.bool,
-  files: PropTypes.object,
   isAdmin: PropTypes.bool
 }
 
-function Job({ highlighted, model, files, isAdmin, ...rest }) {
+function Job({ highlighted, model, isAdmin, ...rest }) {
   const [isEblastOpen, setIsEblastOpen] = useState(false)
   const {
     name,
@@ -53,13 +52,15 @@ function Job({ highlighted, model, files, isAdmin, ...rest }) {
     details,
     forceComplete,
     pixels,
-    eblast
+    eblast,
+    files
   } = model
 
   let dropStatusFromatted = dropStatus ? formatDate(dropStatus) : 'Incomplete'
 
   let listStatus = 'Count Pending'
-  if (files && 'Data List' in files) listStatus = 'List Uploaded'
+  if (files && files.find(o => o.type == 'Data List'))
+    listStatus = 'List Uploaded'
   else if (listType == 'Saturation') listStatus = 'List Pending'
 
   let today = startOfDay(new Date())
@@ -70,17 +71,17 @@ function Job({ highlighted, model, files, isAdmin, ...rest }) {
         expandIcon={<ExpandMoreIcon />}
         className={clsx(
           {
-            complete:
-              forceComplete ||
-              (files &&
-                [
-                  'Proof',
-                  'Data List',
-                  'Dealer invoice',
-                  'Printer invoice',
-                  'Postal',
-                  'Prize board'
-                ].every(key => key in files)),
+            // complete:
+            //   forceComplete ||
+            //   (files &&
+            //     [
+            //       'Proof',
+            //       'Data List',
+            //       'Dealer invoice',
+            //       'Printer invoice',
+            //       'Postal',
+            //       'Prize board'
+            //     ].every(key => key in files)),
             late: dropDate < today && !dropStatus,
             highlighted
           },
@@ -219,92 +220,40 @@ function Job({ highlighted, model, files, isAdmin, ...rest }) {
             )}
           </tbody>
         </table>
-        {files && (
+        {files.length > 0 && (
           <table className="files">
             <tbody>
               <tr>
-                <th coldiv="4" className="section-header">
+                <th colSpan="2" className="section-header">
                   Files
                 </th>
               </tr>
               <tr>
-                <th>Proof</th>
-                <td>
-                  {'Proof' in files
-                    ? files.Proof.map(file => (
-                        <div key={file.key} onClick={handleFileClick(file.key)}>
-                          {file.name}
-                        </div>
-                      ))
-                    : 'None'}
-                </td>
-                <th>Data List</th>
-                <td>
-                  {'Data List' in files
-                    ? files['Data List'].map(file => (
-                        <div key={file.key} onClick={handleFileClick(file.key)}>
-                          {file.name}
-                        </div>
-                      ))
-                    : 'None'}
-                </td>
+                <th>Type</th>
+                <th>Path</th>
               </tr>
-              <tr>
-                <th>Dealer invoice</th>
-                <td>
-                  {'Dealer invoice' in files
-                    ? files['Dealer invoice'].map(file => (
-                        <div key={file.key} onClick={handleFileClick(file.key)}>
-                          {file.name}
-                        </div>
-                      ))
-                    : 'None'}
-                </td>
-                <th>Printer invoice</th>
-                <td>
-                  {'Printer invoice' in files
-                    ? files['Printer invoice'].map(file => (
-                        <div key={file.key} onClick={handleFileClick(file.key)}>
-                          {file.name}
-                        </div>
-                      ))
-                    : 'None'}
-                </td>
-              </tr>
-              <tr>
-                <th>Postal</th>
-                <td>
-                  {'Postal' in files
-                    ? files.Postal.map(file => (
-                        <div key={file.key} onClick={handleFileClick(file.key)}>
-                          {file.name}
-                        </div>
-                      ))
-                    : 'None'}
-                </td>
-                <th>Prize board</th>
-                <td>
-                  {'Prize board' in files
-                    ? files['Prize board'].map(file => (
-                        <div key={file.key} onClick={handleFileClick(file.key)}>
-                          {file.name}
-                        </div>
-                      ))
-                    : 'None'}
-                </td>
-              </tr>
-              {'Other' in files && (
-                <tr>
-                  <th>Other</th>
+              {files.map(file => (
+                <tr
+                  key={file.path}
+                  onClick={() =>
+                    Auth.currentSession().then(async auth => {
+                      const res = await fetch(
+                        `/api/job/${model.id}/file/${file._id}`,
+                        { headers: { Authorization: auth.idToken.jwtToken } }
+                      )
+                      const url = await res.text()
+                      window.open(url, '_blank')
+                    })
+                  }
+                >
+                  <td>{file.type}</td>
                   <td>
-                    {files.Other.map(file => (
-                      <div key={file.key} onClick={handleFileClick(file.key)}>
-                        {file.name}
-                      </div>
-                    ))}
+                    {decodeURIComponent(
+                      file.path.substring(file.path.lastIndexOf('/') + 1)
+                    )}
                   </td>
                 </tr>
-              )}
+              ))}
             </tbody>
           </table>
         )}
@@ -334,13 +283,6 @@ function Job({ highlighted, model, files, isAdmin, ...rest }) {
       {isAdmin && <JobActions model={model} files={files} />}
     </ExpansionPanel>
   )
-}
-
-function handleFileClick(key) {
-  return e =>
-    Storage.get(key)
-      .then(url => window.open(url, '_blank'))
-      .catch(console.error)
 }
 
 export default Job
@@ -423,12 +365,20 @@ span.green {
   font-size: 1.3em;
 }
 
-.job-details .files span {
+.job-details .files tr {
   cursor: pointer;
 }
 
-.job-details .files span:hover {
-  border-bottom: 1px dotted #757575;
+.job-details .files tr th {
+  text-align: center;
+}
+
+.job-details .files tr td {
+  border-bottom: 1px dotted transparent;
+}
+
+.job-details .files tr:hover td:nth-child(2) {
+  border-color: #757575;
 }
 
 .job-details .emails th {

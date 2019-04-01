@@ -1,5 +1,5 @@
 import { CognitoIdentityServiceProvider } from 'aws-sdk'
-import { Auth, Storage } from 'aws-amplify'
+import { Auth } from 'aws-amplify'
 
 import { update, getStore } from './store.js'
 import { parseJSON } from '../utils.js'
@@ -131,17 +131,7 @@ export function resetUserPassword(body) {
 }
 
 export async function send(body) {
-  try {
-    if (body.attachments) {
-      body.attachments = await Promise.all(
-        body.attachments.map(key => Storage.get(key))
-      )
-    }
-
-    return api('/api/send', 'Unable to send email.', { body })
-  } catch (err) {
-    return showError('Unable to resolve attachment URLs.', err)
-  }
+  return api('/api/send', 'Unable to send email.', { body })
 }
 
 export async function fetchClients() {
@@ -167,47 +157,27 @@ export function updateOrCreateClient(body) {
   })
 }
 
-export async function fetchFiles() {
-  try {
-    const res = await Storage.list('')
-    return update(state => {
-      state.files = res.reduce((files, file) => {
-        let parts = file.key.split('/')
-        files[parts[0]] ||= {}
-        files[parts[0]][parts[1]] ||= []
-        files[parts[0]][parts[1]].push({
-          key: file.key,
-          name: decodeURIComponent(parts[2])
-        })
-
-        return files
-      }, {})
-    })
-  } catch (err) {
-    return showError('Unable to fetch files.', err.message)
+export async function uploadFiles(id, files, type) {
+  for (const file of files) {
+    const body = new FormData()
+    body.append('file', file)
+    body.append('type', type)
+    if (!(await api(`/api/job/${id}/file`, 'Unable to upload file.', { body })))
+      return false
   }
+
+  return fetchJobs()
 }
 
-export async function uploadFiles(files, path) {
-  try {
-    await Promise.all(
-      Array.from(files).map(file =>
-        Storage.put(`${path}/${encodeURIComponent(file.name)}`, file, {
-          contentType: file.type
-        })
-      )
+export async function deleteFiles(id, files) {
+  for (const file of files) {
+    if (
+      !(await api(`/api/job/${id}/file/${file._id}`, 'Unable to delete file.', {
+        method: 'DELETE'
+      }))
     )
-    return fetchFiles()
-  } catch (err) {
-    return showError('Unable to upload file.', err)
+      return false
   }
-}
 
-export async function deleteFiles(files) {
-  try {
-    await Promise.all(files.map(key => Storage.remove(key)))
-    return fetchFiles()
-  } catch (err) {
-    return showError('Unable to delete file.', err)
-  }
+  return fetchJobs()
 }

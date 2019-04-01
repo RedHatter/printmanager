@@ -20,13 +20,7 @@ import CloseIcon from './icons/Close.js'
 import connect from './connect.js'
 import { ClientType } from './types.js'
 import { SlideRight } from './components/transitions.jsx'
-import {
-  fetchJobs,
-  fetchFiles,
-  fetchClients,
-  fetchUsers,
-  clearError
-} from './actions.js'
+import { fetchJobs, fetchClients, fetchUsers, clearError } from './actions.js'
 import Tabs from './components/Tabs.jsx'
 import JobList from './views/JobList.jsx'
 import CreateDialog from './CreateDialog.jsx'
@@ -50,7 +44,6 @@ class App extends Component {
     }
 
     fetchUsers().then(fetchJobs)
-    fetchFiles()
     fetchClients()
 
     const query = document.location.search.substring(1)

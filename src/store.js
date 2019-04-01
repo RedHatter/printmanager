@@ -9,7 +9,6 @@ export const store = Atom.of({
   jobs: [],
   clients: [],
   users: [],
-  files: {},
   filter: {
     created: [subDays(new Date(), 30), new Date()],
     dueDate: [],

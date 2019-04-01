@@ -15,7 +15,7 @@ JobList.propTypes = {
 
 export default function JobList({ user, show, isAdmin, elevation }) {
   const [expanded, setExpanded] = useState(false)
-  const { jobs, files } = useStore()
+  const { jobs } = useStore()
 
   return (
     <div className="job-list">
@@ -33,7 +33,6 @@ export default function JobList({ user, show, isAdmin, elevation }) {
         <Job
           elevation={elevation}
           model={show}
-          files={files[show.id]}
           isAdmin={isAdmin}
           expanded={true}
         />
@@ -43,7 +42,6 @@ export default function JobList({ user, show, isAdmin, elevation }) {
             elevation={elevation}
             key={o.id}
             model={o}
-            files={files[o.id]}
             isAdmin={isAdmin}
             expanded={expanded == o.id}
             highlighted={o?.assignee?.id == user}

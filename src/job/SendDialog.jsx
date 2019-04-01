@@ -15,11 +15,11 @@ import ChipInput from 'material-ui-chip-input'
 
 import { JobType } from '../types.js'
 import { send } from '../actions.js'
+import { basename } from '../../utils.js'
 
 export default class SendDialog extends Component {
   static propTypes = {
-    model: JobType.isRequired,
-    files: PropTypes.object.isRequired
+    model: JobType.isRequired
   }
 
   constructor(props) {
@@ -37,7 +37,7 @@ export default class SendDialog extends Component {
 
   render() {
     let { recipients, chipError, attachments, subject, message } = this.state
-    let { onClose, files } = this.props
+    let { onClose, model } = this.props
 
     return (
       <Dialog open>
@@ -66,25 +66,18 @@ export default class SendDialog extends Component {
             value={message}
             onChange={this.handleMessageChange}
           />
-          {Object.entries(files).map(([key, value]) => (
-            <Fragment key={key}>
-              <Typography variant="headline" align="left">
-                {key}
-              </Typography>
-              {value.map(file => (
-                <FormControlLabel
-                  key={file.name}
-                  label={file.name}
-                  control={
-                    <Checkbox
-                      checked={attachments.includes(file.key)}
-                      onChange={this.handleSelectFile(file.key)}
-                      value={file.key}
-                    />
-                  }
+          {model.files.map(file => (
+            <FormControlLabel
+              key={file._id}
+              label={`${file.type} ${basename(file.path)}`}
+              control={
+                <Checkbox
+                  checked={attachments.includes(file._id)}
+                  onChange={this.handleSelectFile(file._id)}
+                  value={file._id}
                 />
-              ))}
-            </Fragment>
+              }
+            />
           ))}
         </DialogContent>
         <DialogActions>

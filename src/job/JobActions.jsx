@@ -1,5 +1,4 @@
 import React, { useState, Fragment } from 'react'
-import bound from 'bound-decorator'
 import {
   withStyles,
   Button,
@@ -109,26 +108,20 @@ DeleteButton.propTypes = {
   model: JobType.isRequired
 }
 
-function SendButton({ model, files }) {
+function SendButton({ model }) {
   const [isOpen, setIsOpen] = useState(false)
   return (
     <Fragment>
       <Button onClick={() => setIsOpen(true)}>Send</Button>
       {isOpen && (
-        <SendDialog
-          open
-          model={model}
-          files={files}
-          onClose={() => setIsOpen(false)}
-        />
+        <SendDialog open model={model} onClose={() => setIsOpen(false)} />
       )}
     </Fragment>
   )
 }
 
 SendButton.propTypes = {
-  model: JobType.isRequired,
-  files: PropTypes.object
+  model: JobType.isRequired
 }
 
 function HistoryButton({ model }) {
@@ -144,26 +137,24 @@ function HistoryButton({ model }) {
 }
 
 HistoryButton.propTypes = {
-  model: JobType.isRequired,
-  files: PropTypes.object
+  model: JobType.isRequired
 }
 
-function JobActions({ model, files }) {
+function JobActions({ model }) {
   return (
     <ExpansionPanelActions>
       <HistoryButton model={model} />
       <EditButton model={model} />
       <DuplicateButton model={model} />
       <DeleteButton model={model} />
-      <FileDialog path={model.id} />
-      {files && <SendButton model={model} files={files} />}
+      <FileDialog model={model} />
+      {model.files.length > 0 && <SendButton model={model} />}
     </ExpansionPanelActions>
   )
 }
 
 JobActions.propTypes = {
-  model: JobType.isRequired,
-  files: PropTypes.object
+  model: JobType.isRequired
 }
 
 export default JobActions
