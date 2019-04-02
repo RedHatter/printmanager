@@ -9,6 +9,7 @@ import {
 } from '@material-ui/core'
 import { DatePicker } from 'material-ui-pickers'
 import clsx from 'clsx'
+import { endOfDay } from 'date-fns'
 
 import { updateFilter, fetchJobs } from './actions.js'
 import { useStore } from './store.js'
@@ -115,7 +116,12 @@ export default function Filters(props) {
           autoOk
           label="Created"
           value={filter.created}
-          onChange={created => handleChange({ created })}
+          onChange={created =>
+            handleChange({
+              created:
+                created.length > 0 ? [created[0], endOfDay(created[1])] : []
+            })
+          }
           disableFuture={true}
           clearable={true}
         />
