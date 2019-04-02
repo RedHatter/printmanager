@@ -8,7 +8,7 @@ import clsx from 'clsx'
 import DeleteIcon from '../icons/Delete.js'
 import { addComment, deleteComment } from '../actions.js'
 import { useStore } from '../store.js'
-import { formatDateTime } from '../../utils.js'
+import { basename, formatDateTime } from '../../utils.js'
 
 function ChipSelection({ label, options, value, onChange }) {
   const [open, setOpen] = useState(false)
@@ -128,6 +128,7 @@ export default function Comments({ model }) {
   const [editorState, setEditorState] = useState(EditorState.createEmpty())
   const [notify, setNotify] = useState([])
   const [limit, setLimit] = useState(5)
+  const [files, setFiles] = useState([])
   const { users } = useStore()
 
   const styles = editorState.getCurrentInlineStyle()
@@ -159,6 +160,24 @@ export default function Comments({ model }) {
             className="delete"
             onClick={e => deleteComment(model.id, o.id)}
           />
+          <br />
+          {o.attachments.map((path, i) => (
+            <Chip
+              className="file"
+              key={path}
+              label={basename(path)}
+              onClick={() =>
+                Auth.currentSession().then(async auth => {
+                  const res = await fetch(
+                    `/api/job/${model.id}/comment/${o._id}/file/${i}`,
+                    { headers: { Authorization: auth.idToken.jwtToken } }
+                  )
+                  const url = await res.text()
+                  window.open(url, '_blank')
+                })
+              }
+            />
+          ))}
           <div
             className="content"
             dangerouslySetInnerHTML={{ __html: o.html }}
@@ -204,6 +223,22 @@ export default function Comments({ model }) {
           onChange={setNotify}
           label="Notify"
         />
+        <Button component="label" className="upload-button">
+          Attach
+          <input
+            onChange={e => setFiles(files.concat(Array.from(e.target.files)))}
+            multiple
+            type="file"
+          />
+        </Button>
+        {files.map(file => (
+          <Chip
+            key={file.name}
+            label={file.name}
+            className="chip-selection-chip"
+            onDelete={() => setFiles(files.filter(o => o != file))}
+          />
+        ))}
         <Editor
           ref={editor}
           customStyleMap={colorStyleMap}
@@ -211,18 +246,25 @@ export default function Comments({ model }) {
           onChange={setEditorState}
         />
         <Button
-          onClick={async e =>
-            (await addComment(
+          onClick={async e => {
+            const res = await addComment(
               {
                 notify: notify.map(o => o.email),
                 user: (await Auth.currentAuthenticatedUser()).username,
                 html: stateToHTML(editorState.getCurrentContent(), {
                   inlineStyles
-                })
+                }),
+                attachments: files
               },
               model.id
-            )) && setEditorState(EditorState.createEmpty())
-          }
+            )
+
+            if (res) {
+              setEditorState(EditorState.createEmpty())
+              setFiles([])
+              setNotify([])
+            }
+          }}
         >
           Comment
         </Button>
@@ -275,6 +317,10 @@ export default function Comments({ model }) {
 
 .comment:hover .delete:hover {
   color: #616161;
+}
+
+.comment .file {
+  margin: 5px;
 }
 
 .comment .content {

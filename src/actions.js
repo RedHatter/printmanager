@@ -2,7 +2,7 @@ import { CognitoIdentityServiceProvider } from 'aws-sdk'
 import { Auth } from 'aws-amplify'
 
 import { update, getStore } from './store.js'
-import { parseJSON } from '../utils.js'
+import { parseJSON, ensureArray } from '../utils.js'
 
 const cognito = new CognitoIdentityServiceProvider({
   region: 'us-west-2',
@@ -80,13 +80,17 @@ export function updateJob(body) {
   return api('/api/job/' + (body.id || ''), 'Unable to update job.', { body })
 }
 
-export function addComment(body, id) {
-  return api(`/api/job/${id}/comments`, 'Unable to comment on job.', { body })
+export function addComment(data, id) {
+  const body = new FormData()
+  for (const [key, valueList] of Object.entries(data))
+    for (const value of ensureArray(valueList)) body.append(key, value)
+
+  return api(`/api/job/${id}/comment`, 'Unable to comment on job.', { body })
 }
 
 export function deleteComment(job, comment) {
   return api(
-    `/api/job/${job}/comments/${comment}`,
+    `/api/job/${job}/comment/${comment}`,
     'Unable to comment on job.',
     { method: 'DELETE' }
   )

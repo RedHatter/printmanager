@@ -17,7 +17,13 @@ import Column from '../components/Column.jsx'
 import Comments from './Comments.jsx'
 import Eblast from '../eblast/Eblast.jsx'
 import { createEblast, updateEblast } from '../actions.js'
-import { colorize, formatNumber, formatPhone, formatDate } from '../../utils.js'
+import {
+  basename,
+  colorize,
+  formatNumber,
+  formatPhone,
+  formatDate
+} from '../../utils.js'
 
 Job.propTypes = {
   model: JobType.isRequired,
@@ -247,11 +253,7 @@ function Job({ highlighted, model, isAdmin, ...rest }) {
                   }
                 >
                   <td>{file.type}</td>
-                  <td>
-                    {decodeURIComponent(
-                      file.path.substring(file.path.lastIndexOf('/') + 1)
-                    )}
-                  </td>
+                  <td>{basename(file.path)}</td>
                 </tr>
               ))}
             </tbody>

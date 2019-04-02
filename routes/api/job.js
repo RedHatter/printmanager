@@ -2,10 +2,11 @@ const fs = require('fs').promises
 const Router = require('koa-router')
 const Jimp = require('jimp')
 const Storage = require('aws-amplify').Storage
+const ObjectId = require('mongoose').Types.ObjectId
 const querystring = require('querystring')
 const { format, startOfMonth, endOfMonth } = require('date-fns')
 const { Job, Client } = require('../../schema')
-const { mapObjectValues } = require('../../utils.js')
+const { mapObjectValues, ensureArray } = require('../../utils.js')
 
 const router = new Router()
 
@@ -275,14 +276,22 @@ router.post('/:id', async ctx => {
   }
 })
 
-router.post('/:id/comments', async ctx => {
+router.post('/:id/comment', async ctx => {
   try {
     const comment = ctx.request.body
+    comment._id = new ObjectId()
+    comment.attachments = await Promise.all(ensureArray(ctx.request.files.attachments).map(async file => {
+      const path = `${ctx.params.id}/comment/${comment._id}/${file.name}`
+      await Storage.put(path, await fs.readFile(file.path), {
+        contentType: file.type,
+        bucket: 'dealerdigitalgroup.printmanager'
+      })
+      return path
+    }))
+
     const to = comment.notify
     delete comment.notify
     const job = await Job.findById(ctx.params.id)
-    if (!job.comments) job.comments = []
-
     job.comments.push(comment)
     await job.save()
 
@@ -290,7 +299,7 @@ router.post('/:id/comments', async ctx => {
     ctx.body = job
     ctx.socketIo.emit('invalidateJobs')
 
-    if (to.length > 0) {
+    if (to && to.length > 0) {
       await ctx.sendMail({
         to,
         subject: job.name,
@@ -312,12 +321,39 @@ router.post('/:id/comments', async ctx => {
   }
 })
 
-router.delete('/:ref/comments/:id', async ctx => {
+router.delete('/:ref/comment/:id', async ctx => {
   const job = await Job.findById(ctx.params.ref)
+
+  const files = await Storage.list(
+    `${ctx.params.ref}/comment/${ctx.params.id}`,
+    { bucket: 'dealerdigitalgroup.printmanager'}
+  )
+  await Promise.all(files.map(o => Storage.remove(o.key, {
+    bucket: 'dealerdigitalgroup.printmanager'
+  })))
+
   job.comments.splice(job.comments.findIndex(o => o._id == ctx.params.id), 1)
   await job.save()
+
+  ctx.response.type = 'json'
+  ctx.body = job
   ctx.socketIo.emit('invalidateJobs')
 })
+
+router.get('/:ref/comment/:id/file/:index', async ctx => {
+  const job = await Job.findById(ctx.params.ref)
+  ctx.assert(job, 404)
+
+  const comment = job.comments.id(ctx.params.id)
+  ctx.assert(comment, 404)
+
+  const file = comment.attachments[ctx.params.index]
+  ctx.assert(file, 404)
+
+  ctx.response.type = 'json'
+  ctx.body = await Storage.get(file, { bucket: 'dealerdigitalgroup.printmanager' })
+})
+
 
 router.get('/:ref/patches', async ctx => {
   ctx.response.type = 'json'

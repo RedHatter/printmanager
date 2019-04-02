@@ -20,7 +20,8 @@ const CommentSchema = new Schema(
     html: {
       type: String,
       set: v => xss(v, { whiteList })
-    }
+    },
+    attachments: [{ type: String }]
   },
   {
     toObject: { virtuals: true, getters: true },

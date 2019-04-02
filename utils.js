@@ -250,6 +250,10 @@ function throttle(func, wait, options) {
   return throttled
 }
 
+function ensureArray (value) {
+  return Array.isArray(value) ? value : [value]
+}
+
 function basename (file) {
   return decodeURIComponent(file.substring(file.lastIndexOf('/') + 1))
 }
@@ -268,5 +272,6 @@ module.exports = {
   isObject,
   deepmerge,
   throttle,
+  ensureArray,
   basename
 }
