@@ -347,7 +347,6 @@ export default function CreateDialog(props) {
           <Grid item sm={6}>
             {customSize ? (
               <TextField
-                required
                 fullWidth
                 label="Size"
                 value={size}
@@ -359,7 +358,6 @@ export default function CreateDialog(props) {
               />
             ) : (
               <TextField
-                required
                 fullWidth
                 label="Size"
                 select

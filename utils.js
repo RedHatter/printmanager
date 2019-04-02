@@ -26,8 +26,9 @@ const enums = {
       'Service',
       'Facebook',
       'Instagram',
-      'Lease / Purchase',
-      'Billboards'
+      'Billboards',
+      'Service Slide',
+      'Service Coupon'
     ]
   },
   addons: [

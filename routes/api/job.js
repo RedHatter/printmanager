@@ -125,6 +125,12 @@ router.post('/', async ctx => {
       case 'Billboards':
         type = 'Billboards'
         break
+      case 'Service Slide':
+        type = 'SLD_SVC'
+        break
+      case 'Service Coupon':
+        type = 'SVC_COUPON'
+        break
     }
 
     let list = ''
@@ -223,7 +229,7 @@ router.post('/search', async ctx => {
   })
     .skip(skip)
     .limit(limit)
-    .sort({ created: -1 })
+    .sort({ name: -1 })
     .exec()
 })
 
