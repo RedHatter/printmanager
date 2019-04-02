@@ -1,163 +1,190 @@
-import React, { Component, Fragment } from 'react'
-import bound from 'bound-decorator'
+import React, { Fragment, useState } from 'react'
 import {
   Paper,
   Dialog,
   DialogContent,
   DialogActions,
+  Typography,
   Button
 } from '@material-ui/core'
 import {
   format,
   startOfMonth,
+  startOfWeek,
   startOfDay,
-  setDay,
-  addDays,
   addMonths,
+  addWeeks,
+  addDays,
+  subMonths,
+  subWeeks,
+  setDay,
   isSameMonth,
   isSameDay
 } from 'date-fns'
 import clsx from 'clsx'
 import PropTypes from 'prop-types'
 
-import connect from '../connect.js'
+import { useStore } from '../store.js'
 import { range } from '../../utils.js'
-import { JobType } from '../types.js'
 import { SlideDown, Fade } from '../components/transitions.jsx'
 import JobList from './JobList.jsx'
 
-class Calendar extends Component {
-  static propTypes = {
-    model: PropTypes.arrayOf(JobType).isRequired
-  }
-
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      selectedDay: new Date(),
-      selectedEvent: undefined,
-      isDetailsOpen: false
-    }
-  }
-
-  render() {
-    let model = this.props.model.reduce((model, job) => {
-      ;[job.dropDate, job.printDate, job.dueDate, job.secondDropDate].forEach(
-        date => (model[startOfDay(date)] ||= []).push(job)
-      )
-
-      return model
-    }, {})
-
-    let { selectedDay, selectedEvent, isDetailsOpen } = this.state
-    let today = startOfDay(new Date())
-    let day = setDay(startOfMonth(new Date(selectedDay)), 0)
-    return (
-      <Fragment>
-        <SlideDown in={isDetailsOpen}>
-          <div>
-            {selectedEvent && <JobList show={selectedEvent} />}
-            <Button
-              onClick={this.handleCloseEvent}
-              className="back-to-calendar"
-            >
-              Back to Calendar
-            </Button>
-          </div>
-        </SlideDown>
-        <Fade in={!isDetailsOpen}>
-          <Paper className="calendar">
-            <table>
-              <thead>
-                <tr>
-                  <td colSpan="7" className="legend">
-                    Send to print <span className="print" />
-                    Drop date <span className="drop" />
-                    Due date <span className="due" />
-                  </td>
-                </tr>
-                <tr className="headline">
-                  <th className="previous" onClick={this.handlePrevious} />
-                  <th colSpan="5">{format(selectedDay, 'MMMM yyyy')}</th>
-                  <th className="next" onClick={this.handleNext} />
-                </tr>
-                <tr>
-                  <th>Sunday</th>
-                  <th>Monday</th>
-                  <th>Tuesday</th>
-                  <th>Wednsday</th>
-                  <th>Thursday</th>
-                  <th>Friday</th>
-                  <th>Saturday</th>
-                </tr>
-              </thead>
-              <tbody>
-                {range(6).map(w => (
-                  <tr key={w}>
-                    {range(7).map(d => (
-                      <td
-                        key={d}
-                        className={clsx({ today: isSameDay(day, today) })}
-                      >
-                        <div
-                          className={clsx({
-                            inactive: !isSameMonth(day, selectedDay)
-                          })}
-                        >
-                          {format(day, 'dd')}
-                        </div>
-                        {model[day]?.map((job, i) => (
-                          <div
-                            key={job.id}
-                            onClick={this.handleSelectEvent.bind(this, job)}
-                            className={clsx({
-                              print: isSameDay(day, job.printDate),
-                              due: isSameDay(day, job.dueDate),
-                              drop:
-                                isSameDay(day, job.dropDate) ||
-                                isSameDay(day, job.secondDropDate),
-                              highlighted: job?.assignee?.id == this.props.user
-                            })}
-                          >
-                            {job.name}
-                          </div>
-                        ))}
-                        {((day = addDays(day, 1)), false)}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </Paper>
-        </Fade>
-      </Fragment>
-    )
-  }
-
-  handleSelectEvent(job) {
-    this.setState({ selectedEvent: job, isDetailsOpen: true })
-  }
-
-  @bound
-  handleCloseEvent(e) {
-    e.stopPropagation()
-    this.setState({ isDetailsOpen: false })
-  }
-
-  @bound
-  handlePrevious(e) {
-    this.setState(state => ({ selectedDay: addMonths(state.selectedDay, -1) }))
-  }
-
-  @bound
-  handleNext(e) {
-    this.setState(state => ({ selectedDay: addMonths(state.selectedDay, 1) }))
-  }
+Calendar.propTypes = {
+  user: PropTypes.string.isRequired
 }
 
-export default connect(state => ({ model: state.jobs }))(Calendar)
+export default function Calendar({ user, isAdmin }) {
+  const [selectedDay, setSelectedDay] = useState(startOfDay(new Date()))
+  const [selectedEvent, setSelectedEvent] = useState(null)
+  const [isDetailsOpen, setDetailsOpen] = useState(false)
+  const [isWeekView, setWeekView] = useState(false)
+  const { jobs } = useStore()
+
+  function DayList({ model, className }) {
+    return model
+      ? model.map(job => (
+          <div
+            key={job.id}
+            onClick={e => {
+              setSelectedEvent(job)
+              setDetailsOpen(true)
+            }}
+            className={clsx(className, {
+              highlighted: job?.assignee?.id == user
+            })}
+          >
+            {job.name}
+          </div>
+        ))
+      : null
+  }
+
+  const dropDate = Object.create(null)
+  const printDate = Object.create(null)
+  const dueDate = Object.create(null)
+
+  for (const job of jobs) {
+    if (job.dropDate) (dropDate[startOfDay(job.dropDate)] ||= []).push(job)
+    if (job.secondDropDate)
+      (dropDate[startOfDay(job.secondDropDate)] ||= []).push(job)
+    if (job.printDate) (printDate[startOfDay(job.printDate)] ||= []).push(job)
+    if (job.dueDate) (dueDate[startOfDay(job.dueDate)] ||= []).push(job)
+  }
+
+  const today = startOfDay(new Date())
+  let day = setDay(
+    isWeekView ? startOfWeek(selectedDay) : startOfMonth(selectedDay),
+    0
+  )
+  return (
+    <Fragment>
+      <SlideDown in={isDetailsOpen}>
+        <div>
+          {selectedEvent && <JobList show={selectedEvent} isAdmin={isAdmin} />}
+          <Button
+            onClick={e => {
+              e.stopPropagation()
+              setDetailsOpen(false)
+            }}
+            className="back-to-calendar"
+          >
+            Back to Calendar
+          </Button>
+        </div>
+      </SlideDown>
+      <Fade in={!isDetailsOpen}>
+        <Paper className="calendar">
+          <table>
+            <thead>
+              <tr>
+                <td colSpan="6" className="legend">
+                  Send to print <span className="print" />
+                  Drop date <span className="drop" />
+                  Due date <span className="due" />
+                </td>
+                <td
+                  onClick={e => setWeekView(!isWeekView)}
+                  className="type-select"
+                >
+                  <Typography
+                    variant="headline"
+                    align="left"
+                    className={clsx({ selected: !isWeekView })}
+                  >
+                    Month
+                  </Typography>
+                  <Typography
+                    variant="headline"
+                    align="left"
+                    className={clsx({ selected: isWeekView })}
+                  >
+                    Week
+                  </Typography>
+                </td>
+              </tr>
+              <tr className="headline">
+                <th
+                  className="previous"
+                  onClick={e =>
+                    setSelectedDay(
+                      isWeekView
+                        ? subWeeks(selectedDay, 1)
+                        : subMonths(selectedDay, 1)
+                    )
+                  }
+                />
+                <th colSpan="5">{format(selectedDay, 'MMMM yyyy')}</th>
+                <th
+                  className="next"
+                  onClick={e =>
+                    setSelectedDay(
+                      isWeekView
+                        ? addWeeks(selectedDay, 1)
+                        : addMonths(selectedDay, 1)
+                    )
+                  }
+                />
+              </tr>
+              <tr>
+                <th>Sunday</th>
+                <th>Monday</th>
+                <th>Tuesday</th>
+                <th>Wednsday</th>
+                <th>Thursday</th>
+                <th>Friday</th>
+                <th>Saturday</th>
+              </tr>
+            </thead>
+            <tbody>
+              {range(isWeekView ? 1 : 6).map(w => (
+                <tr key={w}>
+                  {range(7).map(d => (
+                    <td
+                      key={d}
+                      className={clsx({ today: isSameDay(day, today) })}
+                    >
+                      <div
+                        className={clsx({
+                          inactive: !isSameMonth(day, selectedDay)
+                        })}
+                      >
+                        {format(day, 'dd')}
+                      </div>
+                      <DayList model={dropDate[day]} className="drop" />
+                      <DayList model={printDate[day]} className="print" />
+                      <DayList model={dueDate[day]} className="due" />
+                      {((day = addDays(day, 1)), false)}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </Paper>
+      </Fade>
+    </Fragment>
+  )
+}
 
 <style>
 .calendar {
@@ -270,13 +297,13 @@ export default connect(state => ({ model: state.jobs }))(Calendar)
   margin: 2px;
   padding: 5px;
   border-radius: 2px;
-  background-color: #9c27b0;
+  background-color: #4caf50;
   color: white;
   cursor: pointer;
 }
 
 .calendar td .drop {
-  background-color: #673ab7;
+  background-color: #f44336;
 }
 
 .calendar td .due {
