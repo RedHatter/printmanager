@@ -123,10 +123,10 @@ class App extends Component {
                 />
               </SlideRight>
               <SlideRight in={selectedTab == 1}>
-                <Calendar user={authData.username} />
+                <Calendar user={authData.username} isAdmin={isAdmin} />
               </SlideRight>
               <SlideRight in={selectedTab == 2}>
-                <Sprint user={authData.username} />
+                <Sprint user={authData.username} isAdmin={isAdmin} />
               </SlideRight>
               <SlideRight in={selectedTab == 3}>
                 <UserList />

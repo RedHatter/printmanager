@@ -9,7 +9,7 @@ import { useStore } from '../store.js'
 import { SlideDown, Fade } from '../components/transitions.jsx'
 import JobList from './JobList.jsx'
 
-export default function Sprint({ user }) {
+export default function Sprint({ user, isAdmin }) {
   const [isOpen, setIsOpen] = useState(false)
   const [selected, setSelected] = useState(undefined)
   const columnWrapper = useRef(undefined)
@@ -98,7 +98,7 @@ export default function Sprint({ user }) {
     <Fragment>
       <SlideDown in={isOpen}>
         <div>
-          {selected && <JobList show={selected} />}
+          {selected && <JobList show={selected} isAdmin={isAdmin} />}
           <Button onClick={e => setIsOpen(false)} className="back-to-calendar">
             Back to Sprint
           </Button>

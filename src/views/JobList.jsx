@@ -9,7 +9,7 @@ import Column from '../components/Column.jsx'
 
 JobList.propTypes = {
   user: PropTypes.string,
-  isAdmin: PropTypes.bool,
+  isAdmin: PropTypes.bool.isRequired,
   show: JobType
 }
 
