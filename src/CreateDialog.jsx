@@ -27,12 +27,48 @@ import { useStore } from './store.js'
 import { ClientType, JobType } from './types.js'
 import EditFiles from './EditFiles.jsx'
 
+function SelectField({ size = 4, values, multiple, children, ...props }) {
+  return (
+    <Grid item sm={size}>
+      <TextField
+        fullWidth
+        select
+        SelectProps={
+          multiple
+            ? {
+                multiple: true,
+                renderValue: selected => selected.join(', ')
+              }
+            : {}
+        }
+        {...props}
+      >
+        {values.map(value => (
+          <MenuItem key={value.id || value} value={value.id || value}>
+            {multiple && (
+              <Checkbox checked={props.value.includes(value.id || value)} />
+            )}
+            <ListItemText primary={value.name || value} />
+          </MenuItem>
+        ))}
+        {children}
+      </TextField>
+    </Grid>
+  )
+}
+
+function DateField({ size = 4, ...props }) {
+  return (
+    <Grid item sm={size}>
+      <TextField fullWidth autoOk clearable component={DatePicker} {...props} />
+    </Grid>
+  )
+}
+
 export default function CreateDialog(props) {
-  let initalModel = {
+  const [model, _setModel] = useState({
     created: new Date(),
     type: 'Print',
-    client: '',
-    salesman: '',
     dueDate: null,
     dropDate: null,
     secondDropDate: null,
@@ -50,62 +86,24 @@ export default function CreateDialog(props) {
     details: '',
     artStatus: enums.artStatus[0],
     priority: 1,
-    assignee: '',
-    files: []
-  }
-  let editMode = false
-
-  if (props.model) {
-    initalModel = JSON.parse(JSON.stringify(props.model))
-    initalModel.client = initalModel.client.id
-    initalModel.salesman = initalModel.salesman.id
-
-    if (initalModel.assignee) initalModel.assignee = initalModel.assignee.id
-    editMode = !!initalModel.id
-  }
-
-  const [model, _setModel] = useState(initalModel)
+    files: [],
+    ...props.model,
+    client: props.model?.client?.id || '',
+    salesman: props.model?.salesman?.id || '',
+    assignee: props.model?.assignee?.id || ''
+  })
   const [submitDisabled, setSubmitDisabled] = useState(false)
   const [selectedFiles, setSelectedFiles] = useState([])
   const [customSize, setCustomSize] = useState(false)
   const { clients, users } = useStore()
   const salesmen = users.filter(o => o.salesman)
-
-  const {
-    id,
-    created,
-    type,
-    name,
-    client,
-    jobType,
-    envelope,
-    size,
-    addons,
-    listType,
-    salesman,
-    postage,
-    quantity,
-    dueDate,
-    dropDate,
-    secondDropDate,
-    printDate,
-    expire,
-    vendor,
-    trackingNumber,
-    details,
-    artStatus,
-    dropStatus,
-    versionComment,
-    priority,
-    assignee,
-    files
-  } = model
+  const editMode = !!model.id
 
   function setModel(values) {
-    if ((values.client || values.listType) && client && listType) {
-      model.trackingNumber = clients.find(c => c.id == client).trackingNumbers[
-        listType.toLowerCase()
-      ]
+    if ((values.client || values.listType) && model.client && model.listType) {
+      model.trackingNumber = clients.find(
+        c => c.id == model.client
+      ).trackingNumbers[model.listType.toLowerCase()]
     }
 
     _setModel(Object.assign({}, model, values))
@@ -131,31 +129,34 @@ export default function CreateDialog(props) {
           <Grid
             item
             sm={11}
-            onClick={e =>
-              setModel({ type: type == 'Print' ? 'Digital' : 'Print' })
-            }
+            onClick={e => {
+              setModel({ type: model.type == 'Print' ? 'Digital' : 'Print' })
+              setSubmitDisabled(false)
+            }}
             className="type-select"
           >
             <Typography
               variant="headline"
               align="left"
-              className={clsx({ selected: type == 'Print' })}
+              className={clsx({ selected: model.type == 'Print' })}
             >
               Print
             </Typography>
             <Typography
               variant="headline"
               align="left"
-              className={clsx({ selected: type == 'Digital' })}
+              className={clsx({ selected: model.type == 'Digital' })}
             >
               Digital
             </Typography>
           </Grid>
           <Grid item sm={1}>
             <div
-              className={'priority-button priority-' + priority}
+              className={'priority-button priority-' + model.priority}
               onClick={() =>
-                setModel({ priority: priority < 3 ? priority + 1 : 1 })
+                setModel({
+                  priority: model.priority < 3 ? model.priority + 1 : 1
+                })
               }
             />
           </Grid>
@@ -173,236 +174,143 @@ export default function CreateDialog(props) {
                   fullWidth
                   label="Name"
                   pattern={/^[A-Z]{3,5} \d{4}-\d+/}
-                  value={name}
+                  value={model.name}
                   onChange={e => setModel({ name: e.target.value })}
                 />
               </Grid>
-              <Grid item sm={6}>
-                <TextField
-                  fullWidth
-                  select
-                  label="Job Status"
-                  value={artStatus}
-                  onChange={e => setModel({ artStatus: e.target.value })}
-                >
-                  {enums.artStatus.map(value => (
-                    <MenuItem key={value} value={value}>
-                      {value}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </Grid>
+              <SelectField
+                required
+                size={6}
+                label="Job Status"
+                value={model.artStatus}
+                onChange={e => setModel({ artStatus: e.target.value })}
+                values={enums.artStatus}
+              />
             </Fragment>
           )}
-
-          <Grid item sm={4}>
-            <TextField
-              required
-              value={client}
-              onChange={e => setModel({ client: e.target.value })}
-              label="Client"
-              select
-              fullWidth
-            >
-              {clients.map(c => (
-                <MenuItem value={c.id} key={c.id}>
-                  {c.name}
-                </MenuItem>
-              ))}
-            </TextField>
-          </Grid>
-          <Grid item sm={4}>
-            <TextField
-              value={assignee}
-              onChange={e => setModel({ assignee: e.target.value })}
-              label="Assignee"
-              select
-              fullWidth
-            >
-              {users.map(value => (
-                <MenuItem value={value.id} key={value.id}>
-                  {value.name}
-                </MenuItem>
-              ))}
-            </TextField>
-          </Grid>
-          <Grid item sm={4}>
-            <TextField
-              required
-              value={salesman}
-              onChange={e => setModel({ salesman: e.target.value })}
-              label="Salesman"
-              select
-              fullWidth
-            >
-              {salesmen.map(value => (
-                <MenuItem value={value.id} key={value.id}>
-                  {value.name}
-                </MenuItem>
-              ))}
-            </TextField>
-          </Grid>
+          <SelectField
+            required
+            label="Client"
+            value={model.client}
+            onChange={e => setModel({ client: e.target.value })}
+            values={clients}
+          />
+          <SelectField
+            label="Assignee"
+            value={model.assignee || ''}
+            onChange={e => setModel({ assignee: e.target.value })}
+            values={users}
+          />
+          <SelectField
+            required
+            label="Salesman"
+            value={model.salesman}
+            onChange={e => setModel({ salesman: e.target.value })}
+            values={salesmen}
+          />
           {!editMode && (
-            <Grid item sm={4}>
-              <TextField
-                fullWidth
-                autoOk
-                views={['month']}
-                format="MMMM"
-                label="Month"
-                component={DatePicker}
-                value={created}
-                onChange={value => setModel({ created: startOfMonth(value) })}
-              />
-            </Grid>
+            <DateField
+              views={['month']}
+              format="MMMM"
+              label="Month"
+              value={model.created}
+              onChange={value => setModel({ created: startOfMonth(value) })}
+            />
           )}
           <Grid item sm={12}>
             <Typography variant="headline" align="left">
               Dates
             </Typography>
           </Grid>
-          <Grid item sm={4}>
-            <TextField
-              fullWidth
-              autoOk
-              clearable
-              label="Due Date"
-              component={DatePicker}
-              value={dueDate}
-              onChange={dueDate => setModel({ dueDate })}
-            />
-          </Grid>
-          <Grid item sm={4}>
-            <TextField
-              required
-              fullWidth
-              autoOk
-              clearable
-              label="Drop date"
-              component={DatePicker}
-              value={dropDate}
-              onChange={dropDate => setModel({ dropDate })}
-            />
-          </Grid>
-          {type == 'Print' && (
+          <DateField
+            required
+            label="Due Date"
+            value={model.dueDate}
+            onChange={dueDate => setModel({ dueDate })}
+          />
+          <DateField
+            required
+            label="Drop date"
+            value={model.dropDate}
+            onChange={dropDate => setModel({ dropDate })}
+          />
+          {model.type == 'Print' && (
             <Fragment>
-              <Grid item sm={4}>
-                <TextField
-                  fullWidth
-                  autoOk
-                  clearable
-                  label="Second drop date"
-                  component={DatePicker}
-                  value={secondDropDate || null}
-                  onChange={secondDropDate => setModel({ secondDropDate })}
-                />
-              </Grid>
+              <DateField
+                label="Second drop date"
+                value={model.secondDropDate || null}
+                onChange={secondDropDate => setModel({ secondDropDate })}
+              />
               {editMode && (
-                <Grid item sm={4}>
-                  <TextField
-                    fullWidth
-                    autoOk
-                    clearable
-                    label="Droped On"
-                    component={DatePicker}
-                    value={dropStatus || null}
-                    onChange={dropStatus => setModel({ dropStatus })}
-                  />
-                </Grid>
-              )}
-              <Grid item sm={editMode ? 4 : 6}>
-                <TextField
-                  required
-                  fullWidth
-                  autoOk
-                  clearable
-                  label="Send to print"
-                  component={DatePicker}
-                  value={printDate}
-                  onChange={printDate => setModel({ printDate })}
+                <DateField
+                  label="Droped On"
+                  value={model.dropStatus || null}
+                  onChange={dropStatus => setModel({ dropStatus })}
                 />
-              </Grid>
+              )}
+              <DateField
+                required
+                size={editMode ? 4 : 6}
+                label="Send to print"
+                value={model.printDate}
+                onChange={printDate => setModel({ printDate })}
+              />
             </Fragment>
           )}
-          <Grid item sm={editMode || type == 'Digital' ? 4 : 6}>
-            <TextField
-              required
-              fullWidth
-              autoOk
-              clearable
-              label="Expire"
-              component={DatePicker}
-              value={expire}
-              onChange={expire => setModel({ expire })}
-            />
-          </Grid>
+          <DateField
+            required
+            size={editMode || model.type == 'Digital' ? 4 : 6}
+            label="Expire"
+            value={model.expire}
+            onChange={expire => setModel({ expire })}
+          />
           <Grid item sm={12}>
             <Typography variant="headline" align="left">
               Details
             </Typography>
           </Grid>
-          <Grid item sm={6}>
-            <TextField
-              required
-              fullWidth
-              label="Type"
-              select
-              value={jobType}
-              onChange={e => setModel({ jobType: e.target.value })}
-            >
-              {(type == 'Print'
+          <SelectField
+            size={6}
+            required
+            label="Type"
+            value={model.jobType}
+            onChange={e => setModel({ jobType: e.target.value })}
+            values={
+              model.type == 'Print'
                 ? enums.jobType.print
                 : enums.jobType.digital
-              ).map(value => (
-                <MenuItem key={value} value={value}>
-                  {value}
-                </MenuItem>
-              ))}
-            </TextField>
-          </Grid>
-          <Grid item sm={6}>
-            {customSize ? (
+            }
+          />
+          {customSize ? (
+            <Grid item sm={6}>
               <TextField
                 fullWidth
                 label="Size"
-                value={size.join(', ')}
+                value={model.size.join(', ')}
                 onChange={e => setModel({ size: e.target.value.split(', ') })}
                 onBlur={e => {
                   if (e.target.value == '') setCustomSize(false)
                 }}
                 autoFocus
               />
-            ) : (
-              <TextField
-                fullWidth
-                label="Size"
-                select
-                value={size}
-                SelectProps={{
-                  multiple: true,
-                  renderValue: selected => selected.join(', ')
-                }}
-                onChange={e => {
-                  if (e.target.value.includes('custom')) setCustomSize(true)
-                  else setModel({ size: e.target.value })
-                }}
-              >
-                {type == 'Print'
-                  ? enums.size.print.map(value => (
-                      <MenuItem key={value} value={value}>
-                        {value}
-                      </MenuItem>
-                    ))
-                  : enums.size.digital.map(value => (
-                      <MenuItem key={value} value={value}>
-                        <Checkbox checked={size.includes(value)} />
-                        <ListItemText primary={value} />
-                      </MenuItem>
-                    ))}
-                <MenuItem value="custom">Custom...</MenuItem>
-              </TextField>
-            )}
-          </Grid>
+            </Grid>
+          ) : (
+            <SelectField
+              size={6}
+              label="Size"
+              value={model.size}
+              onChange={e => {
+                if (e.target.value.includes('custom')) setCustomSize(true)
+                else setModel({ size: e.target.value })
+              }}
+              multiple={model.type == 'Digital'}
+              values={
+                model.type == 'Print' ? enums.size.print : enums.size.digital
+              }
+            >
+              <MenuItem value="custom">Custom...</MenuItem>
+            </SelectField>
+          )}
           <Grid item sm={4}>
             <NumberFormat
               fullWidth
@@ -412,20 +320,20 @@ export default function CreateDialog(props) {
               customInput={TextField}
               format="+1 (###) ### ####"
               isNumericString
-              value={trackingNumber}
+              value={model.trackingNumber}
               onValueChange={format =>
                 setModel({ trackingNumber: format.value })
               }
             />
           </Grid>
-          {type == 'Print' && (
+          {model.type == 'Print' && (
             <Fragment>
               <Grid item sm={4}>
                 <TextField
                   fullWidth
                   required
                   label="Vendor"
-                  value={vendor}
+                  value={model.vendor}
                   onChange={e => setModel({ vendor: e.target.value })}
                 />
               </Grid>
@@ -437,78 +345,42 @@ export default function CreateDialog(props) {
                   thousandSeparator
                   label="Quantity"
                   customInput={TextField}
-                  value={quantity}
+                  value={model.quantity}
                   onValueChange={format => setModel({ quantity: format.value })}
                 />
               </Grid>
-              <Grid item sm={6}>
-                <TextField
-                  required
-                  fullWidth
-                  label="List type"
-                  select
-                  value={listType}
-                  onChange={e => setModel({ listType: e.target.value })}
-                >
-                  {enums.listType.map(value => (
-                    <MenuItem key={value} value={value}>
-                      {value}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </Grid>
-              <Grid item sm={6}>
-                <TextField
-                  required
-                  fullWidth
-                  label="Envelope"
-                  select
-                  value={envelope}
-                  onChange={e => setModel({ envelope: e.target.value })}
-                >
-                  {enums.envelope.map(value => (
-                    <MenuItem key={value} value={value}>
-                      {value}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </Grid>
-              <Grid item sm={6}>
-                <TextField
-                  value={addons}
-                  onChange={e => setModel({ addons: e.target.value })}
-                  fullWidth
-                  label="Addons"
-                  select
-                  SelectProps={{
-                    multiple: true,
-                    renderValue: selected => selected.join(', ')
-                  }}
-                >
-                  {enums.addons.map(value => (
-                    <MenuItem key={value} value={value}>
-                      <Checkbox checked={addons.indexOf(value) > -1} />
-                      <ListItemText primary={value} />
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </Grid>
-              <Grid item sm={6}>
-                <TextField
-                  required
-                  fullWidth
-                  label="Postage"
-                  select
-                  value={postage}
-                  onChange={e => setModel({ postage: e.target.value })}
-                >
-                  {enums.postage.map(value => (
-                    <MenuItem key={value} value={value}>
-                      {value}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </Grid>
+              <SelectField
+                size={6}
+                required
+                label="List type"
+                value={model.listType}
+                onChange={e => setModel({ listType: e.target.value })}
+                values={enums.listType}
+              />
+              <SelectField
+                size={6}
+                required
+                label="Envelope"
+                value={model.envelope}
+                onChange={e => setModel({ envelope: e.target.value })}
+                values={enums.envelope}
+              />
+              <SelectField
+                size={6}
+                label="Addons"
+                value={model.addons}
+                onChange={e => setModel({ addons: e.target.value })}
+                values={enums.addons}
+                multiple
+              />
+              <SelectField
+                required
+                size={6}
+                label="Postage"
+                value={model.postage}
+                onChange={e => setModel({ postage: e.target.value })}
+                values={enums.postage}
+              />
             </Fragment>
           )}
           <Grid item sm={12}>
@@ -517,14 +389,14 @@ export default function CreateDialog(props) {
               multiline
               rows={3}
               label="Additional Details"
-              value={details}
+              value={model.details}
               onChange={e => setModel({ details: e.target.value })}
             />
           </Grid>
-          {editMode && files.length > 0 && (
+          {editMode && model.files.length > 0 && (
             <Grid item sm={12}>
               <EditFiles
-                files={files}
+                files={model.files}
                 selected={selectedFiles}
                 onChange={setSelectedFiles}
               />
@@ -538,7 +410,7 @@ export default function CreateDialog(props) {
             className="version-comment"
             fullWidth
             label="Reason for edit"
-            value={versionComment}
+            value={model.versionComment}
             onChange={e => setModel({ versionComment: e.target.value })}
           />
         )}
