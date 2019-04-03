@@ -41,13 +41,13 @@ async function notifiyAssignee(ctx, job, oldAssignee) {
 router.post('/', async ctx => {
   let model = ctx.request.body
 
-  let today = new Date()
+  const created = model.created ? new Date(model.created) : new Date()
   if (!model.name) {
     let n = await Job.count({
       client: model.client,
       created: {
-        $gte: startOfMonth(today),
-        $lt: endOfMonth(today)
+        $gte: startOfMonth(created),
+        $lt: endOfMonth(created)
       }
     })
 
@@ -150,7 +150,7 @@ router.post('/', async ctx => {
         break
     }
 
-    model.name = `${client.acronym} ${format(today, 'MMyy')}-${n +
+    model.name = `${client.acronym} ${format(created, 'MMyy')}-${n +
       1} ${type}${list}`
   }
 

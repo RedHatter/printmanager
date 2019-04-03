@@ -19,6 +19,7 @@ import { Form, TextField } from 'material-ui-utils'
 import NumberFormat from 'react-number-format'
 import PropTypes from 'prop-types'
 import clsx from 'clsx'
+import { startOfMonth } from 'date-fns'
 
 import { enums, colorize } from '../utils.js'
 import { deleteFiles, updateJob } from './actions.js'
@@ -28,6 +29,7 @@ import EditFiles from './EditFiles.jsx'
 
 export default function CreateDialog(props) {
   let initalModel = {
+    created: new Date(),
     type: 'Print',
     client: '',
     salesman: '',
@@ -71,6 +73,7 @@ export default function CreateDialog(props) {
 
   const {
     id,
+    created,
     type,
     name,
     client,
@@ -240,6 +243,20 @@ export default function CreateDialog(props) {
               ))}
             </TextField>
           </Grid>
+          {!editMode && (
+            <Grid item sm={4}>
+              <TextField
+                fullWidth
+                autoOk
+                views={['month']}
+                format="MMMM"
+                label="Month"
+                component={DatePicker}
+                value={created}
+                onChange={value => setModel({ created: startOfMonth(value) })}
+              />
+            </Grid>
+          )}
           <Grid item sm={12}>
             <Typography variant="headline" align="left">
               Dates

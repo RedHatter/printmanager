@@ -36,7 +36,7 @@ CommentSchema.virtual('created').get(function() {
 module.exports = new Schema(
   {
     type: { type: String, enum: ['Print', 'Digital'], required: true },
-    created: { type: Date, default: Date.now },
+    created: { type: Date, required: true },
     name: {
       type: String,
       required: true,
