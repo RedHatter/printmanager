@@ -78,7 +78,6 @@ module.exports = new Schema(
       }
     ],
     completed: Date,
-    forceComplete: Boolean,
     pixels: [
       {
         type: ObjectId,

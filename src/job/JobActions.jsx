@@ -33,7 +33,7 @@ function DuplicateButton(props) {
           delete model.name
           delete model.comments
           delete model.completed
-          delete model.forceComplete
+          delete model.files
           delete model.pixels
           delete model.versionComment
           setIsOpen(true)

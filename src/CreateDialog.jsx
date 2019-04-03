@@ -95,7 +95,6 @@ export default function CreateDialog(props) {
     details,
     artStatus,
     dropStatus,
-    forceComplete,
     versionComment,
     priority,
     assignee,
@@ -513,31 +512,14 @@ export default function CreateDialog(props) {
               onChange={e => setModel({ details: e.target.value })}
             />
           </Grid>
-          {editMode && (
-            <Fragment>
-              {files.length > 0 && (
-                <Grid item sm={12}>
-                  <EditFiles
-                    files={files}
-                    selected={selectedFiles}
-                    onChange={setSelectedFiles}
-                  />
-                </Grid>
-              )}
-              <Grid item sm={12}>
-                <FormControlLabel
-                  label="Force completed"
-                  control={
-                    <Checkbox
-                      checked={forceComplete}
-                      onChange={e =>
-                        setModel({ forceComplete: e.target.checked })
-                      }
-                    />
-                  }
-                />
-              </Grid>
-            </Fragment>
+          {editMode && files.length > 0 && (
+            <Grid item sm={12}>
+              <EditFiles
+                files={files}
+                selected={selectedFiles}
+                onChange={setSelectedFiles}
+              />
+            </Grid>
           )}
         </Grid>
       </DialogContent>

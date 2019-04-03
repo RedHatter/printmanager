@@ -56,10 +56,10 @@ function Job({ highlighted, model, isAdmin, ...rest }) {
     trackingNumber,
     expire,
     details,
-    forceComplete,
     pixels,
     eblast,
-    files
+    files,
+    priority
   } = model
 
   let dropStatusFromatted = dropStatus ? formatDate(dropStatus) : 'Incomplete'
@@ -77,18 +77,9 @@ function Job({ highlighted, model, isAdmin, ...rest }) {
         expandIcon={<ExpandMoreIcon />}
         className={clsx(
           {
-            // complete:
-            //   forceComplete ||
-            //   (files &&
-            //     [
-            //       'Proof',
-            //       'Data List',
-            //       'Dealer invoice',
-            //       'Printer invoice',
-            //       'Postal',
-            //       'Prize board'
-            //     ].every(key => key in files)),
             late: dropDate < today && !dropStatus,
+            'mid-priority': priority == 2,
+            'high-priority': priority == 3,
             highlighted
           },
           'job-row'
@@ -295,12 +286,12 @@ export default Job
   font-style: italic;
 }
 
-.complete {
+.mid-priority {
   padding-left: 19px !important;
-  border-left: 5px solid #4caf50 !important;
+  border-left: 5px solid #ffb300 !important;
 }
 
-.late {
+.high-priority {
   padding-left: 19px !important;
   border-left: 5px solid #f44336 !important;
 }
