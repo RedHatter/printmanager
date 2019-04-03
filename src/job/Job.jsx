@@ -62,14 +62,14 @@ function Job({ highlighted, model, isAdmin, ...rest }) {
     priority
   } = model
 
-  let dropStatusFromatted = dropStatus ? formatDate(dropStatus) : 'Incomplete'
+  const dropStatusFromatted = dropStatus ? formatDate(dropStatus) : 'Incomplete'
 
   let listStatus = 'Count Pending'
   if (files && files.find(o => o.type == 'Data List'))
     listStatus = 'List Uploaded'
   else if (listType == 'Saturation') listStatus = 'List Pending'
 
-  let today = startOfDay(new Date())
+  const today = startOfDay(new Date())
 
   return (
     <ExpansionPanel {...rest}>
@@ -88,7 +88,7 @@ function Job({ highlighted, model, isAdmin, ...rest }) {
         <Column group="name">{name}</Column>
         <Column group="quantity">{quantity && formatNumber(quantity)}</Column>
         <Column group="dropStatus">
-          {dropStatusFromatted && (
+          {jobType == 'Print' && (
             <span
               className={clsx('statusBlock', colorize(dropStatusFromatted))}
             >
@@ -170,21 +170,27 @@ function Job({ highlighted, model, isAdmin, ...rest }) {
               </td>
             </tr>
             <tr>
-              <th rowSpan="2">Contact</th>
-              <td rowSpan="2">
+              <th rowSpan="3">Contact</th>
+              <td rowSpan="3">
                 {client?.contact?.name}
                 <br />
                 {client?.contact?.email}
                 <br />
                 {client && formatPhone(client?.contact?.phone)}
               </td>
-              <th>Envelope</th>
-              <td>{envelope}</td>
+              {jobType == 'Print' && (
+                <Fragment>
+                  <th>Envelope</th>
+                  <td>{envelope}</td>
+                </Fragment>
+              )}
             </tr>
-            <tr>
-              <th>Addons</th>
-              <td>{addons?.join(', ')}</td>
-            </tr>
+            {jobType == 'Print' && (
+              <tr>
+                <th>Addons</th>
+                <td>{addons?.join(', ')}</td>
+              </tr>
+            )}
             <tr>
               {trackingNumber && (
                 <Fragment>
@@ -196,17 +202,25 @@ function Job({ highlighted, model, isAdmin, ...rest }) {
               <td>{expire && formatDate(expire)}</td>
             </tr>
             <tr>
-              <th>Vendor</th>
-              <td>{vendor}</td>
+              {jobType == 'Print' && (
+                <Fragment>
+                  <th>Vendor</th>
+                  <td>{vendor}</td>
+                </Fragment>
+              )}
               <th>Order Date</th>
               <td>{created && formatDate(created)}</td>
             </tr>
-            <tr>
-              <th>List Type</th>
-              <td>{listType}</td>
-              <th>List Status</th>
-              <td>{listStatus}</td>
-            </tr>
+            {jobType == 'Print' && (
+              <Fragment>
+                <tr>
+                  <th>List Type</th>
+                  <td>{listType}</td>
+                  <th>List Status</th>
+                  <td>{listStatus}</td>
+                </tr>
+              </Fragment>
+            )}
             {details && (
               <tr>
                 <th>Additional Details</th>
