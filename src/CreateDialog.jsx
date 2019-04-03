@@ -44,7 +44,7 @@ export default function CreateDialog(props) {
     addons: [],
     jobType: '',
     envelope: 'None',
-    size: '',
+    size: [],
     listType: '',
     postage: '',
     details: '',
@@ -365,8 +365,8 @@ export default function CreateDialog(props) {
               <TextField
                 fullWidth
                 label="Size"
-                value={size}
-                onChange={e => setModel({ size: e.target.value })}
+                value={size.join(', ')}
+                onChange={e => setModel({ size: e.target.value.split(', ') })}
                 onBlur={e => {
                   if (e.target.value == '') setCustomSize(false)
                 }}
@@ -378,18 +378,27 @@ export default function CreateDialog(props) {
                 label="Size"
                 select
                 value={size}
+                SelectProps={{
+                  multiple: true,
+                  renderValue: selected => selected.join(', ')
+                }}
                 onChange={e => {
-                  if (e.target.value == 'custom') setCustomSize(true)
+                  if (e.target.value.includes('custom')) setCustomSize(true)
                   else setModel({ size: e.target.value })
                 }}
               >
-                {(type == 'Print' ? enums.size.print : enums.size.digital).map(
-                  value => (
-                    <MenuItem key={value} value={value}>
-                      {value}
-                    </MenuItem>
-                  )
-                )}
+                {type == 'Print'
+                  ? enums.size.print.map(value => (
+                      <MenuItem key={value} value={value}>
+                        {value}
+                      </MenuItem>
+                    ))
+                  : enums.size.digital.map(value => (
+                      <MenuItem key={value} value={value}>
+                        <Checkbox checked={size.includes(value)} />
+                        <ListItemText primary={value} />
+                      </MenuItem>
+                    ))}
                 <MenuItem value="custom">Custom...</MenuItem>
               </TextField>
             )}

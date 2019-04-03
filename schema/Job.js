@@ -53,7 +53,7 @@ module.exports = new Schema(
       enum: enums.jobType.all,
       required: true
     },
-    size: { type: String },
+    size: [{ type: String }],
     salesman: { ...userType, require: true },
     assignee: userType,
     dueDate: { type: Date, required: true },

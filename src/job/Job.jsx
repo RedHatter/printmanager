@@ -166,7 +166,7 @@ function Job({ highlighted, model, isAdmin, ...rest }) {
             <tr>
               <th>Mailer Type</th>
               <td>
-                {jobType} &mdash; {size}
+                {jobType} &mdash; {size.join(', ')}
               </td>
             </tr>
             <tr>
