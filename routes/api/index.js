@@ -42,6 +42,7 @@ router.post('/send', async ctx => {
   await job.save()
 
   ctx.body = await ctx.sendMail({
+    from: '"Erica Garcia" <ericag@dealerdigitalgroup.com>',
     to: recipients,
     subject,
     html: `${message.replace(

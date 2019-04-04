@@ -39,9 +39,6 @@ app.context.mail = nodemailer.createTransport(
     tls: {
       rejectUnauthorized: false
     }
-  },
-  {
-    from: '"Erica Garcia" <ericag@dealerdigitalgroup.com>'
   }
 )
 app.context.sendMail = body =>

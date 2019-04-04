@@ -15,8 +15,9 @@ async function notifiyAssignee(ctx, job, oldAssignee) {
 
   if (job.assignee && user['cognito:username'] != job.assignee.id)
     await ctx.sendMail({
+      from: `"${user.name} (Workflow)" <ericag@dealerdigitalgroup.com>`,
       to: job.assignee.email,
-      subject: job.name,
+      subject: job.name + ' assigned to you',
       html: `The job <i>${job.name}</i> has been assigned to you by ${
         user.name
       }.<br><br>
@@ -27,8 +28,9 @@ async function notifiyAssignee(ctx, job, oldAssignee) {
 
   if (oldAssignee && user['cognito:username'] != oldAssignee.id)
     await ctx.sendMail({
+      from: `"${user.name} (Workflow)" <ericag@dealerdigitalgroup.com>`,
       to: oldAssignee.email,
-      subject: job.name,
+      subject: job.name + ' assigned to you',
       html: `You have been remove from the job <i>${job.name}</i> by ${
         user.name
       }.<br><br>
@@ -164,8 +166,9 @@ router.post('/', async ctx => {
 
   if (notify) {
     await Promise.all(notify.map(user => ctx.sendMail({
+      from: `"${ctx.state.user.name} (Workflow)" <ericag@dealerdigitalgroup.com>`,
       to: user.email,
-      subject: job.name,
+      subject: 'New job ' + job.name,
       html: `${ctx.state.user.name} has added a new job <i>${job.name}</i> to Workflow.<br><br>
 <a href="http://workflow.dealerdigitalgroup.com/?${job.id}">View in #Workflow</a>`
     })))
@@ -313,9 +316,10 @@ router.post('/:id/comment', async ctx => {
 
     if (to && to.length > 0) {
       await ctx.sendMail({
+        from: `"${ctx.state.user.name} (Workflow)" <ericag@dealerdigitalgroup.com>`,
         to,
-        subject: job.name,
-        html: `A new comment has been posted to <i>${job.name}</i>
+        subject: 'New comment on ' + job.name,
+        html: `${ctx.state.user.name} has commented on <i>${job.name}</i>
 <blockquote>${comment.html}</blockquote>
 <a href="http://workflow.dealerdigitalgroup.com/?${
           job.id
