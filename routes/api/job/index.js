@@ -4,7 +4,7 @@ const Router = require('koa-router')
 const Storage = require('aws-amplify').Storage
 const { format, startOfMonth, endOfMonth } = require('date-fns')
 const { Job, Client } = require('../../../schema')
-const { mapObjectValues } = require('../../../utils.js')
+const { transformValue } = require('../../../utils.js')
 
 const router = new Router()
 router.use(require(path.join(__dirname, 'comment.js')))
@@ -158,7 +158,7 @@ router.post('/', async ctx => {
       1} ${type}${list}`
   }
 
-  model = mapObjectValues(model, val =>
+  model = transformValue(model, val =>
     val === '' || val === null ? undefined : val
   )
 
@@ -265,7 +265,7 @@ router.post('/:id', async ctx => {
   )
 
   try {
-    let model = mapObjectValues(ctx.request.body, val =>
+    let model = transformValue(ctx.request.body, val =>
       val === '' ? undefined : val
     )
     delete model._id

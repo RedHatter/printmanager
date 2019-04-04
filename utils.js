@@ -148,11 +148,14 @@ function clone(obj) {
   return parseJSON(JSON.stringify(obj))
 }
 
-function mapObjectValues(obj, func) {
-  return Object.entries(obj).reduce(
-    (o, [key, value]) => ((o[key] = func(value)), o),
-    {}
-  )
+function transformValue(obj, func) {
+  return Array.isArray(obj)
+    ? obj.map(value => transformValue(value, func))
+    : typeof obj == 'object' && obj !== null
+    ? Object.entries(obj).reduce(
+      (o, [key, value]) => (o[key] = transformValue(value, func), o), {}
+    )
+    : func(obj)
 }
 
 function range(start, end) {
@@ -267,7 +270,7 @@ module.exports = {
   formatDateTime,
   parseJSON,
   clone,
-  mapObjectValues,
+  transformValue,
   range,
   isObject,
   deepmerge,

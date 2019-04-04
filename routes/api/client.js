@@ -1,12 +1,12 @@
 const Router = require('koa-router')
 const { Client } = require('../../schema')
-const { mapObjectValues } = require('../../utils.js')
+const { transformValue } = require('../../utils.js')
 
 const router = new Router()
 
 router.post('/', async ctx => {
   try {
-    let model = mapObjectValues(ctx.request.body, val =>
+    let model = transformValue(ctx.request.body, val =>
       val === '' ? undefined : val
     )
     let client = new Client(model)
@@ -33,7 +33,7 @@ router.post('/:id', async ctx => {
   )
 
   try {
-    let model = mapObjectValues(ctx.request.body, val =>
+    let model = transformValue(ctx.request.body, val =>
       val === '' ? undefined : val
     )
     delete model.id

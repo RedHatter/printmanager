@@ -153,7 +153,6 @@ export default function Client(props) {
               onValueChange={format =>
                 setModel({ trackingNumbers: { database: format.value } })
               }
-              required
             />
           </Grid>
           <Grid item sm={4}>
@@ -169,7 +168,6 @@ export default function Client(props) {
               onValueChange={format =>
                 setModel({ trackingNumbers: { saturation: format.value } })
               }
-              required
             />
           </Grid>
           <Grid item sm={4}>
@@ -185,7 +183,6 @@ export default function Client(props) {
               onValueChange={format =>
                 setModel({ trackingNumbers: { bankruptcy: format.value } })
               }
-              required
             />
           </Grid>
           <Grid item sm={4}>
@@ -201,7 +198,6 @@ export default function Client(props) {
               onValueChange={format =>
                 setModel({ trackingNumbers: { prequalified: format.value } })
               }
-              required
             />
           </Grid>
         </Grid>
