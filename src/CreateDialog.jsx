@@ -26,6 +26,7 @@ import { deleteFiles, updateJob } from './actions.js'
 import { useStore } from './store.js'
 import { ClientType, JobType } from './types.js'
 import EditFiles from './EditFiles.jsx'
+import ChipSelect from './components/ChipSelect.jsx'
 
 function SelectField({ size = 4, values, multiple, children, ...props }) {
   return (
@@ -87,6 +88,7 @@ export default function CreateDialog(props) {
     artStatus: enums.artStatus[0],
     priority: 1,
     files: [],
+    notify: [],
     ...props.model,
     client: props.model?.client?.id || '',
     salesman: props.model?.salesman?.id || '',
@@ -158,6 +160,14 @@ export default function CreateDialog(props) {
                   priority: model.priority < 3 ? model.priority + 1 : 1
                 })
               }
+            />
+          </Grid>
+          <Grid item sm={12}>
+            <ChipSelect
+              options={users}
+              value={model.notify}
+              onChange={notify => setModel({ notify })}
+              label="Notify"
             />
           </Grid>
           <Grid item sm={12}>

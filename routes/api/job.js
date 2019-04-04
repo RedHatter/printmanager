@@ -158,7 +158,19 @@ router.post('/', async ctx => {
     val === '' || val === null ? undefined : val
   )
 
-  let job = new Job(model)
+  const notify = model.notify
+  delete model.notify
+  const job = new Job(model)
+
+  if (notify) {
+    await Promise.all(notify.map(user => ctx.sendMail({
+      to: user.email,
+      subject: job.name,
+      html: `${ctx.state.user.name} has added a new job <i>${job.name}</i> to Workflow.<br><br>
+<a href="http://workflow.dealerdigitalgroup.com/?${job.id}">View in #Workflow</a>`
+    })))
+  }
+
   try {
     await job.save()
     ctx.response.type = 'json'
