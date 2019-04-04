@@ -24,7 +24,7 @@ router.use(async (ctx, next) => {
   }
 })
 
-router.use('/job', require(path.join(__dirname, 'job.js')))
+router.use('/job', require(path.join(__dirname, 'job')))
 router.use('/client', require(path.join(__dirname, 'client.js')))
 router.use('/user', require(path.join(__dirname, 'user.js')))
 

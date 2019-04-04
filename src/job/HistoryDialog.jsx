@@ -21,7 +21,7 @@ export default function HistoryDialog({ model, onClose }) {
   const [selected, setSelected] = useState(undefined)
   useEffect(() => {
     ;(async () => {
-      let res = await fetch(`/api/job/${model.id}/patches`, {
+      let res = await fetch(`/api/job/${model.id}/patch`, {
         headers: {
           Authorization: (await Auth.currentSession()).idToken.jwtToken
         }
@@ -31,7 +31,7 @@ export default function HistoryDialog({ model, onClose }) {
   }, [])
 
   async function select(patch) {
-    let res = await fetch(`/api/job/${model.id}/patches/${patch._id}`, {
+    let res = await fetch(`/api/job/${model.id}/patch/${patch._id}`, {
       headers: { Authorization: (await Auth.currentSession()).idToken.jwtToken }
     })
     setSelected(parseJSON(await res.text()))
