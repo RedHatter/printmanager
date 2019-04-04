@@ -55,6 +55,8 @@ router.post('/:id/comment', async ctx => {
 
 router.delete('/:ref/comment/:id', async ctx => {
   const job = await Job.findById(ctx.params.ref)
+  const comment = job.comments.id(ctx.params.id)
+  ctx.assert(ctx.state.user['cognito:username'] == comment.user.id, 403)
 
   const files = await Storage.list(
     `${ctx.params.ref}/comment/${ctx.params.id}`,
@@ -64,7 +66,7 @@ router.delete('/:ref/comment/:id', async ctx => {
     bucket: 'dealerdigitalgroup.printmanager'
   })))
 
-  job.comments.splice(job.comments.findIndex(o => o._id == ctx.params.id), 1)
+  comment.remove()
   await job.save()
 
   ctx.response.type = 'json'
