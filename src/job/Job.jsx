@@ -10,7 +10,6 @@ import {
 import { startOfDay, format } from 'date-fns'
 
 import ExpandMoreIcon from '../icons/ExpandMore.js'
-import { JobType } from '../types.js'
 import JobActions from './JobActions.jsx'
 import Column from '../components/Column.jsx'
 import Comments from './Comments.jsx'
@@ -25,7 +24,7 @@ import {
 } from '../../utils.js'
 
 Job.propTypes = {
-  model: JobType.isRequired,
+  model: PropTypes.object.isRequired,
   highlighted: PropTypes.bool,
   isAdmin: PropTypes.bool
 }

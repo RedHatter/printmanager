@@ -23,7 +23,6 @@ import { startOfMonth } from 'date-fns'
 import { enums, colorize } from '../utils.js'
 import { deleteFiles, updateJob } from './actions.js'
 import { useStore } from './store.js'
-import { ClientType, JobType } from './types.js'
 import EditFiles from './EditFiles.jsx'
 import ChipSelect from './components/ChipSelect.jsx'
 import Form from './components/Form.jsx'
@@ -427,7 +426,7 @@ export default function CreateDialog(props) {
 }
 
 CreateDialog.propTypes = {
-  model: JobType,
+  model: PropTypes.object,
   onClose: PropTypes.func.isRequired
 }
 

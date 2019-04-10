@@ -167,13 +167,23 @@ router.post('/', async ctx => {
   const job = new Job(model)
 
   if (notify) {
-    await Promise.all(notify.map(user => ctx.sendMail({
-      from: `"${ctx.state.user.name} (Workflow)" <ericag@dealerdigitalgroup.com>`,
-      to: user.email,
-      subject: 'New job ' + job.name,
-      html: `${ctx.state.user.name} has added a new job <i>${job.name}</i> to Workflow.<br><br>
-<a href="http://workflow.dealerdigitalgroup.com/?${job.id}">View in #Workflow</a>`
-    })))
+    await Promise.all(
+      notify.map(user =>
+        ctx.sendMail({
+          from: `"${
+            ctx.state.user.name
+          } (Workflow)" <ericag@dealerdigitalgroup.com>`,
+          to: user.email,
+          subject: 'New job ' + job.name,
+          html: `${ctx.state.user.name} has added a new job <i>${
+            job.name
+          }</i> to Workflow.<br><br>
+<a href="http://workflow.dealerdigitalgroup.com/?${
+            job.id
+          }">View in #Workflow</a>`
+        })
+      )
+    )
   }
 
   try {
@@ -298,9 +308,13 @@ router.delete('/:id', async ctx => {
   const files = await Storage.list(ctx.params.id, {
     bucket: 'dealerdigitalgroup.printmanager'
   })
-  await Promise.all(files.map(o => Storage.remove(o.key, {
-    bucket: 'dealerdigitalgroup.printmanager'
-  })))
+  await Promise.all(
+    files.map(o =>
+      Storage.remove(o.key, {
+        bucket: 'dealerdigitalgroup.printmanager'
+      })
+    )
+  )
 
   const job = await Job.findByIdAndRemove(ctx.params.id)
   if (job.eblast.image) {

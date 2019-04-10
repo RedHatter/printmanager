@@ -1,5 +1,7 @@
-public/app.js
-public/app.js.map
+public/bundle.js
+public/bundle.js.map
+public/login/bundle.js
+public/login/bundle.js.map
 public/styles.css
 public/images/**
 yarn.lock

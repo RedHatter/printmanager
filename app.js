@@ -37,19 +37,17 @@ const app = new Koa()
 const router = new Router()
 
 app.keys = ['d4c2b975-6876-4e04-9e41-dc8153bbade6']
-app.context.mail = nodemailer.createTransport(
-  {
-    host: 'mail.dealerdigitalgroup.com',
-    port: 465,
-    auth: {
-      user: 'ericag@dealerdigitalgroup.com',
-      pass: '?Sf=hzfhCu)(5#pCyH'
-    },
-    tls: {
-      rejectUnauthorized: false
-    }
+app.context.mail = nodemailer.createTransport({
+  host: 'mail.dealerdigitalgroup.com',
+  port: 465,
+  auth: {
+    user: 'ericag@dealerdigitalgroup.com',
+    pass: '?Sf=hzfhCu)(5#pCyH'
+  },
+  tls: {
+    rejectUnauthorized: false
   }
-)
+})
 app.context.sendMail = body =>
   new Promise((resolve, reject) =>
     app.context.mail.sendMail(body, (err, info) => {
@@ -58,7 +56,7 @@ app.context.sendMail = body =>
     })
   )
 
-async function secure (ctx, next) {
+async function secure(ctx, next) {
   try {
     ctx.state.user = await validate(ctx.cookies.get('AccessToken'))
     return next()

@@ -153,8 +153,9 @@ function transformValue(obj, func) {
     ? obj.map(value => transformValue(value, func))
     : typeof obj == 'object' && obj !== null
     ? Object.entries(obj).reduce(
-      (o, [key, value]) => (o[key] = transformValue(value, func), o), {}
-    )
+        (o, [key, value]) => ((o[key] = transformValue(value, func)), o),
+        {}
+      )
     : func(obj)
 }
 
@@ -253,11 +254,11 @@ function throttle(func, wait, options) {
   return throttled
 }
 
-function ensureArray (value) {
+function ensureArray(value) {
   return value === undefined ? [] : Array.isArray(value) ? value : [value]
 }
 
-function basename (file) {
+function basename(file) {
   return decodeURIComponent(file.substring(file.lastIndexOf('/') + 1))
 }
 

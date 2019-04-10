@@ -3,12 +3,11 @@ import PropTypes from 'prop-types'
 import { Paper } from '@material-ui/core'
 
 import { useStore } from '../store.js'
-import { JobType } from '../types.js'
 import Job from '../job/Job.jsx'
 import Column from '../components/Column.jsx'
 
 JobList.propTypes = {
-  show: JobType,
+  show: PropTypes.object,
   elevation: PropTypes.number
 }
 

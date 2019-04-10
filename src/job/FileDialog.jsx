@@ -12,10 +12,9 @@ import {
 import PropTypes from 'prop-types'
 
 import { uploadFiles } from '../actions.js'
-import { JobType } from '../types.js'
 
 FileDialog.propTypes = {
-  model: JobType.isRequired
+  model: PropTypes.object.isRequired
 }
 export default function FileDialog({ model }) {
   const [files, setFiles] = useState([])

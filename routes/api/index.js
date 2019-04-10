@@ -39,9 +39,13 @@ router.post('/send', async ctx => {
           bucket: 'dealerdigitalgroup.printmanager'
         }).then(path => ({
           path,
-          filename: path.substring(path.lastIndexOf('/') + 1, path.lastIndexOf('?'))
+          filename: path.substring(
+            path.lastIndexOf('/') + 1,
+            path.lastIndexOf('?')
+          )
         }))
-    ))
+      )
+    )
   })
 })
 

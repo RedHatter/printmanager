@@ -11,14 +11,16 @@ router.post('/:id/comment', async ctx => {
   try {
     const comment = ctx.request.body
     comment._id = new ObjectId()
-    comment.attachments = await Promise.all(ensureArray(ctx.request.files.attachments).map(async file => {
-      const path = `${ctx.params.id}/comment/${comment._id}/${file.name}`
-      await Storage.put(path, await fs.readFile(file.path), {
-        contentType: file.type,
-        bucket: 'dealerdigitalgroup.printmanager'
+    comment.attachments = await Promise.all(
+      ensureArray(ctx.request.files.attachments).map(async file => {
+        const path = `${ctx.params.id}/comment/${comment._id}/${file.name}`
+        await Storage.put(path, await fs.readFile(file.path), {
+          contentType: file.type,
+          bucket: 'dealerdigitalgroup.printmanager'
+        })
+        return path
       })
-      return path
-    }))
+    )
 
     const to = comment.notify
     delete comment.notify
@@ -32,7 +34,9 @@ router.post('/:id/comment', async ctx => {
 
     if (to && to.length > 0) {
       await ctx.sendMail({
-        from: `"${ctx.state.user.name} (Workflow)" <ericag@dealerdigitalgroup.com>`,
+        from: `"${
+          ctx.state.user.name
+        } (Workflow)" <ericag@dealerdigitalgroup.com>`,
         to,
         subject: 'New comment on ' + job.name,
         html: `${ctx.state.user.name} has commented on <i>${job.name}</i>
@@ -60,11 +64,15 @@ router.delete('/:ref/comment/:id', async ctx => {
 
   const files = await Storage.list(
     `${ctx.params.ref}/comment/${ctx.params.id}`,
-    { bucket: 'dealerdigitalgroup.printmanager'}
+    { bucket: 'dealerdigitalgroup.printmanager' }
   )
-  await Promise.all(files.map(o => Storage.remove(o.key, {
-    bucket: 'dealerdigitalgroup.printmanager'
-  })))
+  await Promise.all(
+    files.map(o =>
+      Storage.remove(o.key, {
+        bucket: 'dealerdigitalgroup.printmanager'
+      })
+    )
+  )
 
   comment.remove()
   await job.save()
@@ -85,7 +93,9 @@ router.get('/:ref/comment/:id/file/:index', async ctx => {
   ctx.assert(file, 404)
 
   ctx.response.type = 'json'
-  ctx.body = await Storage.get(file, { bucket: 'dealerdigitalgroup.printmanager' })
+  ctx.body = await Storage.get(file, {
+    bucket: 'dealerdigitalgroup.printmanager'
+  })
 })
 
 module.exports = router.routes()

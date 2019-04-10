@@ -9,7 +9,6 @@ import {
 } from '@material-ui/core'
 import PropTypes from 'prop-types'
 
-import { JobType } from '../types.js'
 import { deleteJob } from '../actions.js'
 import { clone } from '../../utils.js'
 import HistoryDialog from './HistoryDialog.jsx'
@@ -57,7 +56,7 @@ function DuplicateButton(props) {
 }
 
 DuplicateButton.propTypes = {
-  model: JobType.isRequired
+  model: PropTypes.object.isRequired
 }
 
 function EditButton({ model }) {
@@ -73,7 +72,7 @@ function EditButton({ model }) {
 }
 
 EditButton.propTypes = {
-  model: JobType.isRequired
+  model: PropTypes.object.isRequired
 }
 
 function DeleteButton({ model }) {
@@ -105,7 +104,7 @@ function DeleteButton({ model }) {
 }
 
 DeleteButton.propTypes = {
-  model: JobType.isRequired
+  model: PropTypes.object.isRequired
 }
 
 function SendButton({ model }) {
@@ -121,7 +120,7 @@ function SendButton({ model }) {
 }
 
 SendButton.propTypes = {
-  model: JobType.isRequired
+  model: PropTypes.object.isRequired
 }
 
 function HistoryButton({ model }) {
@@ -137,7 +136,7 @@ function HistoryButton({ model }) {
 }
 
 HistoryButton.propTypes = {
-  model: JobType.isRequired
+  model: PropTypes.object.isRequired
 }
 
 function JobActions({ model }) {
@@ -154,7 +153,7 @@ function JobActions({ model }) {
 }
 
 JobActions.propTypes = {
-  model: JobType.isRequired
+  model: PropTypes.object.isRequired
 }
 
 export default JobActions

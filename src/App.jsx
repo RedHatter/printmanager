@@ -18,7 +18,6 @@ import Cookies from 'js-cookie'
 import { parseJSON } from '../utils.js'
 import CloseIcon from './icons/Close.js'
 import connect from './connect.js'
-import { ClientType } from './types.js'
 import { SlideRight } from './components/transitions.jsx'
 import { fetchJobs, fetchClients, fetchUsers, clearError } from './actions.js'
 import Tabs from './components/Tabs.jsx'
@@ -32,7 +31,9 @@ import ClientList from './clients/ClientList.jsx'
 
 class App extends Component {
   static propTypes = {
-    clients: PropTypes.arrayOf(ClientType).isRequired
+    clients: PropTypes.arrayOf(PropTypes.object).isRequired,
+    user: PropTypes.object.isRequired,
+    error: PropTypes.string
   }
 
   constructor(props) {

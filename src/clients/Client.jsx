@@ -12,13 +12,12 @@ import NumberFormat from 'react-number-format'
 import PropTypes from 'prop-types'
 
 import { deepmerge } from '../../utils.js'
-import { ClientType } from '../types.js'
 import { updateOrCreateClient } from '../actions.js'
 import Form from '../components/Form.jsx'
 import TextField from '../components/TextField.jsx'
 
 Client.propTypes = {
-  model: ClientType,
+  model: PropTypes.object,
   onClose: PropTypes.func
 }
 

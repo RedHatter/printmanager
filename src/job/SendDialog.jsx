@@ -13,13 +13,12 @@ import {
 } from '@material-ui/core'
 import ChipInput from 'material-ui-chip-input'
 
-import { JobType } from '../types.js'
 import { send } from '../actions.js'
 import { basename } from '../../utils.js'
 
 export default class SendDialog extends Component {
   static propTypes = {
-    model: JobType.isRequired
+    model: PropTypes.object.isRequired
   }
 
   constructor(props) {
