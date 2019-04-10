@@ -1,0 +1,42 @@
+<html lang="en">
+<head>
+  <title>Workflow</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">
+  <script src="https://sdk.amazonaws.com/js/aws-sdk-2.437.0.min.js"></script>
+  <style>
+    body {
+      background-color: #f2f3f4;
+      font-family: 'Roboto', sans-serif;
+    }
+
+    #root > div, form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      width: 400px;
+      margin: 160px auto 0;
+      padding: 30px;
+    }
+
+    form > div {
+      margin: 20px 0 !important;
+      width: 60%;
+    }
+
+    p {
+      text-align: left;
+      margin: 20px !important;
+    }
+
+    button {
+      margin: 20px 0 !important;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script src="bundle.js"></script>
+</body>
+</html>

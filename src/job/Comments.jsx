@@ -2,7 +2,6 @@ import React, { Fragment, useState, useRef } from 'react'
 import { Editor, EditorState, RichUtils, Modifier } from 'draft-js'
 import { Button, Popover, Chip } from '@material-ui/core'
 import { stateToHTML } from 'draft-js-export-html'
-import { Auth } from 'aws-amplify'
 import clsx from 'clsx'
 
 import DeleteIcon from '../icons/Delete.js'
@@ -87,7 +86,7 @@ export default function Comments({ model }) {
   const [notify, setNotify] = useState([])
   const [limit, setLimit] = useState(5)
   const [files, setFiles] = useState([])
-  const { users } = useStore()
+  const { users, user } = useStore()
 
   const styles = editorState.getCurrentInlineStyle()
   function toggleInlineStyle(type, e) {
@@ -125,14 +124,9 @@ export default function Comments({ model }) {
               key={path}
               label={basename(path)}
               onClick={() =>
-                Auth.currentSession().then(async auth => {
-                  const res = await fetch(
-                    `/api/job/${model.id}/comment/${o._id}/file/${i}`,
-                    { headers: { Authorization: auth.idToken.jwtToken } }
-                  )
-                  const url = await res.text()
-                  window.open(url, '_blank')
-                })
+                fetch(`/api/job/${model.id}/comment/${o._id}/file/${i}`)
+                  .then(res => res.text())
+                  .then(url => window.open(url, '_blank'))
               }
             />
           ))}
@@ -208,7 +202,7 @@ export default function Comments({ model }) {
             const res = await addComment(
               {
                 notify: notify.map(o => o.email),
-                user: (await Auth.currentAuthenticatedUser()).username,
+                user: user.id,
                 html: stateToHTML(editorState.getCurrentContent(), {
                   inlineStyles
                 }),

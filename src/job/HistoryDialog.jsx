@@ -11,7 +11,6 @@ import {
   TableBody
 } from '@material-ui/core'
 import PropTypes from 'prop-types'
-import { Auth } from 'aws-amplify'
 
 import { formatDateTime, parseJSON } from '../../utils.js'
 import JobList from '../views/JobList.jsx'
@@ -20,20 +19,13 @@ export default function HistoryDialog({ model, onClose }) {
   const [patches, setPatches] = useState([])
   const [selected, setSelected] = useState(undefined)
   useEffect(() => {
-    ;(async () => {
-      let res = await fetch(`/api/job/${model.id}/patch`, {
-        headers: {
-          Authorization: (await Auth.currentSession()).idToken.jwtToken
-        }
-      })
-      setPatches(parseJSON(await res.text()))
-    })()
+    fetch(`/api/job/${model.id}/patch`).then(res =>
+      setPatches(parseJSON(res.text()))
+    )
   }, [])
 
   async function select(patch) {
-    let res = await fetch(`/api/job/${model.id}/patch/${patch._id}`, {
-      headers: { Authorization: (await Auth.currentSession()).idToken.jwtToken }
-    })
+    let res = await fetch(`/api/job/${model.id}/patch/${patch._id}`)
     setSelected(parseJSON(await res.text()))
   }
 

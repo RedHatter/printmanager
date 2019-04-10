@@ -13,7 +13,7 @@ import {
   Snackbar
 } from '@material-ui/core'
 import PropTypes from 'prop-types'
-import { Auth } from 'aws-amplify'
+import Cookies from 'js-cookie'
 
 import { parseJSON } from '../utils.js'
 import CloseIcon from './icons/Close.js'
@@ -52,25 +52,15 @@ class App extends Component {
 
   @bound
   async viewJob(id) {
-    const res = await fetch('/api/job/' + id, {
-      headers: {
-        Authorization: (await Auth.currentSession()).idToken.jwtToken
-      }
-    })
+    const res = await fetch('/api/job/' + id)
     const selectedJob = parseJSON(await res.text())
     if (selectedJob.id == id) this.setState({ selectedJob, selectedTab: -1 })
   }
 
   render() {
-    const { authData, clients, error } = this.props
-    if (!authData) return null
+    const { clients, user, error } = this.props
 
     const { selectedTab, selectedClient, selectedJob } = this.state
-    const isAdmin =
-      'cognito:groups' in authData.signInUserSession.idToken.payload &&
-      authData.signInUserSession.idToken.payload['cognito:groups'].includes(
-        'Admin'
-      )
 
     return (
       <Fragment>
@@ -86,17 +76,13 @@ class App extends Component {
           }
         />
         <AppBar position="static" color="default">
-          <Toolbar>
-            <img src="/images/logo.png" />
-            <div className="header-button-container">
-              {authData?.email}
-              <Button onClick={this.handleSignOut}>Sign Out</Button>
-            </div>
-          </Toolbar>
+          <img src="/images/logo.png" />
+          {user.name}
+          <Button onClick={this.handleSignOut}>Sign Out</Button>
         </AppBar>
         <div className="app">
           <div className="sidebar">
-            {isAdmin && (
+            {user.isAdmin && (
               <Button onClick={this.openCreateDialog}>Create Job</Button>
             )}
             <br />
@@ -108,25 +94,21 @@ class App extends Component {
               <Tab label="All Jobs" />
               <Tab label="Calendar" />
               <Tab label="Sprint" />
-              {isAdmin && <Tab label="Users" />}
-              {isAdmin && <Tab label="Clients" />}
+              {user.isAdmin && <Tab label="Users" />}
+              {user.isAdmin && <Tab label="Clients" />}
             </Tabs>
           </div>
           <div className="content-container">
             {selectedTab <= 2 && <Filters />}
             <div className="content-wrapper">
               <SlideRight in={selectedTab == 0 || selectedJob}>
-                <JobList
-                  user={authData.username}
-                  isAdmin={isAdmin}
-                  show={selectedJob}
-                />
+                <JobList show={selectedJob} />
               </SlideRight>
               <SlideRight in={selectedTab == 1}>
-                <Calendar user={authData.username} isAdmin={isAdmin} />
+                <Calendar />
               </SlideRight>
               <SlideRight in={selectedTab == 2}>
-                <Sprint user={authData.username} isAdmin={isAdmin} />
+                <Sprint />
               </SlideRight>
               <SlideRight in={selectedTab == 3}>
                 <UserList />
@@ -157,9 +139,8 @@ class App extends Component {
 
   @bound
   handleSignOut() {
-    Auth.signOut()
-      .then(() => this.props.onStateChange('signIn'))
-      .catch(console.error)
+    Cookies.remove('AccessToken')
+    location.reload()
   }
 
   @bound
@@ -175,6 +156,7 @@ class App extends Component {
 
 export default connect(state => ({
   clients: state.clients,
+  user: state.user,
   error: state.errors.length > 0 ? state.errors[0].message : undefined
 }))(App)
 
@@ -184,8 +166,17 @@ body {
   font-family: 'Roboto', sans-serif;
 }
 
-.logo {
-  max-width: calc(100% - 30px);
+header {
+  align-items: center;
+  flex-direction: row !important;
+}
+
+header img {
+  margin-right: 30px;
+}
+
+header button {
+  margin-left: 10px !important;
 }
 
 .app {

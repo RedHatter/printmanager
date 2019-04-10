@@ -1,7 +1,6 @@
 import React, { useState, Fragment } from 'react'
 import clsx from 'clsx'
 import PropTypes from 'prop-types'
-import { Auth } from 'aws-amplify'
 import {
   Button,
   ExpansionPanel,
@@ -131,19 +130,15 @@ function Job({ highlighted, model, isAdmin, ...rest }) {
                   />
                 )}
                 <Button
-                  onClick={e =>
-                    Auth.currentSession().then(async auth => {
-                      const res = await fetch(`/api/job/${model.id}/eblast`, {
-                        headers: { Authorization: auth.idToken.jwtToken }
-                      })
-                      const a = document.createElement('a')
-                      a.href = window.URL.createObjectURL(await res.blob())
-                      a.download = 'download.html'
-                      document.body.appendChild(a)
-                      a.click()
-                      a.remove()
-                    })
-                  }
+                  onClick={async e => {
+                    const res = await fetch(`/api/job/${model.id}/eblast`)
+                    const a = document.createElement('a')
+                    a.href = window.URL.createObjectURL(await res.blob())
+                    a.download = name + '_eblast.html'
+                    document.body.appendChild(a)
+                    a.click()
+                    a.remove()
+                  }}
                 >
                   Download
                 </Button>
@@ -247,14 +242,9 @@ function Job({ highlighted, model, isAdmin, ...rest }) {
                 <tr
                   key={file.path}
                   onClick={() =>
-                    Auth.currentSession().then(async auth => {
-                      const res = await fetch(
-                        `/api/job/${model.id}/file/${file._id}`,
-                        { headers: { Authorization: auth.idToken.jwtToken } }
-                      )
-                      const url = await res.text()
-                      window.open(url, '_blank')
-                    })
+                    fetch(`/api/job/${model.id}/file/${file._id}`)
+                      .then(res => res.text())
+                      .then(url => window.open(url, '_blank'))
                   }
                 >
                   <td>{file.type}</td>

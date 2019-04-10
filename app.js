@@ -7,8 +7,17 @@ const serve = require('koa-static')
 const Router = require('koa-router')
 const session = require('koa-session')
 const socketIo = require('socket.io')
+const { promisify } = require('util')
 const nodemailer = require('nodemailer')
+const Cognito = require('cognito-express')
 const Amplify = require('aws-amplify').default
+
+const cognitoExpress = new Cognito({
+  region: 'us-west-2',
+  cognitoUserPoolId: 'us-west-2_***REMOVED***',
+  tokenUse: 'access'
+})
+const validate = promisify(cognitoExpress.validate).bind(cognitoExpress)
 
 AWS.config.update({
   credentials: new AWS.Credentials({
@@ -49,8 +58,28 @@ app.context.sendMail = body =>
     })
   )
 
-router.use('/api', require(path.join(__dirname, 'routes', 'api/index.js')))
+async function secure (ctx, next) {
+  try {
+    ctx.state.user = await validate(ctx.cookies.get('AccessToken'))
+    return next()
+  } catch (err) {
+    ctx.throw(403, err)
+  }
+}
+
 router.use('/pixel', require(path.join(__dirname, 'routes', 'pixel.js')))
+router.use('/api', secure)
+router.use('/api', require(path.join(__dirname, 'routes', 'api/index.js')))
+
+router.get('/bundle.js', secure)
+router.get('/', async (ctx, next) => {
+  try {
+    ctx.state.user = await validate(ctx.cookies.get('AccessToken'))
+    return next()
+  } catch (err) {
+    ctx.redirect('/login/')
+  }
+})
 
 app
   .use(body({ multipart: true, formLimit: '5mb' }))

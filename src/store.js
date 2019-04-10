@@ -1,9 +1,10 @@
 import { Atom, swap, deref, useAtom } from '@dbeining/react-atom'
 import { subDays, endOfDay } from 'date-fns'
-import produce, { original } from 'immer'
-import io from 'socket.io-client'
+import produce from 'immer'
+import jwtDecode from 'jwt-decode'
+import Cookies from 'js-cookie'
 
-import { fetchJobs, fetchClients, fetchUsers } from './actions.js'
+const cognitoUser = jwtDecode(Cookies.get('AccessToken'))
 
 export const store = Atom.of({
   jobs: [],
@@ -15,7 +16,12 @@ export const store = Atom.of({
     skip: 0,
     limit: 50
   },
-  errors: []
+  errors: [],
+  user: {
+    id: cognitoUser.username,
+    isAdmin: cognitoUser['cognito:groups'].includes('Admin'),
+    isSalesman: cognitoUser['cognito:groups'].includes('Salesmen')
+  }
 })
 
 export function update(fn) {
@@ -30,8 +36,3 @@ export function useStore() {
 export function getStore() {
   return deref(store)
 }
-
-const socket = io()
-socket.on('invalidateJobs', fetchJobs)
-socket.on('invalidateClients', fetchClients)
-socket.on('invalidateUsers', fetchUsers)

@@ -29,16 +29,12 @@ import { range } from '../../utils.js'
 import { SlideDown, Fade } from '../components/transitions.jsx'
 import JobList from './JobList.jsx'
 
-Calendar.propTypes = {
-  user: PropTypes.string.isRequired
-}
-
-export default function Calendar({ user, isAdmin }) {
+export default function Calendar(props) {
   const [selectedDay, setSelectedDay] = useState(startOfDay(new Date()))
   const [selectedEvent, setSelectedEvent] = useState(null)
   const [isDetailsOpen, setDetailsOpen] = useState(false)
   const [isWeekView, setWeekView] = useState(false)
-  const { jobs } = useStore()
+  const { jobs, user } = useStore()
 
   function DayList({ model, className }) {
     return model
@@ -50,7 +46,7 @@ export default function Calendar({ user, isAdmin }) {
               setDetailsOpen(true)
             }}
             className={clsx(className, {
-              highlighted: job?.assignee?.id == user
+              highlighted: job?.assignee?.id == user.id
             })}
           >
             {job.name}
@@ -80,7 +76,7 @@ export default function Calendar({ user, isAdmin }) {
     <Fragment>
       <SlideDown in={isDetailsOpen}>
         <div>
-          {selectedEvent && <JobList show={selectedEvent} isAdmin={isAdmin} />}
+          {selectedEvent && <JobList show={selectedEvent} />}
           <Button
             onClick={e => {
               e.stopPropagation()

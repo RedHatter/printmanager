@@ -1,28 +1,26 @@
-import { CognitoIdentityServiceProvider } from 'aws-sdk'
-import { Auth } from 'aws-amplify'
-
+import io from '../node_modules/socket.io-client/dist/socket.io.js'
 import { update, getStore } from './store.js'
 import { parseJSON, ensureArray } from '../utils.js'
 
-const cognito = new CognitoIdentityServiceProvider({
-  region: 'us-west-2',
-  accessKeyId: '***REMOVED***',
-  secretAccessKey: '***REMOVED***'
-})
+const socket = io()
+socket.on('invalidateJobs', fetchJobs)
+socket.on('invalidateClients', fetchClients)
+socket.on('invalidateUsers', fetchUsers)
 
 async function api(url, error, { body, method }) {
   try {
     const request = {
-      method: method || 'POST',
-      headers: {
-        Authorization: (await Auth.currentSession()).idToken.jwtToken
-      }
+      method: method || 'POST'
     }
 
     if (body instanceof FormData) request.body = body
     else if (body) {
-      request.body = JSON.stringify(body)
-      request.headers['Content-Type'] = 'application/json'
+      Object.assign(request, {
+        body: JSON.stringify(body),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
     }
 
     let res = await fetch(url, request)
@@ -113,6 +111,7 @@ export async function fetchUsers() {
   if (users === false) return false
 
   return update(state => {
+    state.user = users.find(o => state.user.id == o.id)
     state.users = users
   })
 }

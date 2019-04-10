@@ -15,7 +15,6 @@ import {
   Paper
 } from '@material-ui/core'
 import { DatePicker } from 'material-ui-pickers'
-import { Form, TextField } from 'material-ui-utils'
 import NumberFormat from 'react-number-format'
 import PropTypes from 'prop-types'
 import clsx from 'clsx'
@@ -27,6 +26,8 @@ import { useStore } from './store.js'
 import { ClientType, JobType } from './types.js'
 import EditFiles from './EditFiles.jsx'
 import ChipSelect from './components/ChipSelect.jsx'
+import Form from './components/Form.jsx'
+import TextField from './components/TextField.jsx'
 
 function SelectField({ size = 4, values, multiple, children, ...props }) {
   return (

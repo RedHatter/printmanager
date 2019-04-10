@@ -8,14 +8,13 @@ import Job from '../job/Job.jsx'
 import Column from '../components/Column.jsx'
 
 JobList.propTypes = {
-  user: PropTypes.string,
-  isAdmin: PropTypes.bool.isRequired,
-  show: JobType
+  show: JobType,
+  elevation: PropTypes.number
 }
 
-export default function JobList({ user, show, isAdmin, elevation }) {
+export default function JobList({ show, elevation }) {
   const [expanded, setExpanded] = useState(false)
-  const { jobs } = useStore()
+  const { jobs, user } = useStore()
 
   return (
     <div className="job-list">
@@ -33,7 +32,7 @@ export default function JobList({ user, show, isAdmin, elevation }) {
         <Job
           elevation={elevation}
           model={show}
-          isAdmin={isAdmin}
+          isAdmin={user.isAdmin}
           expanded={true}
         />
       ) : jobs.length > 0 ? (
@@ -42,9 +41,9 @@ export default function JobList({ user, show, isAdmin, elevation }) {
             elevation={elevation}
             key={o.id}
             model={o}
-            isAdmin={isAdmin}
+            isAdmin={user.isAdmin}
             expanded={expanded == o.id}
-            highlighted={o?.assignee?.id == user}
+            highlighted={o?.assignee?.id == user.id}
             onChange={e => setExpanded(expanded == o.id ? false : o.id)}
           />
         ))

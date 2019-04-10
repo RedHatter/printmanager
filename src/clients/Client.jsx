@@ -8,13 +8,14 @@ import {
   DialogContent,
   DialogActions
 } from '@material-ui/core'
-import { Form, TextField } from 'material-ui-utils'
 import NumberFormat from 'react-number-format'
 import PropTypes from 'prop-types'
 
 import { deepmerge } from '../../utils.js'
 import { ClientType } from '../types.js'
 import { updateOrCreateClient } from '../actions.js'
+import Form from '../components/Form.jsx'
+import TextField from '../components/TextField.jsx'
 
 Client.propTypes = {
   model: ClientType,

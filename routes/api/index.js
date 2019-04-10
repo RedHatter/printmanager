@@ -1,28 +1,10 @@
 const { promisify } = require('util')
-const Cognito = require('cognito-express')
 const Router = require('koa-router')
 const path = require('path')
 
 const { Job, Pixel } = require('../../schema')
 
-const cognitoExpress = new Cognito({
-  region: 'us-west-2',
-  cognitoUserPoolId: 'us-west-2_***REMOVED***',
-  tokenUse: 'id'
-})
-const validate = promisify(cognitoExpress.validate).bind(cognitoExpress)
-
 const router = new Router()
-
-router.use(async (ctx, next) => {
-  try {
-    let response = await validate(ctx.headers.authorization)
-    ctx.state.user = response
-    return next()
-  } catch (err) {
-    ctx.throw(403, err)
-  }
-})
 
 router.use('/job', require(path.join(__dirname, 'job')))
 router.use('/client', require(path.join(__dirname, 'client.js')))

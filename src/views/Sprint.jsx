@@ -9,11 +9,11 @@ import { useStore } from '../store.js'
 import { SlideDown, Fade } from '../components/transitions.jsx'
 import JobList from './JobList.jsx'
 
-export default function Sprint({ user, isAdmin }) {
+export default function Sprint(props) {
   const [isOpen, setIsOpen] = useState(false)
   const [selected, setSelected] = useState(undefined)
   const columnWrapper = useRef(undefined)
-  const { jobs } = useStore()
+  const { jobs, user } = useStore()
 
   function resize() {
     const dom = columnWrapper.current
@@ -45,7 +45,7 @@ export default function Sprint({ user, isAdmin }) {
           const job = jobs.find(o => id == o.id)
           if (job.artStatus == name) return
 
-          if (job.artStatus == 'Unassigned') job.assignee = user
+          if (job.artStatus == 'Unassigned') job.assignee = user.id
           else if (name == 'Unassigned') job.assignee = ''
 
           job.artStatus = name
@@ -57,7 +57,7 @@ export default function Sprint({ user, isAdmin }) {
           <div
             key={job.id}
             className={clsx('priority-' + job.priority, {
-              highlighted: job?.assignee?.id == user
+              highlighted: job?.assignee?.id == user.id
             })}
             draggable
             onDragStart={e => {
@@ -98,7 +98,7 @@ export default function Sprint({ user, isAdmin }) {
     <Fragment>
       <SlideDown in={isOpen}>
         <div>
-          {selected && <JobList show={selected} isAdmin={isAdmin} />}
+          {selected && <JobList show={selected} />}
           <Button onClick={e => setIsOpen(false)} className="back-to-calendar">
             Back to Sprint
           </Button>
