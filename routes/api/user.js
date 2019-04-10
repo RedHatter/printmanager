@@ -43,7 +43,7 @@ router.post('/', async ctx => {
     ]
   })
 
-  if (config.admin) {
+  if (config.isAdmin) {
     adminAddUserToGroup({
       GroupName: 'Admin',
       UserPoolId: 'us-west-2_***REMOVED***',
@@ -51,7 +51,7 @@ router.post('/', async ctx => {
     })
   }
 
-  if (config.salesmen) {
+  if (config.isSalesmen) {
     adminAddUserToGroup({
       GroupName: 'Salesmen',
       UserPoolId: 'us-west-2_***REMOVED***',
@@ -67,7 +67,7 @@ router.post('/', async ctx => {
 router.post('/:id', async ctx => {
   const config = ctx.request.body
 
-  if (config.admin) {
+  if (config.isAdmin) {
     adminAddUserToGroup({
       GroupName: 'Admin',
       UserPoolId: 'us-west-2_***REMOVED***',
@@ -81,7 +81,7 @@ router.post('/:id', async ctx => {
     })
   }
 
-  if (config.salesmen) {
+  if (config.isSalesmen) {
     adminAddUserToGroup({
       GroupName: 'Salesmen',
       UserPoolId: 'us-west-2_***REMOVED***',

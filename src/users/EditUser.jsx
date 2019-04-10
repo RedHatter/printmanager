@@ -10,8 +10,8 @@ import {
 } from '@material-ui/core'
 
 export default function EditUser({ onClose, onChange, value }) {
-  const [admin, setAdmin] = useState(value.admin || false)
-  const [salesman, setSalesman] = useState(value.salesman || false)
+  const [isAdmin, setAdmin] = useState(value.isAdmin || false)
+  const [isSalesman, setSalesman] = useState(value.isSalesman || false)
 
   return (
     <Dialog open>
@@ -19,9 +19,9 @@ export default function EditUser({ onClose, onChange, value }) {
         <FormControlLabel
           control={
             <Checkbox
-              checked={admin}
+              checked={isAdmin}
               onChange={e => setAdmin(e.target.checked)}
-              value="admin"
+              value="isAdmin"
             />
           }
           label="Admin"
@@ -29,9 +29,9 @@ export default function EditUser({ onClose, onChange, value }) {
         <FormControlLabel
           control={
             <Checkbox
-              checked={salesman}
+              checked={isSalesman}
               onChange={e => setSalesman(e.target.checked)}
-              value="salesman"
+              value="isSalesman"
             />
           }
           label="Salesman"
@@ -42,7 +42,7 @@ export default function EditUser({ onClose, onChange, value }) {
         <Button
           onClick={e => {
             onClose()
-            onChange({ ...value, admin, salesmen })
+            onChange({ ...value, isAdmin, salesmen })
           }}
         >
           Done

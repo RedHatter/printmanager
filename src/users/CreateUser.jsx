@@ -12,8 +12,8 @@ import {
 export default function({ onClose, onChange }) {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
-  const [admin, setAdmin] = useState(false)
-  const [salesmen, setSalesmen] = useState(false)
+  const [isAdmin, setAdmin] = useState(false)
+  const [isSalesmen, setSalesmen] = useState(false)
 
   return (
     <Dialog open>
@@ -33,9 +33,9 @@ export default function({ onClose, onChange }) {
         <FormControlLabel
           control={
             <Checkbox
-              checked={admin}
+              checked={isAdmin}
               onChange={e => setAdmin(e.target.checked)}
-              value="admin"
+              value="isAdmin"
             />
           }
           label="Admin"
@@ -43,9 +43,9 @@ export default function({ onClose, onChange }) {
         <FormControlLabel
           control={
             <Checkbox
-              checked={salesmen}
+              checked={isSalesmen}
               onChange={e => setSalesmen(e.target.checked)}
-              value="salesman"
+              value="isSalesman"
             />
           }
           label="Salesman"
@@ -53,7 +53,7 @@ export default function({ onClose, onChange }) {
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
-        <Button onClick={e => onChange({ name, email, admin, salesmen })}>
+        <Button onClick={e => onChange({ name, email, isAdmin, isSalesmen })}>
           Done
         </Button>
       </DialogActions>

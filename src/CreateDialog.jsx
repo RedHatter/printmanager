@@ -99,7 +99,7 @@ export default function CreateDialog(props) {
   const [selectedFiles, setSelectedFiles] = useState([])
   const [customSize, setCustomSize] = useState(false)
   const { clients, users } = useStore()
-  const salesmen = users.filter(o => o.salesman)
+  const salesmen = users.filter(o => o.isSalesman)
   const editMode = !!model.id
 
   function setModel(values) {

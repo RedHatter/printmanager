@@ -46,8 +46,8 @@ async function invalidateUsers() {
       }
     }
 
-    obj.salesman = salesmen.includes(user.Username)
-    obj.admin = admins.includes(user.Username)
+    obj.isSalesman = salesmen.includes(user.Username)
+    obj.isAdmin = admins.includes(user.Username)
     obj.id = user.Username
 
     return obj
