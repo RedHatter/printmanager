@@ -9,7 +9,7 @@ function EditFiles({ files, onChange, selected }) {
 
   return (
     <Fragment>
-      <Typography variant="headline" align="left">
+      <Typography variant="h1" align="left">
         Files
       </Typography>
       {files.map(file => (

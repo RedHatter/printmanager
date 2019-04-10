@@ -89,7 +89,7 @@ class App extends Component {
             {this.state.isCreateDialogOpen && (
               <CreateDialog onClose={this.closeCreateDialog} />
             )}
-            <Typography variant="headline">Views</Typography>
+            <Typography variant="h1">Views</Typography>
             <Tabs value={selectedTab} onChange={this.handleTabChange}>
               <Tab label="All Jobs" />
               <Tab label="Calendar" />

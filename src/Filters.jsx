@@ -22,7 +22,7 @@ export default function Filters(props) {
   const handleChange = async o => (await updateFilter(o)) && fetchJobs()
 
   return (
-    <Grid container spacing={16} className="filters">
+    <Grid container spacing={2} className="filters">
       <Grid
         item
         sm={2}
@@ -37,27 +37,13 @@ export default function Filters(props) {
         }
         className="type-select"
       >
-        <Typography
-          variant="headline"
-          align="left"
-          className={clsx({ selected: !filter.type })}
-        >
-          All
-        </Typography>
-        <Typography
-          variant="headline"
-          align="left"
-          className={clsx({ selected: filter.type == 'Print' })}
-        >
+        <span className={clsx({ selected: !filter.type })}>All</span>
+        <span className={clsx({ selected: filter.type == 'Print' })}>
           Print
-        </Typography>
-        <Typography
-          variant="headline"
-          align="left"
-          className={clsx({ selected: filter.type == 'Digital' })}
-        >
+        </span>
+        <span className={clsx({ selected: filter.type == 'Digital' })}>
           Digital
-        </Typography>
+        </span>
       </Grid>
       <Grid item sm={2}>
         <TextField

@@ -128,7 +128,7 @@ export default function CreateDialog(props) {
       }}
     >
       <DialogContent className="content">
-        <Grid container spacing={16}>
+        <Grid container spacing={2}>
           <Grid
             item
             sm={11}
@@ -138,20 +138,12 @@ export default function CreateDialog(props) {
             }}
             className="type-select"
           >
-            <Typography
-              variant="headline"
-              align="left"
-              className={clsx({ selected: model.type == 'Print' })}
-            >
+            <span className={clsx({ selected: model.type == 'Print' })}>
               Print
-            </Typography>
-            <Typography
-              variant="headline"
-              align="left"
-              className={clsx({ selected: model.type == 'Digital' })}
-            >
+            </span>
+            <span className={clsx({ selected: model.type == 'Digital' })}>
               Digital
-            </Typography>
+            </span>
           </Grid>
           <Grid item sm={1}>
             <div
@@ -172,7 +164,7 @@ export default function CreateDialog(props) {
             />
           </Grid>
           <Grid item sm={12}>
-            <Typography variant="headline" align="left">
+            <Typography variant="h1" align="left">
               General
             </Typography>
           </Grid>
@@ -229,7 +221,7 @@ export default function CreateDialog(props) {
             />
           )}
           <Grid item sm={12}>
-            <Typography variant="headline" align="left">
+            <Typography variant="h1" align="left">
               Dates
             </Typography>
           </Grid>
@@ -276,7 +268,7 @@ export default function CreateDialog(props) {
             onChange={expire => setModel({ expire })}
           />
           <Grid item sm={12}>
-            <Typography variant="headline" align="left">
+            <Typography variant="h1" align="left">
               Details
             </Typography>
           </Grid>
@@ -444,15 +436,16 @@ CreateDialog.propTypes = {
   cursor: pointer;
 }
 
-.type-select h1 {
+.type-select span {
   display: inline-block;
   margin: 2px;
   color: #e0e0e0;
+  font-size: 1.6rem;
   transition: all 0.3s;
   transform: scale(0.8) translateY(2px);
 }
 
-.type-select h1.selected {
+.type-select span.selected {
   color: black;
   transform: scale(1) translateY(0);
 }

@@ -238,7 +238,7 @@ export default function Comments({ model }) {
 .comment .created {
   margin-left: 12px;
   color: #9e9e9e;
-  font-size: 0.8em;
+  font-size: 0.8rem;
 }
 
 .comment .delete {

@@ -359,7 +359,7 @@ span.green {
 
 .job-details .section-header {
   text-align: center;
-  font-size: 1.3em;
+  font-size: 1.3rem;
 }
 
 .job-details .files tr {

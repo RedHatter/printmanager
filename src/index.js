@@ -18,6 +18,14 @@ const theme = createMuiTheme({
       root: {
         width: 'auto'
       }
+    },
+    MuiTypography: {
+      h1: {
+        color: 'rgba(0, 0, 0, 0.87)',
+        fontSize: '1.6rem',
+        fontWeight: '400',
+        lineHeight: '1.35'
+      }
     }
   }
 })

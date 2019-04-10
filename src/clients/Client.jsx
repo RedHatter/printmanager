@@ -62,9 +62,9 @@ export default function Client(props) {
       }}
     >
       <DialogContent>
-        <Grid container spacing={16}>
+        <Grid container spacing={2}>
           <Grid item sm={12}>
-            <Typography variant="headline" align="left">
+            <Typography variant="h1" align="left">
               General
             </Typography>
           </Grid>
@@ -98,7 +98,7 @@ export default function Client(props) {
             />
           </Grid>
           <Grid item sm={12}>
-            <Typography variant="headline" align="left">
+            <Typography variant="h1" align="left">
               Contact Information
             </Typography>
           </Grid>
@@ -137,7 +137,7 @@ export default function Client(props) {
             />
           </Grid>
           <Grid item sm={12}>
-            <Typography variant="headline" align="left">
+            <Typography variant="h1" align="left">
               Call Tracking Numbers
             </Typography>
           </Grid>

@@ -102,23 +102,11 @@ export default function Calendar(props) {
                   onClick={e => setWeekView(!isWeekView)}
                   className="type-select"
                 >
-                  <Typography
-                    variant="headline"
-                    align="left"
-                    className={clsx({ selected: !isWeekView })}
-                  >
-                    Month
-                  </Typography>
-                  <Typography
-                    variant="headline"
-                    align="left"
-                    className={clsx({ selected: isWeekView })}
-                  >
-                    Week
-                  </Typography>
+                  <span className={clsx({ selected: !isWeekView })}>Month</span>
+                  <span className={clsx({ selected: isWeekView })}>Week</span>
                 </td>
               </tr>
-              <tr className="headline">
+              <tr className="heading">
                 <th
                   className="previous"
                   onClick={e =>
@@ -252,11 +240,11 @@ export default function Calendar(props) {
   transform: translateX(5px) rotate(45deg);
 }
 
-.calendar tr.headline th {
+.calendar tr.heading th {
   height: 200px;
   border-bottom: 1px solid #eeeeee;
   text-transform: none;
-  font-size: 2em;
+  font-size: 2rem;
 }
 
 .calendar tr th {
@@ -275,7 +263,7 @@ export default function Calendar(props) {
 .calendar tbody td div:first-child {
   margin: 10px;
   text-align: right;
-  font-size: 1.1em;
+  font-size: 1.1rem;
 }
 
 .calendar tbody td.today div:first-child {
