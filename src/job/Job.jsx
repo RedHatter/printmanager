@@ -70,7 +70,10 @@ function Job({ highlighted, model, isAdmin, ...rest }) {
   const today = startOfDay(new Date())
 
   return (
-    <ExpansionPanel {...rest}>
+    <ExpansionPanel
+      TransitionProps={{ mountOnEnter: true, unmountOnExit: true }}
+      {...rest}
+    >
       <ExpansionPanelSummary
         expandIcon={<ExpandMoreIcon />}
         className={clsx(
@@ -99,7 +102,11 @@ function Job({ highlighted, model, isAdmin, ...rest }) {
           <br />
           {secondDropDate && formatDate(secondDropDate)}
         </Column>
-        <Column group="artStatus">{artStatus}</Column>
+        <Column group="artStatus">
+          <span className={clsx('statusBlock', colorize(artStatus))}>
+            {artStatus}
+          </span>
+        </Column>
         <Column group="printDate">{printDate && formatDate(printDate)}</Column>
         <Column group="dueDate">{dueDate && formatDate(dueDate)}</Column>
         <Column group="assignee">{assignee?.name}</Column>

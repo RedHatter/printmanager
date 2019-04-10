@@ -7,7 +7,7 @@ function transition(className) {
       in={props.in}
       timeout={200}
       classNames={className}
-      unmountOnExit
+      mountOnEnter
     >
       {props.children}
     </CSSTransition>

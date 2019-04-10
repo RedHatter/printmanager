@@ -105,6 +105,15 @@ router.post('/:id/eblast', async ctx => {
   } else {
     ctx.assert(ctx.request.body.image, 422)
     job.eblast = ctx.request.body
+    job.eblast.rows = job.eblast.rows
+      .filter(r => r.height > 0)
+      .map(r => {
+        r.y = Math.max(0, r.y)
+        r.cells = r.cells
+          .filter(c => c.width > 0)
+          .map(c => ((c.x = Math.max(0, c.x)), c))
+        return r
+      })
   }
 
   await job.save()

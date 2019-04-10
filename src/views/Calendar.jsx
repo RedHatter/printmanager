@@ -40,7 +40,7 @@ export default function Calendar(props) {
     return model
       ? model.map(job => (
           <div
-            key={job.id}
+            key={job.id + className}
             onClick={e => {
               setSelectedEvent(job)
               setDetailsOpen(true)

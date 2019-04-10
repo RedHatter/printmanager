@@ -105,13 +105,15 @@ function colorize(status) {
   switch (status) {
     case 'List Uploaded':
     case 'List Pending':
-    default:
+    case 'Complete':
       return 'green'
     case 'Count Pending':
+    case 'In Progress':
       return 'yellow'
     case 'Incomplete':
+    case 'Unassigned':
       return 'red'
-    case 'In Progress':
+    default:
       return undefined
   }
 }

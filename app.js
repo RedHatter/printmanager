@@ -71,17 +71,19 @@ router.use('/api', require(path.join(__dirname, 'routes', 'api/index.js')))
 
 router.get('/bundle.js', secure)
 router.get('/', async (ctx, next) => {
+  const token = ctx.cookies.get('AccessToken')
   try {
-    ctx.state.user = await validate(ctx.cookies.get('AccessToken'))
+    ctx.state.user = await validate(token)
     return next()
   } catch (err) {
+    if (token) ctx.cookies.set('AccessToken')
     ctx.redirect('/login/')
   }
 })
 
 app
   .use(body({ multipart: true, formLimit: '5mb' }))
-  .use(session({ maxAge: 'session' }, app))
+  // .use(session({ maxAge: 'session' }, app))
   .use(router.routes())
   .use(serve(path.join(__dirname, 'public')))
 

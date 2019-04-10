@@ -7,10 +7,10 @@
   "private": true,
   "scripts": {
     "start": "node app.js",
-    "build": "yarn rasterize && yarn format && rollup -c",
-    "format": "node --experimental-modules ./script/format.mjs",
-    "rasterize": "mkdir -p ./public/images && for f in ./src/images/*; do d=./public/images/`basename $f .svg`.png && test ! -e $d -o $f -nt $d && inkscape $f -e $d; done; return 0",
-    "build-production": "NODE_ENV=production yarn build",
+    "build": "yarn build:rasterize && yarn build:format && rollup -c",
+    "build:rasterize": "mkdir -p ./public/images && for f in ./src/images/*; do d=./public/images/`basename $f .svg`.png && test ! -e $d -o $f -nt $d && inkscape $f -e $d; done; return 0",
+    "build:format": "node --experimental-modules ./script/format.mjs",
+    "build:production": "NODE_ENV=production yarn build",
     "clean": "rm -r public/*[^index.html] public/login/*[^index.html]",
     "deploy": "rsync -rtv --update --delete --exclude-from .rsyncignore . generic-MERN:/opt/printmanager"
   },
