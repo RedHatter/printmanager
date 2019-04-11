@@ -23,7 +23,7 @@ router.post('/', async ctx => {
   const config = ctx.request.body
 
   const user = await adminCreateUser({
-    UserPoolId: 'us-west-2_***REMOVED***',
+    UserPoolId: '***REMOVED***',
     Username: config.email,
     DesiredDeliveryMediums: ['EMAIL'],
     ForceAliasCreation: false,
@@ -46,7 +46,7 @@ router.post('/', async ctx => {
   if (config.isAdmin) {
     adminAddUserToGroup({
       GroupName: 'Admin',
-      UserPoolId: 'us-west-2_***REMOVED***',
+      UserPoolId: '***REMOVED***',
       Username: user.User.Username
     })
   }
@@ -54,7 +54,7 @@ router.post('/', async ctx => {
   if (config.isSalesmen) {
     adminAddUserToGroup({
       GroupName: 'Salesmen',
-      UserPoolId: 'us-west-2_***REMOVED***',
+      UserPoolId: '***REMOVED***',
       Username: user.User.Username
     })
   }
@@ -70,13 +70,13 @@ router.post('/:id', async ctx => {
   if (config.isAdmin) {
     adminAddUserToGroup({
       GroupName: 'Admin',
-      UserPoolId: 'us-west-2_***REMOVED***',
+      UserPoolId: '***REMOVED***',
       Username: config.id
     })
   } else {
     adminRemoveUserFromGroup({
       GroupName: 'Admin',
-      UserPoolId: 'us-west-2_***REMOVED***',
+      UserPoolId: '***REMOVED***',
       Username: config.id
     })
   }
@@ -84,13 +84,13 @@ router.post('/:id', async ctx => {
   if (config.isSalesmen) {
     adminAddUserToGroup({
       GroupName: 'Salesmen',
-      UserPoolId: 'us-west-2_***REMOVED***',
+      UserPoolId: '***REMOVED***',
       Username: config.id
     })
   } else {
     adminRemoveUserFromGroup({
       GroupName: 'Salesmen',
-      UserPoolId: 'us-west-2_***REMOVED***',
+      UserPoolId: '***REMOVED***',
       Username: config.id
     })
   }
@@ -101,7 +101,7 @@ router.post('/:id', async ctx => {
 
 router.delete('/:id', async ctx => {
   await adminDeleteUser({
-    UserPoolId: 'us-west-2_***REMOVED***',
+    UserPoolId: '***REMOVED***',
     Username: ctx.params.id
   })
   ctx.status = 200
@@ -111,7 +111,7 @@ router.delete('/:id', async ctx => {
 
 router.get('/:id/reset', async ctx => {
   ctx.body = await adminResetUserPassword({
-    UserPoolId: 'us-west-2_***REMOVED***',
+    UserPoolId: '***REMOVED***',
     Username: ctx.params.id
   })
   ctx.status = 200

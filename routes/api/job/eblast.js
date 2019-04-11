@@ -1,9 +1,18 @@
 const fs = require('fs').promises
+const { S3 } = require('aws-sdk')
 const Router = require('koa-router')
 const Jimp = require('jimp')
-const Storage = require('aws-amplify').Storage
 const querystring = require('querystring')
 const { Job } = require('../../../schema')
+
+const s3 = new S3({
+  region: 'us-west-1',
+  credentials: {
+    accessKeyId: '***REMOVED***',
+    secretAccessKey: '***REMOVED***'
+  },
+  params: { Bucket: 'dealerdigitalgroup.media' }
+})
 
 const router = new Router()
 
@@ -32,11 +41,11 @@ router.get('/:id/eblast', async ctx => {
 
       const path =
         model.image.substring(
-          'https://s3-us-west-1.amazonaws.com/dealerdigitalgroup.media/public/'
+          'https://s3-us-west-1.amazonaws.com/dealerdigitalgroup.media/'
             .length,
           model.image.lastIndexOf('.')
         ) + `_${i++}.png`
-      await Storage.put(path, buffer, { contentType: 'image/png' })
+      await s3.putObject({ Body: buffer, Key: path, ContentType: 'image/png' }).promise()
 
       const utm = {
         utm_source: model.utmSource,
@@ -53,9 +62,9 @@ router.get('/:id/eblast', async ctx => {
 
       if (cell.url) {
         const url = `${cell.url}?${querystring.stringify(utm)}`
-        html += `<a href="${url}"><img src="https://s3-us-west-1.amazonaws.com/dealerdigitalgroup.media/public/${path}"${alt}></a>`
+        html += `<a href="${url}"><img src="https://s3-us-west-1.amazonaws.com/dealerdigitalgroup.media/${path}"${alt}></a>`
       } else {
-        html += `<img src="https://s3-us-west-1.amazonaws.com/dealerdigitalgroup.media/public/${path}"${alt}>`
+        html += `<img src="https://s3-us-west-1.amazonaws.com/dealerdigitalgroup.media/${path}"${alt}>`
       }
     }
     html += '</td></tr>'
@@ -77,15 +86,11 @@ router.post('/:id/eblast', async ctx => {
       job.name.replace(/ /g, '_') +
         file.name.substring(file.name.lastIndexOf('.'))
     )
-    await Storage.put(path, await fs.readFile(file.path), {
-      contentType: file.type,
-      bucket: 'dealerdigitalgroup.media'
-    })
+    await s3.putObject({ Body: await fs.readFile(file.path), Key: path, ContentType: 'image/png' }).promise()
 
     job.eblast = {
       image:
-        'https://s3-us-west-1.amazonaws.com/dealerdigitalgroup.media/public/' +
-        path,
+        'https://s3-us-west-1.amazonaws.com/dealerdigitalgroup.media/' + path,
       rows: [
         {
           y: 0,

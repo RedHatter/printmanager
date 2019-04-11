@@ -1,9 +1,18 @@
 const fs = require('fs').promises
+const { S3 } = require('aws-sdk')
 const Router = require('koa-router')
-const Storage = require('aws-amplify').Storage
 const ObjectId = require('mongoose').Types.ObjectId
 const { Job } = require('../../../schema')
 const { ensureArray } = require('../../../utils.js')
+
+const s3 = new S3({
+  region: 'us-west-1',
+  credentials: {
+    accessKeyId: '***REMOVED***',
+    secretAccessKey: '***REMOVED***'
+  },
+  params: { Bucket: 'dealerdigitalgroup.printmanager' }
+})
 
 const router = new Router()
 
@@ -14,10 +23,11 @@ router.post('/:id/comment', async ctx => {
     comment.attachments = await Promise.all(
       ensureArray(ctx.request.files.attachments).map(async file => {
         const path = `${ctx.params.id}/comment/${comment._id}/${file.name}`
-        await Storage.put(path, await fs.readFile(file.path), {
-          contentType: file.type,
-          bucket: 'dealerdigitalgroup.printmanager'
-        })
+        await s3.putObject({
+          Body: await fs.readFile(file.path),
+          Key: path,
+          ContentType: file.type
+        }).promise()
         return path
       })
     )
@@ -62,17 +72,8 @@ router.delete('/:ref/comment/:id', async ctx => {
   const comment = job.comments.id(ctx.params.id)
   ctx.assert(ctx.state.user['cognito:username'] == comment.user.id, 403)
 
-  const files = await Storage.list(
-    `${ctx.params.ref}/comment/${ctx.params.id}`,
-    { bucket: 'dealerdigitalgroup.printmanager' }
-  )
-  await Promise.all(
-    files.map(o =>
-      Storage.remove(o.key, {
-        bucket: 'dealerdigitalgroup.printmanager'
-      })
-    )
-  )
+  const files = await s3.listObjectsV2({ Prefix: `${ctx.params.ref}/comment/${ctx.params.id}` }).promise()
+  await s3.deleteObjects({ Delete: { Objects: files.Contents.map(o => ({ Key: o.Key })) } }).promise()
 
   comment.remove()
   await job.save()
@@ -93,9 +94,7 @@ router.get('/:ref/comment/:id/file/:index', async ctx => {
   ctx.assert(file, 404)
 
   ctx.response.type = 'json'
-  ctx.body = await Storage.get(file, {
-    bucket: 'dealerdigitalgroup.printmanager'
-  })
+  ctx.body = await s3.getSignedUrl('getObject', {Key: file})
 })
 
 module.exports = router.routes()

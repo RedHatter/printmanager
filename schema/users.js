@@ -3,7 +3,7 @@ const cognito = new AWS.CognitoIdentityServiceProvider({ region: 'us-west-2' })
 
 async function invalidateUsers() {
   const rawUsers = await new Promise((resolve, reject) =>
-    cognito.listUsers({ UserPoolId: 'us-west-2_***REMOVED***' }, (err, res) => {
+    cognito.listUsers({ UserPoolId: '***REMOVED***' }, (err, res) => {
       if (err) reject(err)
       else resolve(res.Users)
     })
@@ -11,7 +11,7 @@ async function invalidateUsers() {
 
   const salesmen = (await new Promise((resolve, reject) =>
     cognito.listUsersInGroup(
-      { GroupName: 'Salesmen', UserPoolId: 'us-west-2_***REMOVED***' },
+      { GroupName: 'Salesmen', UserPoolId: '***REMOVED***' },
       (err, res) => {
         if (err) reject(err)
         else resolve(res.Users)
@@ -23,7 +23,7 @@ async function invalidateUsers() {
     cognito.listUsersInGroup(
       {
         GroupName: 'Admin',
-        UserPoolId: 'us-west-2_***REMOVED***'
+        UserPoolId: '***REMOVED***'
       },
       (err, res) => {
         if (err) reject(err)

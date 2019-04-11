@@ -1,7 +1,6 @@
 const Koa = require('koa')
 const path = require('path')
 const http = require('http')
-const AWS = require('aws-sdk')
 const body = require('koa-body')
 const serve = require('koa-static')
 const Router = require('koa-router')
@@ -10,28 +9,13 @@ const socketIo = require('socket.io')
 const { promisify } = require('util')
 const nodemailer = require('nodemailer')
 const Cognito = require('cognito-express')
-const Amplify = require('aws-amplify').default
 
 const cognitoExpress = new Cognito({
   region: 'us-west-2',
-  cognitoUserPoolId: 'us-west-2_***REMOVED***',
+  cognitoUserPoolId: '***REMOVED***',
   tokenUse: 'access'
 })
 const validate = promisify(cognitoExpress.validate).bind(cognitoExpress)
-
-AWS.config.update({
-  credentials: new AWS.Credentials({
-    accessKeyId: '***REMOVED***',
-    secretAccessKey: '***REMOVED***'
-  })
-})
-
-Amplify.configure({
-  Storage: {
-    region: 'us-west-1',
-    bucket: 'dealerdigitalgroup.media'
-  }
-})
 
 const app = new Koa()
 const router = new Router()

@@ -119,7 +119,7 @@ module.exports = new Schema(
       utmSource: String,
       image: {
         type: String,
-        match: /https:\/\/s3-us-west-1\.amazonaws\.com\/dealerdigitalgroup\.media\/public\/.+/
+        match: /https:\/\/s3-us-west-1\.amazonaws\.com\/dealerdigitalgroup\.media\/.+/
       },
       rows: [
         {

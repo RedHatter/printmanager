@@ -1,7 +1,16 @@
 const fs = require('fs').promises
 const Router = require('koa-router')
-const Storage = require('aws-amplify').Storage
+const { S3 } = require('aws-sdk')
 const { Job } = require('../../../schema')
+
+const s3 = new S3({
+  region: 'us-west-1',
+  credentials: {
+    accessKeyId: '***REMOVED***',
+    secretAccessKey: '***REMOVED***'
+  },
+  params: { Bucket: 'dealerdigitalgroup.printmanager' }
+})
 
 const router = new Router()
 
@@ -11,10 +20,11 @@ router.post('/:id/file', async ctx => {
 
   const file = ctx.request.files.file
   const path = `${ctx.params.id}/${type}/${encodeURIComponent(file.name)}`
-  await Storage.put(path, await fs.readFile(file.path), {
-    contentType: file.type,
-    bucket: 'dealerdigitalgroup.printmanager'
-  })
+  await s3.putObject({
+    Body: await fs.readFile(file.path),
+    Key: path,
+    ContentType: file.type
+  }).promise()
 
   const job = await Job.findById(ctx.params.id)
   ctx.assert(job, 404)
@@ -33,7 +43,7 @@ router.delete('/:ref/file/:id', async ctx => {
 
   const file = job.files.id(ctx.params.id)
   ctx.assert(file, 404)
-  await Storage.remove(file.path, { bucket: 'dealerdigitalgroup.printmanager' })
+  await s3.deleteObject({ Key: file.path }).promise()
   file.remove()
   await job.save()
 
@@ -49,9 +59,7 @@ router.get('/:ref/file/:id', async ctx => {
   ctx.assert(file, 404)
 
   ctx.response.type = 'json'
-  ctx.body = await Storage.get(file.path, {
-    bucket: 'dealerdigitalgroup.printmanager'
-  })
+  ctx.body = await s3.getSignedUrl('getObject', {Key: file.path})
 })
 
 module.exports = router.routes()

@@ -1,10 +1,18 @@
 const fs = require('fs').promises
 const path = require('path')
+const { S3 } = require('aws-sdk')
 const Router = require('koa-router')
-const Storage = require('aws-amplify').Storage
 const { format, startOfMonth, endOfMonth } = require('date-fns')
 const { Job, Client } = require('../../../schema')
 const { transformValue } = require('../../../utils.js')
+
+const s3 = new S3({
+  region: 'us-west-1',
+  credentials: {
+    accessKeyId: '***REMOVED***',
+    secretAccessKey: '***REMOVED***'
+  }
+})
 
 const router = new Router()
 router.use(require(path.join(__dirname, 'comment.js')))
@@ -305,30 +313,18 @@ router.post('/:id', async ctx => {
 })
 
 router.delete('/:id', async ctx => {
-  const files = await Storage.list(ctx.params.id, {
-    bucket: 'dealerdigitalgroup.printmanager'
-  })
-  await Promise.all(
-    files.map(o =>
-      Storage.remove(o.key, {
-        bucket: 'dealerdigitalgroup.printmanager'
-      })
-    )
-  )
+  const files = await s3.listObjectsV2({ Prefix: ctx.params.id, Bucket: 'dealerdigitalgroup.printmanager' }).promise()
+  await s3.deleteObjects({ Delete: { Objects: files.Contents.map(o => ({ Key: o.Key })) }, Bucket: 'dealerdigitalgroup.printmanager' }).promise()
 
   const job = await Job.findByIdAndRemove(ctx.params.id)
   if (job.eblast.image) {
     const name = job.eblast.image.substring(
-      'https://s3-us-west-1.amazonaws.com/dealerdigitalgroup.media/public/'
+      'https://s3-us-west-1.amazonaws.com/dealerdigitalgroup.media/'
         .length,
       job.eblast.image.lastIndexOf('.')
     )
-    const allFiles = await Storage.list('')
-    await Promise.all(
-      allFiles
-        .filter(o => o.key.startsWith(name))
-        .map(o => Storage.remove(o.key))
-    )
+    const files = await s3.listObjectsV2({ Prefix: name, Bucket: 'dealerdigitalgroup.media' }).promise()
+    await s3.deleteObjects({ Delete: { Objects: files.Contents.map(o => ({ Key: o.Key })) }, Bucket: 'dealerdigitalgroup.media' }).promise()
   }
 
   ctx.response.type = 'json'
